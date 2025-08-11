@@ -1,4 +1,4 @@
-./docker/musicplatform_data
+/docker/musicplatform_data
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
