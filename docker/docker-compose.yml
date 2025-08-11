@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+
+  musicplatform_db:
+    image: postgres:15
+    env_file:
+      - musicplatform_db.env
+    volumes:
+      - ./musicplatform_data:/var/lib/postgresql/data/
+    networks:
+      - musicplatform_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    env_file:
+      - pgadmin.env
+    ports:
+      - "5050:80"
+    networks:
+      - musicplatform_network
+
+networks:
+  musicplatform_network:
+    driver: bridge
