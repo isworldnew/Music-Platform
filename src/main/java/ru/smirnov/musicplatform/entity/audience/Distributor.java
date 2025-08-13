@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributorType;
 import ru.smirnov.musicplatform.entity.relation.DistributorsByArtists;
 
@@ -34,7 +35,8 @@ public class Distributor {
     @Column(name = "distributor_type", nullable = false)
     private DistributorType distributorType;
 
-    @Column(name = "registration_date", columnDefinition = "TIMESTAMPTZ", nullable = false)
+    @Column(name = "registration_date", columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP", nullable = false)
+    @CreationTimestamp
     private OffsetDateTime registrationDate;
 
     @OneToMany(mappedBy = "distributor")

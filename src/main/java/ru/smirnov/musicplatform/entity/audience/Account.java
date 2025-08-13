@@ -2,6 +2,7 @@ package ru.smirnov.musicplatform.entity.audience;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;
@@ -12,13 +13,11 @@ import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 @Data @NoArgsConstructor
 public class Account {
 
-    // тут ещё должна быть зависимость, нужная для сущности, но ненужная для БД
-    // зависимость от менеджера паролей
-
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "VARCHAR(255)", nullable = false)
+    @Column(columnDefinition = "VARCHAR(255)", nullable = false, unique = true)
+    @Size(min = 3, max = 255, message = "Username length must be in range [2, 255] characters")
     private String username;
 
     @Column(columnDefinition = "TEXT", nullable = false)

@@ -10,7 +10,7 @@ import ru.smirnov.musicplatform.entity.domain.Chart;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity // в SpEL будет имя самого класса или значение, заданное в @Entity?
 @Table(name = "admins")
 @Data
 public class Admin {

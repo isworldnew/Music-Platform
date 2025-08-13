@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import ru.smirnov.musicplatform.entity.auxiliary.embedding.CommonPersonData;
 import ru.smirnov.musicplatform.entity.domain.Playlist;
 import ru.smirnov.musicplatform.entity.domain.Tag;
@@ -36,7 +37,8 @@ public class User {
     @Column(name = "date_of_birth", columnDefinition = "DATE", nullable = false)
     private Date dateOfBirth;
 
-    @Column(name = "registration_date", columnDefinition = "TIMESTAMPTZ", nullable = false)
+    @Column(name = "registration_date", columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP", nullable = false)
+    @CreationTimestamp
     private OffsetDateTime registrationDate;
 
     @OneToMany(mappedBy = "user")
