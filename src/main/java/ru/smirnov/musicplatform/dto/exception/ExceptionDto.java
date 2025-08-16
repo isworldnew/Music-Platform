@@ -1,9 +1,9 @@
 package ru.smirnov.musicplatform.dto.exception;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data @Builder
+@Data @AllArgsConstructor
 public class ExceptionDto {
 
     private String exceptionMessage;

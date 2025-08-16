@@ -19,12 +19,12 @@ import java.io.IOException;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final AccountService accountService;
-    private final TokenManager tokenManager;
+    private final TokenUtils tokenUtils;
 
     @Autowired
-    public JwtRequestFilter(AccountService accountService, TokenManager tokenManager) {
+    public JwtRequestFilter(AccountService accountService, TokenUtils tokenUtils) {
         this.accountService = accountService;
-        this.tokenManager = tokenManager;
+        this.tokenUtils = tokenUtils;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwtToken = authorizationHeader.substring(7);
             try {
-                username = tokenManager.extractUsername(jwtToken);
+                username = tokenUtils.extractUsername(jwtToken);
             } catch (Exception e) {
                 logger.error("Cannot extract username from JWT token: {}");
             }
@@ -50,7 +50,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = accountService.loadUserByUsername(username);
 
-            if (tokenManager.validateJwtToken(jwtToken, userDetails)) {
+            // ограничение на использование в заголовке (для общения с API) только access-токена
+            if (!this.tokenUtils.tokenPresentsType(jwtToken, JwtToken.ACCESS_TOKEN)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "For communicating with API access-token is required");
+                return;
+            }
+
+            if (tokenUtils.validateJwtToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,

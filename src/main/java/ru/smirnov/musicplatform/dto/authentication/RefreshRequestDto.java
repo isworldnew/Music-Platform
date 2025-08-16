@@ -6,12 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class JwtRequestDto {
+public class RefreshRequestDto {
 
     @NotNull @NotBlank @NotEmpty
-    private String username;
-
-    @NotNull @NotBlank @NotEmpty
-    private String password;
+    private String refreshToken;
 
 }

@@ -2,13 +2,14 @@ package ru.smirnov.musicplatform.authentication;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Setter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;
 
 import java.util.List;
 
-@Data @Builder
+@Data @Builder @Setter
 public class DataForToken implements UserDetails {
 
     private String username;
@@ -19,7 +20,6 @@ public class DataForToken implements UserDetails {
     private Long accountId;
     private String role;
     private Long entityId;
-
 
     @Override
     public boolean isAccountNonExpired() { return true; }

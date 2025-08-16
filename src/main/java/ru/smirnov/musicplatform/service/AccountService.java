@@ -1,6 +1,7 @@
 package ru.smirnov.musicplatform.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,11 +33,13 @@ public class AccountService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DisabledException {
 
         Account account = this.accountRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("No Account with such Username")
         );
+
+        if (!account.getStatus().isEnabled()) throw new DisabledException("Account is disabled");
 
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(
                 new SimpleGrantedAuthority("ROLE_" + account.getRole().name())
@@ -57,6 +60,7 @@ public class AccountService implements UserDetailsService {
 
         // а вот если нам попалась более, чем одна сущность, привязанная к аккаунту - это недопустимый
         // случай и серьёзная проблема, нужно кидать исключение
+        // хотя я и установил связь между аккаунтами и сущностями как 1:1, но пусть будет
 
         int counter = 0;
         for (String entityRepository : this.entityRepositories.keySet()) {
