@@ -46,7 +46,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 logger.error("Cannot extract username from JWT token: {}");
             }
         }
-
         
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = accountService.loadUserByUsername(username);
