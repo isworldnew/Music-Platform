@@ -1,3 +1,4 @@
+.DS_Store
 /docker/musicplatform_data
 HELP.md
 target/
