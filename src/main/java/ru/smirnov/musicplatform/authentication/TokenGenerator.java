@@ -63,6 +63,19 @@ public class TokenGenerator {
 
     }
 
+    /*
+    нам для того, чтобы попасть в этот контроллер (и этот метод), сначала нужно пройти цепочку фильтров
+
+    сначала выполнится фильтр, он полностью проверит токен (не повреждён ли он, можно ли из него данные вытащить, не истёк ли срок действия)
+
+    потом он его установит в контекст
+
+    только затем из него мы возьмём authority (что это refresh-токен)
+
+    и вот только после всех этих проверок, если всё ок, мы уже можем попасть сюда и сделать новый токен
+
+    тут как бэ... даже проверять ничего не нужно - фильтр на себя всю валидацию забирает
+    */
     public ResponseEntity<JwtResponseDto> refreshTokens() {
 
         UserDetails dataForToken = this.userDetailsService.loadUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
