@@ -33,8 +33,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<JwtResponseDto> refreshTokens(@RequestBody @Valid RefreshRequestDto dto) {
-        return this.tokenGenerator.refreshTokens(dto);
+    public ResponseEntity<JwtResponseDto> refreshTokens() {
+        return this.tokenGenerator.refreshTokens();
     }
 
 

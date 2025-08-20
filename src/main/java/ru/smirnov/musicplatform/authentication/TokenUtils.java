@@ -17,9 +17,9 @@ public class TokenUtils {
 
     @Value("${jwt.secret}")
     private String secret;
-    
+
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return this.extractClaim(token, Claims::getSubject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -36,16 +36,16 @@ public class TokenUtils {
     }
 
     public boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        return this.extractExpiration(token).before(new Date());
     }
 
     public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+        return this.extractClaim(token, Claims::getExpiration);
     }
 
     public boolean validateJwtToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()) && !this.isTokenExpired(token));
     }
 
     public Key getSigningKey() {

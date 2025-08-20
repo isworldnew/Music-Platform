@@ -74,7 +74,7 @@ public class AccountService implements UserDetailsService {
         if (counter > 1) throw new NonUniqueAccountPerEntity("There is an account connected with more than one business-entity");
 
 
-        DataForToken dataForToken = DataForToken.builder()
+        return DataForToken.builder()
                 .username(account.getUsername())
                 .password(account.getPassword())
                 .enabled(account.getStatus().isEnabled())
@@ -84,6 +84,5 @@ public class AccountService implements UserDetailsService {
                 .entityId(entityId)
                 .build();
 
-        return dataForToken;
     }
 }

@@ -3,11 +3,11 @@ package ru.smirnov.musicplatform.dto.authentication;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data
+@Data @AllArgsConstructor
 public class JwtResponseDto {
 
-    private final String accessToken;
+    private String accessToken;
 
-    private final String refreshToken;
+    private String refreshToken;
 
 }
