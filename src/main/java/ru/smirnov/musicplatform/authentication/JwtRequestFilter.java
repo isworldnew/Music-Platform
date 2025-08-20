@@ -1,11 +1,15 @@
 package ru.smirnov.musicplatform.authentication;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +18,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -40,25 +47,49 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 username = this.tokenUtils.extractUsername(jwtToken);
             }
+            catch (ExpiredJwtException eje) {
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.setContentType("application/json");
+                response.getWriter().write("{\"exceptionMessage\": \"" + "Token has been expired" + "\"}");
+                return;
+            }
             catch (Exception e) {
-                // ВОТ ТУТ БЫ КАКОЙ-ТО КАСТОМНЫЙ ЭКСПЕШЕН ПРОКИНУТЬ
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.setContentType("application/json");
+                response.getWriter().write("{\"exceptionMessage\": \"" + "Invalid token: unable to extract username from token" + "\"}");
+                return;
             }
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
 
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            if (tokenUtils.validateJwtToken(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            try {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-                SecurityContextHolder.getContext().setAuthentication(token);
+                if (tokenUtils.validateJwtToken(jwtToken, userDetails)) {
+
+                    Claims claims = tokenUtils.extractAllClaims(jwtToken);
+                    List<SimpleGrantedAuthority> authorities = ((List<Map<String, String>>) claims.get("authorities")).stream()
+                            .map(authority -> new SimpleGrantedAuthority(authority.get("authority")))
+                            .collect(Collectors.toList());
+
+
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, authorities);
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+
+            } catch (Exception e) {
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.setContentType("application/json");
+                response.getWriter().write("{\"exceptionMessage\": \"" + "Invalid token: unable to load data by username or validation fail" + "\"}");
+                return;
             }
-
         }
 
         filterChain.doFilter(request, response);
-
     }
 }

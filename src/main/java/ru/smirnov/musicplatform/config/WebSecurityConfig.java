@@ -54,10 +54,9 @@ public class WebSecurityConfig {
                 csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/authentication/login", "/error").permitAll()
-                        .requestMatchers("/authentication/refresh").hasAuthority(JwtToken.REFRESH_TOKEN.name())
                         // вот тут надо будет дописать эндпоинты, которые доступны без аутентификации и авторизации
+                        .requestMatchers("/authentication/refresh").hasAuthority(JwtToken.REFRESH_TOKEN.name())
                         .anyRequest().hasAuthority(JwtToken.ACCESS_TOKEN.name())
-                        //.authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(this.daoAuthenticationProvider())

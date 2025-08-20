@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.TokenGenerator;
 import ru.smirnov.musicplatform.dto.authentication.LoginRequestDto;
 import ru.smirnov.musicplatform.dto.authentication.JwtResponseDto;
-import ru.smirnov.musicplatform.dto.authentication.RefreshRequestDto;
 
 import java.util.HashMap;
 import java.util.Map;

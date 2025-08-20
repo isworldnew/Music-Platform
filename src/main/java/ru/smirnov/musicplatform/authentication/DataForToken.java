@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
+
 @Data @Builder @Setter
 public class DataForToken implements UserDetails {
 
@@ -19,10 +20,6 @@ public class DataForToken implements UserDetails {
     private Long accountId;
     private String role;
     private Long entityId;
-
-    public void addAuthority(SimpleGrantedAuthority authority) {
-        this.authorities.add(authority);
-    }
 
     @Override
     public boolean isEnabled() {

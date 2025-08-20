@@ -1,5 +1,6 @@
 package ru.smirnov.musicplatform.authentication;
 
+
 public enum JwtToken {
 
     ACCESS_TOKEN(30 * 60 * 1000), // 30 минут
