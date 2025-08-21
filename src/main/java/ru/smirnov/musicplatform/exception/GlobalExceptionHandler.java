@@ -33,4 +33,26 @@ public class GlobalExceptionHandler {
         );
     }
 
+
+    @ExceptionHandler(UsernameOccupiedException.class)
+    public ResponseEntity<ExceptionDto> handleUsernameOccupiedException(UsernameOccupiedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ExceptionDto(ex.getMessage())
+        );
+    }
+
+    @ExceptionHandler(PhonenumberOccupiedException.class)
+    public ResponseEntity<ExceptionDto> handlePhonenumberOccupiedException(PhonenumberOccupiedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ExceptionDto(ex.getMessage())
+        );
+    }
+
+    @ExceptionHandler(EmailOccupiedException.class)
+    public ResponseEntity<ExceptionDto> handleEmailOccupiedException(EmailOccupiedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ExceptionDto(ex.getMessage())
+        );
+    }
+
 }

@@ -3,6 +3,7 @@ package ru.smirnov.musicplatform.entity.audience;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;
@@ -17,7 +18,7 @@ public class Account {
     private Long id;
 
     @Column(columnDefinition = "VARCHAR(255)", nullable = false, unique = true)
-    @Size(min = 3, max = 255, message = "Username length must be in range [2, 255] characters")
+    @Size(min = 3, max = 255, message = "Username length must be in range [3, 255] characters")
     private String username;
 
     @Column(columnDefinition = "TEXT", nullable = false)

@@ -24,22 +24,20 @@ public class WebSecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public WebSecurityConfig(UserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter) {
+    public WebSecurityConfig(UserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDetailsService = userDetailsService;
         this.jwtRequestFilter = jwtRequestFilter;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAP = new DaoAuthenticationProvider(userDetailsService);
-        daoAP.setPasswordEncoder(this.bCryptPasswordEncoder());
+        daoAP.setPasswordEncoder(this.bCryptPasswordEncoder);
         return daoAP;
     }
 
@@ -54,6 +52,7 @@ public class WebSecurityConfig {
                 csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/authentication/login", "/error").permitAll()
+                        .requestMatchers("/users/registration").permitAll()
                         // вот тут надо будет дописать эндпоинты, которые доступны без аутентификации и авторизации
                         .requestMatchers("/authentication/refresh").hasAuthority(JwtToken.REFRESH_TOKEN.name())
                         .anyRequest().hasAuthority(JwtToken.ACCESS_TOKEN.name())

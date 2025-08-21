@@ -2,8 +2,9 @@ package ru.smirnov.musicplatform.entity.auxiliary.embedding;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Data;
 
-@Embeddable
+@Embeddable @Data
 public class CommonPersonData {
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -12,10 +13,10 @@ public class CommonPersonData {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String firstname;
 
-    @Column(columnDefinition = "CHAR(11)", nullable = false)
+    @Column(columnDefinition = "CHAR(11)", nullable = false, unique = true)
     private String phonenumber;
 
-    @Column(columnDefinition = "VARCHAR(255)", nullable = false)
+    @Column(columnDefinition = "VARCHAR(255)", nullable = false, unique = true)
     private String email;
 
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @GetMapping("/data")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DISTRIBUTOR')")
     public String getData() {
         return "test data";
     }

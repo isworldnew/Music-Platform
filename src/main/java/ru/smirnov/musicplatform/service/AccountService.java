@@ -6,10 +6,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.musicplatform.dto.authentication.LoginRequestDto;
 import ru.smirnov.musicplatform.entity.audience.Account;
+import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;
+import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.exception.NonUniqueAccountPerEntity;
+import ru.smirnov.musicplatform.exception.UsernameOccupiedException;
 import ru.smirnov.musicplatform.repository.audience.AccountRepository;
 import ru.smirnov.musicplatform.repository.auxiliary.EntityRepository;
 
@@ -23,14 +29,17 @@ public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
     private final Map<String, EntityRepository<?, Long>> entityRepositories;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public AccountService(
             AccountRepository accountRepository,
-            Map<String, EntityRepository<?, Long>> entityRepositories
+            Map<String, EntityRepository<?, Long>> entityRepositories,
+            BCryptPasswordEncoder bCryptPasswordEncoder
     ) {
         this.accountRepository = accountRepository;
         this.entityRepositories = entityRepositories;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -90,4 +99,26 @@ public class AccountService implements UserDetailsService {
                 .build();
 
     }
+
+
+
+    // обычные методы для работы с данной сущностью (не относящиеся к UserDetailsService)
+
+    // подразумеваю, что данный метод не будет вызываться самостоятельно, поэтому уровень изоляции оставляю по умолчанию
+    @Transactional
+    public Account createAccount(LoginRequestDto dto, Role role, AccountStatus accountStatus) {
+
+        if (this.accountRepository.findByUsername(dto.getUsername()).isPresent())
+            throw new UsernameOccupiedException("Such username is already in use by other account");
+
+        Account newAccount = new Account();
+        newAccount.setUsername(dto.getUsername());
+        newAccount.setPassword(this.bCryptPasswordEncoder.encode(dto.getPassword()));
+        newAccount.setRole(role);
+        newAccount.setStatus(accountStatus);
+
+        return this.accountRepository.save(newAccount);
+
+    }
+
 }
