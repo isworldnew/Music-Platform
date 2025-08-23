@@ -11,8 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import ru.smirnov.musicplatform.dto.FileToUpdateDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistDataDto;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistExtendedData;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistToCreateDto;
 import ru.smirnov.musicplatform.service.sql.domain.ArtistService;
 
@@ -46,6 +46,12 @@ public class ArtistController {
 //    public ResponseEntity<ArtistExtendedData> getArtistExtendedDataById(@NotNull @Positive @PathVariable Long id) {
 //
 //    }
+
+    @PatchMapping("/update-cover/{id}")
+    @PreAuthorize("hasRole('DISTRIBUTOR')")
+    public ResponseEntity<Void> updateArtistCover(@NotNull @Positive @PathVariable Long id, @Valid @ModelAttribute FileToUpdateDto dto) {
+        return this.artistService.updateArtistCover(id, dto);
+    }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {

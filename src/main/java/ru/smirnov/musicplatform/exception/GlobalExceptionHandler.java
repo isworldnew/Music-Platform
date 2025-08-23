@@ -62,6 +62,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler({FileSizeExcessException.class, InvalidFileExtensionException.class})
+    public ResponseEntity<ExceptionDto> handleBadRequestExceptions(Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ExceptionDto(ex.getMessage())
+        );
+    }
+
 
     // ОБЪЕДИНИТЬ ХЕНДЛЕРЫ ПО HTTP-КОДАМ!!! ПРОСТО ОТЛАВЛИВАТЬ ОБОБЩЁННЫЕ ИСКЛЮЧЕНИЯ
 

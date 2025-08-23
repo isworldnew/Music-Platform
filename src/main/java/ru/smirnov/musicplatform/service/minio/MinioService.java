@@ -2,7 +2,9 @@ package ru.smirnov.musicplatform.service.minio;
 
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import io.minio.errors.*;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ public class MinioService {
         this.minioClient = minioClient;
     }
 
-    @Async
+    @Async @SneakyThrows
     public void uploadObjectWithMetadata(String bucketName, String objectName, MultipartFile object, Map<String, String> objectMetaData) {
 
         try (InputStream inputStream = object.getInputStream()) {
@@ -45,6 +47,16 @@ public class MinioService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Async @SneakyThrows
+    public void removeObject(String bucketName, String objectName) {
+        this.minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(objectName)
+                        .build()
+        );
     }
 
 }
