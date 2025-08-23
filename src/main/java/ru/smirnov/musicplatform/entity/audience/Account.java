@@ -3,7 +3,6 @@ package ru.smirnov.musicplatform.entity.audience;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;

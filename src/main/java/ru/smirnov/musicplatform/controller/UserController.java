@@ -13,7 +13,7 @@ import ru.smirnov.musicplatform.dto.audience.user.UserPersonalDataRegistrationDt
 import ru.smirnov.musicplatform.dto.authentication.JwtResponseDto;
 import ru.smirnov.musicplatform.dto.authentication.LoginRequestDto;
 import ru.smirnov.musicplatform.entity.audience.User;
-import ru.smirnov.musicplatform.service.UserService;
+import ru.smirnov.musicplatform.service.sql.audience.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +38,9 @@ public class UserController {
                 new LoginRequestDto(dto.getAccountData().getUsername(), dto.getAccountData().getPassword())
         );
     }
+
+
+    // наверное нужно раздельное обновление бизнес-данных об аккаунте и аккаунта (юзернейм, пароль)
 
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

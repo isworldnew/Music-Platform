@@ -27,6 +27,24 @@ services:
     networks:
       - musicplatform_network
 
+  minio:
+    image: minio/minio:latest
+    env_file:
+      - minio.env
+    volumes:
+      - ./minio_data:/data
+    networks:
+      - musicplatform_network
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
 networks:
   musicplatform_network:
     driver: bridge

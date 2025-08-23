@@ -55,4 +55,14 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(ArtistNameNonUniqueException.class)
+    public ResponseEntity<ExceptionDto> handleArtistNameNonUniqueException(ArtistNameNonUniqueException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ExceptionDto(ex.getMessage())
+        );
+    }
+
+
+    // ОБЪЕДИНИТЬ ХЕНДЛЕРЫ ПО HTTP-КОДАМ!!! ПРОСТО ОТЛАВЛИВАТЬ ОБОБЩЁННЫЕ ИСКЛЮЧЕНИЯ
+
 }

@@ -1,4 +1,4 @@
-package ru.smirnov.musicplatform.service;
+package ru.smirnov.musicplatform.service.sql.audience;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
@@ -19,7 +19,6 @@ import ru.smirnov.musicplatform.exception.UsernameOccupiedException;
 import ru.smirnov.musicplatform.repository.audience.AccountRepository;
 import ru.smirnov.musicplatform.repository.auxiliary.EntityRepository;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

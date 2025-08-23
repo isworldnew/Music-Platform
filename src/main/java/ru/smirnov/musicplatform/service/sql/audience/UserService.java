@@ -1,4 +1,4 @@
-package ru.smirnov.musicplatform.service;
+package ru.smirnov.musicplatform.service.sql.audience;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
