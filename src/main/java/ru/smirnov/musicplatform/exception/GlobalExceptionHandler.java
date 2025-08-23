@@ -12,64 +12,56 @@ import ru.smirnov.musicplatform.dto.exception.ExceptionDto;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(NonUniqueAccountPerEntity.class)
-    public ResponseEntity<ExceptionDto> handleNonUniqueAccountPerEntity(NonUniqueAccountPerEntity ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-            new ExceptionDto(ex.getMessage())
-        );
-    }
-
-    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
-    public ResponseEntity<ExceptionDto> badCredentialsException(Exception ex) {
+    @ExceptionHandler({
+            UsernameNotFoundException.class,
+            BadCredentialsException.class
+    })
+    public ResponseEntity<ExceptionDto> handleUnauthorizedExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 new ExceptionDto(ex.getMessage())
         );
     }
 
-    @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<ExceptionDto> handleDisabledException(DisabledException ex) {
+    @ExceptionHandler({
+            DisabledException.class
+    })
+    public ResponseEntity<ExceptionDto> handleForbiddenExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
                 new ExceptionDto(ex.getMessage())
         );
     }
 
-
-    @ExceptionHandler(UsernameOccupiedException.class)
-    public ResponseEntity<ExceptionDto> handleUsernameOccupiedException(UsernameOccupiedException ex) {
+    @ExceptionHandler({
+            NonUniqueAccountPerEntity.class,
+            UsernameOccupiedException.class,
+            PhonenumberOccupiedException.class,
+            EmailOccupiedException.class,
+            ArtistNameNonUniqueException.class,
+            ReferenceConsistencyViolationException.class
+    })
+    public ResponseEntity<ExceptionDto> handleConflictExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 new ExceptionDto(ex.getMessage())
         );
     }
 
-    @ExceptionHandler(PhonenumberOccupiedException.class)
-    public ResponseEntity<ExceptionDto> handlePhonenumberOccupiedException(PhonenumberOccupiedException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                new ExceptionDto(ex.getMessage())
-        );
-    }
-
-    @ExceptionHandler(EmailOccupiedException.class)
-    public ResponseEntity<ExceptionDto> handleEmailOccupiedException(EmailOccupiedException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                new ExceptionDto(ex.getMessage())
-        );
-    }
-
-    @ExceptionHandler(ArtistNameNonUniqueException.class)
-    public ResponseEntity<ExceptionDto> handleArtistNameNonUniqueException(ArtistNameNonUniqueException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                new ExceptionDto(ex.getMessage())
-        );
-    }
-
-    @ExceptionHandler({FileSizeExcessException.class, InvalidFileExtensionException.class})
+    @ExceptionHandler({
+            FileSizeExcessException.class,
+            InvalidFileExtensionException.class
+    })
     public ResponseEntity<ExceptionDto> handleBadRequestExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new ExceptionDto(ex.getMessage())
         );
     }
 
-
-    // ОБЪЕДИНИТЬ ХЕНДЛЕРЫ ПО HTTP-КОДАМ!!! ПРОСТО ОТЛАВЛИВАТЬ ОБОБЩЁННЫЕ ИСКЛЮЧЕНИЯ
+    @ExceptionHandler({
+            NotFoundException.class
+    })
+    public ResponseEntity<ExceptionDto> handleNotFoundExceptions(Exception ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ExceptionDto(ex.getMessage())
+        );
+    }
 
 }

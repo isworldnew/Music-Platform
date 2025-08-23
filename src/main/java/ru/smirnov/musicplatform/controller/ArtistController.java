@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.dto.FileToUpdateDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistDataDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistToCreateDto;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistToUpdateDto;
 import ru.smirnov.musicplatform.service.sql.domain.ArtistService;
 
 import java.util.HashMap;
@@ -39,6 +40,7 @@ public class ArtistController {
     @GetMapping("/artist-data-by-id/{id}")
     public ResponseEntity<ArtistDataDto> getArtistDataById(@NotNull @Positive @PathVariable Long id) {
         return this.artistService.getArtistDataById(id);
+        // ПРОВЕРКА НА ТО, ЧТО У ИСПОЛНИТЕЛЯ НЕТ АКТИВНЫХ СВЯЗЕЙ И ВСЁ ВОТ ЭТО
     }
 
 //    @GetMapping("/artist-extended-data-by-id/{id}")
@@ -47,10 +49,18 @@ public class ArtistController {
 //
 //    }
 
+    @PatchMapping("/update-artist/{id}")
+    @PreAuthorize("hasRole('DISTRIBUTOR')")
+    public ResponseEntity<Void> updateArtistBasicData(@NotNull @Positive @PathVariable("id") Long artistId, @Valid @RequestBody ArtistToUpdateDto dto) {
+        return this.artistService.updateArtistBasicData(artistId, dto);
+        // В СЕРВИСЕ СДЕЛАТЬ ПРОВЕРКУ НА ТО, ЧТО РЕДАКТИРУЕМ СВОЕГО ИСПОЛНИТЕЛЯ
+    }
+
     @PatchMapping("/update-cover/{id}")
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Void> updateArtistCover(@NotNull @Positive @PathVariable Long id, @Valid @ModelAttribute FileToUpdateDto dto) {
-        return this.artistService.updateArtistCover(id, dto);
+    public ResponseEntity<Void> updateArtistCover(@NotNull @Positive @PathVariable("id") Long artistId, @Valid @ModelAttribute FileToUpdateDto dto) {
+        return this.artistService.updateArtistCover(artistId, dto);
+        // В СЕРВИСЕ СДЕЛАТЬ ПРОВЕРКУ НА ТО, ЧТО РЕДАКТИРУЕМ СВОЕГО ИСПОЛНИТЕЛЯ
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributionStatus;
 import ru.smirnov.musicplatform.repository.relation.DistributorByArtistRepository;
 
+import java.util.Optional;
+
 @Service
 public class DistributorByArtistService {
 
@@ -18,5 +20,10 @@ public class DistributorByArtistService {
     public Long save(Long distributorId, Long artistId, DistributionStatus status) {
         return this.distributorByArtistRepository.save(distributorId, artistId, status.name());
     }
+
+    public Optional<Long> activeDistributionStatusWithArtist(Long artistId) {
+        return this.distributorByArtistRepository.activeDistributionStatusWithArtist(artistId);
+    }
+
 
 }

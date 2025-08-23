@@ -1,5 +1,6 @@
 package ru.smirnov.musicplatform.service.sql.domain;
 
+import io.minio.messages.Bucket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -15,9 +17,11 @@ import ru.smirnov.musicplatform.config.MinioBuckets;
 import ru.smirnov.musicplatform.dto.FileToUpdateDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistDataDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistToCreateDto;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistToUpdateDto;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributionStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.relation.ArtistsSocialNetworks;
+import ru.smirnov.musicplatform.entity.relation.DistributorsByArtists;
 import ru.smirnov.musicplatform.exception.ArtistNameNonUniqueException;
 import ru.smirnov.musicplatform.exception.FileSizeExcessException;
 import ru.smirnov.musicplatform.mapper.ArtistMapper;
@@ -25,6 +29,7 @@ import ru.smirnov.musicplatform.repository.domain.ArtistRepository;
 import ru.smirnov.musicplatform.service.minio.MinioService;
 import ru.smirnov.musicplatform.service.sql.relation.ArtistSocialNetworkService;
 import ru.smirnov.musicplatform.service.sql.relation.DistributorByArtistService;
+import ru.smirnov.musicplatform.validators.ArtistValidator;
 import ru.smirnov.musicplatform.validators.enums.ContentType;
 import ru.smirnov.musicplatform.validators.interfaces.FileValidator;
 
@@ -46,6 +51,7 @@ public class ArtistService {
     private final MinioService minioService;
 
     private final List<FileValidator> fileValidators;
+    private final ArtistValidator artistValidator;
 
     @Autowired
     public ArtistService(
@@ -54,6 +60,7 @@ public class ArtistService {
             ArtistSocialNetworkService artistSocialNetworkService,
             MinioService minioService,
             ArtistMapper artistMapper,
+            ArtistValidator artistValidator,
             List<FileValidator> fileValidators
     ) {
         this.artistRepository = artistRepository;
@@ -61,6 +68,7 @@ public class ArtistService {
         this.artistSocialNetworkService = artistSocialNetworkService;
         this.minioService = minioService;
         this.artistMapper = artistMapper;
+        this.artistValidator = artistValidator;
         this.fileValidators = fileValidators;
     }
 
@@ -70,16 +78,20 @@ public class ArtistService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         DataForToken tokenData = (DataForToken) authentication.getPrincipal();
 
-        if (this.artistRepository.findByName(dto.getName()).isPresent())
-            throw new ArtistNameNonUniqueException("Such artist's name already exists");
+//        if (this.artistRepository.findByName(dto.getName()).isPresent())
+//            throw new ArtistNameNonUniqueException("Such artist's name already exists");
 
-        boolean coverIsAttached = false;
+        // валидации:
+        this.artistValidator.existsByName(dto.getName());
+        this.fileValidators.forEach(fileValidator -> fileValidator.validate(dto.getCover(), ContentType.IMAGE));
 
-        if (dto.getCover() != null && !dto.getCover().isEmpty()) {
-            coverIsAttached = true;
-            if (dto.getCover().getSize() > this.coverMaxSizeBytes)
-                throw new FileSizeExcessException("Cover's max size is" + (this.coverMaxSizeBytes / 1024.0) +  "KB, your is: " + dto.getCover().getSize() / 1024.0);
-        }
+        boolean coverIsAttached = (dto.getCover() != null && !dto.getCover().isEmpty());
+
+//        if (dto.getCover() != null && !dto.getCover().isEmpty()) {
+//            coverIsAttached = true;
+//            if (dto.getCover().getSize() > this.coverMaxSizeBytes)
+//                throw new FileSizeExcessException("Cover's max size is" + (this.coverMaxSizeBytes / 1024.0) +  "KB, your is: " + dto.getCover().getSize() / 1024.0);
+//        }
 
         String objectName = dto.getName().replace(" ", "_");
 
@@ -115,84 +127,83 @@ public class ArtistService {
 
     }
 
-//    @Transactional
-//    public ResponseEntity<> updateArtistRootData(Long id, ArtistToUpdateDto dto) {
-//
-//        Artist artist = this.artistRepository.findById(id).orElse(null);
-//
-//        if (artist == null)
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//
-//        if (this.artistRepository.findByName(dto.getName()).isPresent())
-//            throw new ArtistNameNonUniqueException("Such artist's name already exists");
-//
-//        artist.setDescription(dto.getDescription());
-//
-//        String newName = dto.getName();
-//        MultipartFile newCover = dto.getCover();
-//
-//        boolean coverIsAttached = (newCover != null && !newCover.isEmpty());
-//        boolean nameHasChanged = (artist.getName().equals(newName));
-//
-//        if (!nameHasChanged && coverIsAttached) {
-//            // взять старую ссылку
-//            // сходить по ней в MinIO
-//            // сохранить новый файл
-//        }
-//
-//        if (!nameHasChanged && !coverIsAttached) {
-//
-//        }
-//
-//        if (nameHasChanged && !coverIsAttached) {
-//
-//        }
-//
-//        if (nameHasChanged && coverIsAttached) {
-//
-//        }
-//
-//
-//
-//    }
+    public ResponseEntity<Void> updateArtistCover(Long artistId, FileToUpdateDto dto) {
 
-    // так... уже не нравится. Надо обновлять отдельно: имя и описание, файл (ну и ссылку), соцсети, статус взаимодействия
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        DataForToken tokenData = (DataForToken) authentication.getPrincipal();
 
-    public ResponseEntity<Void> updateArtistCover(Long id, FileToUpdateDto dto) {
+        // дистрибьютор может редактировать только своих исполнителей:
+        // поэтому проверяю, что я обращаюсь именно к своему исполнителю, с которым ACTIVE-ная связь
+        Long distributorId = this.distributorByArtistService.activeDistributionStatusWithArtist(artistId).orElse(null);
+        if (!tokenData.getEntityId().equals(distributorId))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-        Artist artist = this.artistRepository.findById(id).orElse(null);
-
-        if (artist == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-
+        // валидации:
+        Artist artist = this.artistValidator.safelyGetById(artistId);
         this.fileValidators.forEach(fileValidator -> fileValidator.validate(dto.getFile(), ContentType.IMAGE));
 
-        boolean coverIsAttached = dto.getFile() != null && !dto.getFile().isEmpty();
+        boolean coverIsAttached = (dto.getFile() != null && !dto.getFile().isEmpty());
 
+        if (coverIsAttached) {
 
-        String[] cover = artist.getImageReference().split("/");
-        String bucketName = cover[0];
-        String objectName = cover[1];
+            if (artist.getImageReference() != null)
+                this.minioService.uploadObjectWithMetadata(
+                        artist.getBucketName(),
+                        artist.getObjectName(),
+                        dto.getFile(),
+                        null
+                );
+            else {
+                // после удаления изображения нужно заново сгенерировать ссылку
+                this.minioService.uploadObjectWithMetadata(
+                        artist.getBucketName(),
+                        artist.getObjectName(),
+                        dto.getFile(),
+                        null
+                );
+                artist.setImageReference(MinioBuckets.ARTIST_COVER.getBucketName() + "/" + /*вот тут допиши с нижним подчёркиванием*/);
+            }
+        }
 
-        if (coverIsAttached)
-            this.minioService.uploadObjectWithMetadata(
-                    bucketName,
-                    objectName,
-                    dto.getFile(),
-                    null
-            );
-
-        else this.minioService.removeObject(bucketName, objectName);
+        else {
+            this.minioService.removeObject(artist.getBucketName(), artist.getObjectName());
+            artist.setImageReference(null);
+            this.artistRepository.save(artist);
+        }
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
     }
 
+    // пока оставлю Void, но вообще желательно возвращать ту сущность, что я буду возвращать Дистрибьютору при чтении информации об Исполнителе
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ResponseEntity<Void> updateArtistBasicData(Long artistId, ArtistToUpdateDto dto) {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        DataForToken tokenData = (DataForToken) authentication.getPrincipal();
 
-    public ResponseEntity<ArtistDataDto> getArtistDataById(Long id) {
+        // валидации:
+        Artist artist = this.artistValidator.safelyGetById(artistId);
+        this.artistValidator.existsByNameForUpdate(artist.getId(), dto.getName());
 
-        Artist artist = this.artistRepository.findById(id).orElse(null);
+        // дистрибьютор может редактировать только своих исполнителей:
+        // поэтому проверяю, что я обращаюсь именно к своему исполнителю, с которым ACTIVE-ная связь
+        Long distributorId = this.distributorByArtistService.activeDistributionStatusWithArtist(artistId).orElse(null);
+        if (!tokenData.getEntityId().equals(distributorId))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        artist.setName(dto.getName());
+        artist.setDescription(dto.getDescription());
+
+        this.artistRepository.save(artist);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+    }
+
+    public ResponseEntity<ArtistDataDto> getArtistDataById(Long artistId) {
+
+        Artist artist = this.artistRepository.findById(artistId).orElse(null);
 
         if (artist == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

@@ -15,7 +15,7 @@ public class DistributorsByArtists {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "artist_id")
     @JsonBackReference
     private Artist artist;

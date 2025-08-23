@@ -1,5 +1,6 @@
 .DS_Store
 /docker/musicplatform_data
+/docker/minio_data
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
