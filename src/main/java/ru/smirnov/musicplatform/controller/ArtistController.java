@@ -28,7 +28,7 @@ public class ArtistController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Long> createArtist(@RequestBody @Valid ArtistToCreateDto dto) {
+    public ResponseEntity<Long> createArtist(@ModelAttribute @Valid ArtistToCreateDto dto) {
         return this.artistService.createArtist(dto);
     }
 

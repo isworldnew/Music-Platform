@@ -79,6 +79,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                             userDetails, null, authorities);
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+                    // ВОТ ТУТ В ФИЛЬТРЕ ЕЩЁ ПРОВЕРИТЬ (ИЛИ ЭТО УЖЕ ПОД КАПОТОМ ПРОВЕРЯЕТСЯ?), ЧТО ПОЛЬЗОВАТЕЛЬ,
+                    // ИНФОРМАЦИЯ О КОТОРОМ СОДЕРЖИТСЯ В ТОКЕНЕ - НЕ СТАЛ ВДРУГ DISABLED
+
+                    if (!userDetails.isEnabled()) {
+                        response.setStatus(HttpStatus.FORBIDDEN.value());
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"exceptionMessage\": \"" + "Account became DISABLED after generating this token" + "\"}");
+                        return;
+                    }
+
+
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
 

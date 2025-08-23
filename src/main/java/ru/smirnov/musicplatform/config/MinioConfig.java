@@ -3,6 +3,7 @@ package ru.smirnov.musicplatform.config;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
+import io.minio.SetBucketPolicyArgs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -52,6 +53,46 @@ public class MinioConfig {
 
         if (!exists)
             minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+
+        // Пример установки политики "чтение-запись"
+        // MinIO использует политики в формате JSON. Вот пример простой политики,
+        // которая разрешает полный доступ к бакету для всех (в реальных условиях нужно ограничивать доступ).
+        String policyJson = "{\n" +
+                "  \"Version\": \"2012-10-17\",\n" +
+                "  \"Statement\": [\n" +
+                "    {\n" +
+                "      \"Effect\": \"Allow\",\n" +
+                "      \"Principal\": {\"AWS\": [\"*\"]},\n" +
+                "      \"Action\": [\n" +
+                "        \"s3:GetBucketLocation\",\n" +
+                "        \"s3:ListBucket\"\n" +
+                "      ],\n" +
+                "      \"Resource\": [\n" +
+                "        \"arn:aws:s3:::" + bucketName + "\"\n" +
+                "      ]\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"Effect\": \"Allow\",\n" +
+                "      \"Principal\": {\"AWS\": [\"*\"]},\n" +
+                "      \"Action\": [\n" +
+                "        \"s3:GetObject\",\n" +
+                "        \"s3:PutObject\",\n" +
+                "        \"s3:DeleteObject\"\n" +
+                "      ],\n" +
+                "      \"Resource\": [\n" +
+                "        \"arn:aws:s3:::" + bucketName + "/*\"\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+
+        // Установка политики на бакет
+        minioClient.setBucketPolicy(
+                SetBucketPolicyArgs.builder()
+                        .bucket(bucketName)
+                        .config(policyJson)
+                        .build()
+        );
     }
 
 }

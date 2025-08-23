@@ -3,8 +3,10 @@ package ru.smirnov.musicplatform.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
+import ru.smirnov.musicplatform.dto.validation.annotation.SocialNetworksMap;
 
 import java.util.Map;
 
@@ -18,7 +20,7 @@ public class ArtistToCreateDto {
 
     private MultipartFile cover;
 
-    // вот тут точно придётся писать кастмный валидатор: мапа либо вообще null, либо в ней (ключ, значение) никогда не null
+    @SocialNetworksMap
     private Map<String, String> socialNetworks;
 
 }
