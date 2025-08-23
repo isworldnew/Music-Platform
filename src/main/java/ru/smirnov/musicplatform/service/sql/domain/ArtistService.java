@@ -11,9 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import ru.smirnov.musicplatform.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.ArtistToCreateDto;
+import ru.smirnov.musicplatform.config.MinioBuckets;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistDataDto;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistToCreateDto;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributionStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
+import ru.smirnov.musicplatform.entity.relation.ArtistsSocialNetworks;
 import ru.smirnov.musicplatform.exception.ArtistNameNonUniqueException;
 import ru.smirnov.musicplatform.exception.CoverSizeExcessException;
 import ru.smirnov.musicplatform.mapper.ArtistMapper;
@@ -22,6 +25,8 @@ import ru.smirnov.musicplatform.service.minio.MinioService;
 import ru.smirnov.musicplatform.service.sql.relation.ArtistSocialNetworkService;
 import ru.smirnov.musicplatform.service.sql.relation.DistributorByArtistService;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -72,7 +77,7 @@ public class ArtistService {
         String objectName = dto.getName().replace(" ", "_");
 
         // вот от этого можно избавиться с помощью MapStruct или хотя бы примитивного Маппера:
-        Artist artist = this.artistMapper.artistToCreateDtoToArtistEntity(dto, "artist-cover" + "/" + objectName);
+        Artist artist = this.artistMapper.artistToCreateDtoToArtistEntity(dto, (MinioBuckets.ARTIST_COVER.getBucketName() + "/" + objectName));
 
         this.artistRepository.save(artist);
 
@@ -89,8 +94,8 @@ public class ArtistService {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override
                 public void afterCommit() {
-                    minioService.uploadObjectWithMetadata( // this здесь уже не работает - другой контекст
-                            "artist-cover",
+                    minioService.uploadObjectWithMetadata( // this.minioService здесь уже не работает - другой контекст
+                            MinioBuckets.ARTIST_COVER.getBucketName(),
                             objectName,
                             dto.getCover(),
                             null
@@ -103,4 +108,20 @@ public class ArtistService {
 
     }
 
+
+    public ResponseEntity<ArtistDataDto> getArtistDataById(Long id) {
+
+        Artist artist = this.artistRepository.findById(id).orElse(null);
+
+        if (artist == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+        List<ArtistsSocialNetworks> rawArtistsSocialNetworks = this.artistSocialNetworkService.findAllByArtistId(artist.getId());
+        Map<String, String> socialNetworks = new HashMap<>();
+
+        for (ArtistsSocialNetworks asn : rawArtistsSocialNetworks)
+            socialNetworks.put(asn.getSocialNetwork(), asn.getReference());
+
+        return ResponseEntity.ok(this.artistMapper.createArtistDataDto(artist, socialNetworks));
+    }
 }

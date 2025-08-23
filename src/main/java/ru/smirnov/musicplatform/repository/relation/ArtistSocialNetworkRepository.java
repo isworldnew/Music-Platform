@@ -6,6 +6,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.smirnov.musicplatform.entity.relation.ArtistsSocialNetworks;
 
+import java.util.List;
+
 @Repository
 public interface ArtistSocialNetworkRepository extends JpaRepository<ArtistsSocialNetworks, Long> {
 
@@ -21,5 +23,7 @@ public interface ArtistSocialNetworkRepository extends JpaRepository<ArtistsSoci
 
     // создать соцсети: надо проверить, что для одного исполнителя уникальны соцсети (и не повторяются они)
     // ТОЛЬКО ЭТО НЕ ЗДЕСЬ: это в момент добавления
+
+    List<ArtistsSocialNetworks> findAllByArtistId(Long artistId);
 
 }

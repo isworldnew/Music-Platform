@@ -1,8 +1,11 @@
 package ru.smirnov.musicplatform.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.smirnov.musicplatform.dto.ArtistToCreateDto;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistDataDto;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistToCreateDto;
 import ru.smirnov.musicplatform.entity.domain.Artist;
+
+import java.util.Map;
 
 @Component
 public class ArtistMapper {
@@ -15,4 +18,13 @@ public class ArtistMapper {
         return artist;
     }
 
+    public ArtistDataDto createArtistDataDto(Artist artist, Map<String, String> socialNetworks) {
+        ArtistDataDto dto = new ArtistDataDto();
+        dto.setId(artist.getId());
+        dto.setName(artist.getName());
+        dto.setDescription(artist.getDescription());
+        dto.setCoverReference(artist.getImageReference());
+        dto.setSocialNetworks(socialNetworks);
+        return dto;
+    }
 }

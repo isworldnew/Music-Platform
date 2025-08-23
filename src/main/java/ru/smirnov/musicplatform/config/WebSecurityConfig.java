@@ -53,7 +53,9 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/authentication/login", "/error").permitAll()
                         .requestMatchers("/users/registration").permitAll()
-                        // вот тут надо будет дописать эндпоинты, которые доступны без аутентификации и авторизации
+                        .requestMatchers(
+                                "artists/artist-data-by-id/**"
+                        ).permitAll()
                         .requestMatchers("/authentication/refresh").hasAuthority(JwtToken.REFRESH_TOKEN.name())
                         .anyRequest().hasAuthority(JwtToken.ACCESS_TOKEN.name())
                 )

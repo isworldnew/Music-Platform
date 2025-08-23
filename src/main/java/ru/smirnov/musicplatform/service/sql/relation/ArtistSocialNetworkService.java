@@ -3,7 +3,10 @@ package ru.smirnov.musicplatform.service.sql.relation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import ru.smirnov.musicplatform.entity.relation.ArtistsSocialNetworks;
 import ru.smirnov.musicplatform.repository.relation.ArtistSocialNetworkRepository;
+
+import java.util.List;
 
 @Service
 public class ArtistSocialNetworkService {
@@ -18,4 +21,9 @@ public class ArtistSocialNetworkService {
     public Long save(Long artistId, String socialNetworkName, String reference) {
         return this.artistSocialNetworkRepository.save(artistId, socialNetworkName, reference);
     }
+
+    public List<ArtistsSocialNetworks> findAllByArtistId(Long artistId) {
+        return this.artistSocialNetworkRepository.findAllByArtistId(artistId);
+    }
+
 }
