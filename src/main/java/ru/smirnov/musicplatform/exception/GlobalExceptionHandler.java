@@ -14,7 +14,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             UsernameNotFoundException.class,
-            BadCredentialsException.class
+            BadCredentialsException.class,
+            SecurityContextException.class
     })
     public ResponseEntity<ExceptionDto> handleUnauthorizedExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
@@ -23,7 +24,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            DisabledException.class
+            DisabledException.class,
     })
     public ResponseEntity<ExceptionDto> handleForbiddenExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(

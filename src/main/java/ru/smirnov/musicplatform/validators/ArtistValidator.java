@@ -1,18 +1,25 @@
 package ru.smirnov.musicplatform.validators;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.exception.ArtistNameNonUniqueException;
 import ru.smirnov.musicplatform.exception.NotFoundException;
+import ru.smirnov.musicplatform.exception.ReferenceConsistencyViolationException;
 import ru.smirnov.musicplatform.repository.domain.ArtistRepository;
+import ru.smirnov.musicplatform.service.sql.relation.DistributorByArtistService;
 
 @Component
 public class ArtistValidator {
 
     private final ArtistRepository artistRepository;
 
-    public ArtistValidator(ArtistRepository artistRepository) {
+    private final DistributorByArtistService distributorByArtistService;
+
+    @Autowired
+    public ArtistValidator(ArtistRepository artistRepository, DistributorByArtistService distributorByArtistService) {
         this.artistRepository = artistRepository;
+        this.distributorByArtistService = distributorByArtistService;
     }
 
     public Artist safelyGetById(Long id) {
@@ -38,6 +45,20 @@ public class ArtistValidator {
         Artist artist = this.artistRepository.findByName(name).orElse(null);
         if (artist != null && !artist.getId().equals(id))
             throw new ArtistNameNonUniqueException("Such artist's name already exists");
+    }
+
+    // проверка на то, что дистрибьютор взаимодействует с исполнителем, с которым
+    // в целом есть связь, и эта связь - ACTIVE
+    public void distributorAndItsArtistInteractionWithActiveStatus(Long targetDistributorId, Long targetArtistId) {
+
+        Long distributorId = this.distributorByArtistService.activeDistributionStatusWithArtist(targetArtistId).orElse(null);
+
+        if (!targetDistributorId.equals(distributorId))
+            throw new ReferenceConsistencyViolationException(
+                    "Attempt to interact with the Artist without an existing reference, or with a reference status other than ACTIVE"
+            );
+
+
     }
 
 

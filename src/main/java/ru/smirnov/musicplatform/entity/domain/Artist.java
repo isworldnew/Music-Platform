@@ -28,15 +28,6 @@ public class Artist {
     @Column(name = "image_reference", columnDefinition = "TEXT")
     private String imageReference;
 
-    public String getBucketName() {
-        return this.imageReference.split("/")[0];
-    }
-
-    public String getObjectName() {
-        return this.imageReference.split("/")[1];
-    }
-
-
     // может исполнителю тоже сделать статус, мол, он доступен или нет?
     // чтобы можно было управлять тем, появляется его творчество в поиске или нет...
 

@@ -2,8 +2,6 @@ package ru.smirnov.musicplatform.validators.enums;
 
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Getter
