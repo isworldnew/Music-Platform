@@ -1,8 +1,6 @@
 package ru.smirnov.musicplatform.service.minio;
 
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import io.minio.*;
 import io.minio.errors.*;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +55,30 @@ public class MinioService {
                         .object(objectName)
                         .build()
         );
+    }
+
+    @Async @SneakyThrows
+    public void replaceObjectInBucket(String bucketName, String oldObjectName, String newObjectName) {
+
+        // кстати, тут как с транзакциями: я вызываю @Async метод из другого @Async метода того же класса
+        // поэтому вызовется не прокси, а this
+        // и оба метода выполнятся в одном потоке
+
+        this.minioClient.copyObject(
+                CopyObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(newObjectName)
+                        .source(
+                                CopySource.builder()
+                                        .bucket(bucketName)
+                                        .object(oldObjectName)
+                                        .build()
+                        )
+                        .build()
+        );
+
+        this.removeObject(bucketName, oldObjectName);
+
     }
 
 }

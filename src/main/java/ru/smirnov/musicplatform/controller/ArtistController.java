@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.dto.FileToUpdateDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistDataDto;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistExtendedDataDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistToCreateDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistToUpdateDto;
 import ru.smirnov.musicplatform.service.sql.domain.ArtistService;
@@ -43,24 +44,22 @@ public class ArtistController {
         // ПРОВЕРКА НА ТО, ЧТО У ИСПОЛНИТЕЛЯ НЕТ АКТИВНЫХ СВЯЗЕЙ И ВСЁ ВОТ ЭТО
     }
 
-//    @GetMapping("/artist-extended-data-by-id/{id}")
-//    @PreAuthorize("hasRole('DISTRIBUTOR')")
-//    public ResponseEntity<ArtistExtendedData> getArtistExtendedDataById(@NotNull @Positive @PathVariable Long id) {
-//
-//    }
+    @GetMapping("/artist-extended-data-by-id/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DISTRIBUTOR')")
+    public ResponseEntity<ArtistExtendedDataDto> getArtistExtendedDataById(@NotNull @Positive @PathVariable Long id) {
+        return this.artistService.getArtistExtendedDataById(id);
+    }
 
     @PatchMapping("/update-artist/{id}")
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Void> updateArtistBasicData(@NotNull @Positive @PathVariable("id") Long artistId, @Valid @RequestBody ArtistToUpdateDto dto) {
+    public ResponseEntity<ArtistExtendedDataDto> updateArtistBasicData(@NotNull @Positive @PathVariable("id") Long artistId, @Valid @RequestBody ArtistToUpdateDto dto) {
         return this.artistService.updateArtistBasicData(artistId, dto);
-        // В СЕРВИСЕ СДЕЛАТЬ ПРОВЕРКУ НА ТО, ЧТО РЕДАКТИРУЕМ СВОЕГО ИСПОЛНИТЕЛЯ
     }
 
     @PatchMapping("/update-cover/{id}")
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Void> updateArtistCover(@NotNull @Positive @PathVariable("id") Long artistId, @Valid @ModelAttribute FileToUpdateDto dto) {
+    public ResponseEntity<ArtistExtendedDataDto> updateArtistCover(@NotNull @Positive @PathVariable("id") Long artistId, @Valid @ModelAttribute FileToUpdateDto dto) {
         return this.artistService.updateArtistCover(artistId, dto);
-        // В СЕРВИСЕ СДЕЛАТЬ ПРОВЕРКУ НА ТО, ЧТО РЕДАКТИРУЕМ СВОЕГО ИСПОЛНИТЕЛЯ
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

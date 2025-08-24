@@ -2,6 +2,6 @@ package ru.smirnov.musicplatform.entity.auxiliary.enums;
 
 public enum OfficialMusicCollectionStatus {
 
-    TEAPOT;
+    CREATED_AND_HIDDEN, PUBLISHED;
 
 }

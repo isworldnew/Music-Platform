@@ -2,6 +2,6 @@ package ru.smirnov.musicplatform.entity.auxiliary.enums;
 
 public enum TrackStatus {
 
-    TEAPOT;
+    UPLOADED_AND_HIDDEN, PUBLISHED, BANNED;
 
 }

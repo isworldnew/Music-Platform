@@ -3,8 +3,10 @@ package ru.smirnov.musicplatform.service.sql.relation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributionStatus;
+import ru.smirnov.musicplatform.projection.DistributorByArtistProjection;
 import ru.smirnov.musicplatform.repository.relation.DistributorByArtistRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,5 +27,8 @@ public class DistributorByArtistService {
         return this.distributorByArtistRepository.activeDistributionStatusWithArtist(artistId);
     }
 
+    public List<DistributorByArtistProjection> findDistributorByArtistProjectionByArtistId(Long artistId) {
+        return this.distributorByArtistRepository.findDistributorByArtistProjectionByArtistId(artistId);
+    }
 
 }

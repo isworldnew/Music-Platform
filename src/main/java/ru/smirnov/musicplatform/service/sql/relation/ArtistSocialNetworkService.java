@@ -2,8 +2,11 @@ package ru.smirnov.musicplatform.service.sql.relation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ru.smirnov.musicplatform.dto.relation.ArtistSocialNetworkDto;
 import ru.smirnov.musicplatform.entity.relation.ArtistsSocialNetworks;
+import ru.smirnov.musicplatform.mapper.ArtistSocialNetworkMapper;
 import ru.smirnov.musicplatform.repository.relation.ArtistSocialNetworkRepository;
 
 import java.util.List;
@@ -12,10 +15,12 @@ import java.util.List;
 public class ArtistSocialNetworkService {
 
     private final ArtistSocialNetworkRepository artistSocialNetworkRepository;
+    private final ArtistSocialNetworkMapper artistSocialNetworkMapper;
 
     @Autowired
-    public ArtistSocialNetworkService(ArtistSocialNetworkRepository artistSocialNetworkRepository) {
+    public ArtistSocialNetworkService(ArtistSocialNetworkRepository artistSocialNetworkRepository, ArtistSocialNetworkMapper artistSocialNetworkMapper) {
         this.artistSocialNetworkRepository = artistSocialNetworkRepository;
+        this.artistSocialNetworkMapper = artistSocialNetworkMapper;
     }
 
     public Long save(Long artistId, String socialNetworkName, String reference) {
@@ -24,6 +29,14 @@ public class ArtistSocialNetworkService {
 
     public List<ArtistsSocialNetworks> findAllByArtistId(Long artistId) {
         return this.artistSocialNetworkRepository.findAllByArtistId(artistId);
+    }
+
+    public List<ArtistSocialNetworkDto> findAllArtistSocialNetworkDtoByArtistId(Long artistId) {
+        List<ArtistsSocialNetworks> rawArtistsSocialNetworks = this.artistSocialNetworkRepository.findAllByArtistId(artistId);
+
+        return rawArtistsSocialNetworks.stream().map(
+                rawEntity -> this.artistSocialNetworkMapper.artistsSocialNetworksEntityToArtistSocialNetworkDto(rawEntity)
+        ).toList();
     }
 
 }

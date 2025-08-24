@@ -6,7 +6,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributionStatus;
 import ru.smirnov.musicplatform.entity.relation.DistributorsByArtists;
+import ru.smirnov.musicplatform.projection.DistributorByArtistProjection;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -51,5 +53,22 @@ public interface DistributorByArtistRepository extends JpaRepository<Distributor
             nativeQuery = true
     )
     Long relationExistenceBetweenDistributorAndArtist(@Param("artistId") Long artistId, @Param("distributorId") Long distributorId);
+
+
+    @Query(
+            value = """
+                    SELECT
+                        distributors_by_artists.id AS id,
+                        distributors_by_artists.distributor_id AS distributor_id,
+                        distributors_by_artists.status AS status,
+                        distributors.name AS distributor_name
+                    FROM distributors_by_artists
+                    JOIN distributors
+                    ON distributors_by_artists.distributor_id = distributors.id
+                    WHERE distributors_by_artists.artist_id = :artistId
+                    """,
+            nativeQuery = true
+    )
+    List<DistributorByArtistProjection> findDistributorByArtistProjectionByArtistId(@Param("artistId") Long artistId);
 
 }
