@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             DisabledException.class,
+            ForbiddenException.class
     })
     public ResponseEntity<ExceptionDto> handleForbiddenExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
@@ -38,7 +39,8 @@ public class GlobalExceptionHandler {
             PhonenumberOccupiedException.class,
             EmailOccupiedException.class,
             ArtistNameNonUniqueException.class,
-            ReferenceConsistencyViolationException.class
+            ReferenceConsistencyViolationException.class,
+            RelationBetweenArtistAndDistributorException.class
     })
     public ResponseEntity<ExceptionDto> handleConflictExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
@@ -48,7 +50,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             FileSizeExcessException.class,
-            InvalidFileExtensionException.class
+            InvalidFileExtensionException.class,
+            BadRequestException.class
     })
     public ResponseEntity<ExceptionDto> handleBadRequestExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(

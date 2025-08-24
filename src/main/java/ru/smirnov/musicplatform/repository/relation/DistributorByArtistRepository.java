@@ -71,4 +71,20 @@ public interface DistributorByArtistRepository extends JpaRepository<Distributor
     )
     List<DistributorByArtistProjection> findDistributorByArtistProjectionByArtistId(@Param("artistId") Long artistId);
 
+
+    @Query(
+            value = """
+                    SELECT
+                        COUNT(*)
+                    FROM distributors_by_artists
+                    WHERE
+                    distributors_by_artists.artist_id = :artistId
+                    AND
+                    distributors_by_artists.status = 'ACTIVE'
+                    """,
+            nativeQuery = true
+    )
+    Optional<Integer> countAmountOfActiveRelations(@Param("artistId") Long artistId);
+
+
 }
