@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.dto.FileToUpdateDto;
@@ -34,6 +35,8 @@ public class ArtistController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('DISTRIBUTOR')")
+    // @Validated // вроде и без этого работало, но тут прикол в том, что тут связка @ModelAttribute и @Valid
+    // а вот связка @RequestBody и @Valid без @Validated над контроллером или эндпоинтом - не сработает
     public ResponseEntity<Long> createArtist(@ModelAttribute @Valid ArtistToCreateDto dto) {
         return this.artistService.createArtist(dto);
     }

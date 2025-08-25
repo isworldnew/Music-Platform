@@ -10,10 +10,14 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.config.MinioBuckets;
+import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelUpdateDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackToCreateDto;
+import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
+import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.exception.BadRequestException;
+import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.mapper.TrackMapper;
 import ru.smirnov.musicplatform.repository.domain.TrackRepository;
 import ru.smirnov.musicplatform.service.SecurityContextService;
@@ -21,6 +25,7 @@ import ru.smirnov.musicplatform.service.minio.MinioService;
 import ru.smirnov.musicplatform.service.sql.relation.CoArtistService;
 import ru.smirnov.musicplatform.util.MinioPathUtil;
 import ru.smirnov.musicplatform.validators.ArtistValidatorImproved;
+import ru.smirnov.musicplatform.validators.TrackValidator;
 import ru.smirnov.musicplatform.validators.enums.ContentType;
 import ru.smirnov.musicplatform.validators.interfaces.FileValidator;
 
@@ -43,6 +48,7 @@ public class TrackService {
 
     private final List<FileValidator> fileValidators;
     private final ArtistValidatorImproved artistValidator;
+    private final TrackValidator trackValidator;
 
     @Autowired
     public TrackService(
@@ -53,7 +59,8 @@ public class TrackService {
             SecurityContextService securityContextService,
             List<FileValidator> fileValidators,
             ArtistValidatorImproved artistValidator,
-            CoArtistService coArtistService
+            CoArtistService coArtistService,
+            TrackValidator trackValidator
     ) {
         this.trackRepository = trackRepository;
         this.trackMapper = trackMapper;
@@ -63,6 +70,7 @@ public class TrackService {
         this.fileValidators = fileValidators;
         this.artistValidator = artistValidator;
         this.coArtistService = coArtistService;
+        this.trackValidator = trackValidator;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -129,4 +137,45 @@ public class TrackService {
 
     }
 
+    @Transactional
+    public ResponseEntity<Void> listenTo(Long trackId) {
+        Track track = this.trackValidator.safelyGetById(trackId);
+
+        track.setNumberOfPlays(track.getNumberOfPlays() + 1);
+
+        this.trackRepository.save(track);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ResponseEntity<Void> setTrackAccessLevel(Long trackId, TrackAccessLevelUpdateDto dto) {
+
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+
+        Track track = this.trackValidator.safelyGetById(trackId);
+
+        if (tokenData.getRole().equals("ROLE_" + Role.DISTRIBUTOR.name())) {
+            // проверка на то, что данный трек относится к исполнителю, с которым у дистрибьютора есть ACTIVE-связь
+            this.artistValidator.distributorIsAbleToInteractWithThisArtist(tokenData.getEntityId(), track.getArtist().getId());
+
+            if (track.getStatus().equals(TrackStatus.BANNED))
+                throw new ForbiddenException("Track is BANNED, distributor has no rights to change it");
+
+            if (dto.getTrackAccessLevel().equals(TrackStatus.BANNED.name()))
+                throw new ForbiddenException("Distributor has no rights to BAN track of it's artist");
+
+        }
+
+        // в данном методе может оказаться только DISTRIBUTOR или ADMIN,
+        // поэтому то, что вне if - как бы действия, которые выполняются
+        // в любом случае - то есть администратором
+
+
+         track.setStatus(TrackStatus.valueOf(dto.getTrackAccessLevel()));
+
+         this.trackRepository.save(track);
+
+         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
