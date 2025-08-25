@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelUpdateDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackDataDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackToCreateDto;
+import ru.smirnov.musicplatform.projection.SavedTrackProjection;
 import ru.smirnov.musicplatform.service.sql.domain.TrackService;
+import ru.smirnov.musicplatform.service.sql.relation.SavedTrackService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Validated
@@ -27,10 +30,12 @@ import java.util.Map;
 public class TrackController {
 
     private final TrackService trackService;
+    private final SavedTrackService savedTrackService;
 
     @Autowired
-    public TrackController(TrackService trackService) {
+    public TrackController(TrackService trackService, SavedTrackService savedTrackService) {
         this.trackService = trackService;
+        this.savedTrackService = savedTrackService;
     }
 
     @PostMapping("/upload-track")
@@ -59,6 +64,24 @@ public class TrackController {
     @PreAuthorize("hasAnyRole('ADMIN', 'DISTRIBUTOR')")
     public ResponseEntity<TrackDataDto> getTrackById(@NotNull @Positive @PathVariable Long id) {
         return this.trackService.getTrackDataById(id, false);
+    }
+
+    @PostMapping("/save/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Long> saveTrack(@NotNull @Positive @PathVariable Long id) {
+        return this.savedTrackService.save(id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> deleteTrack(@NotNull @Positive @PathVariable Long id) {
+        return this.savedTrackService.delete(id);
+    }
+
+    @GetMapping("/saved")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<SavedTrackProjection>> getAllSavedTracks() {
+        return this.savedTrackService.getAllSavedTracks();
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

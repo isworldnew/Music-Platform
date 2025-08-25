@@ -2,7 +2,9 @@ package ru.smirnov.musicplatform.validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.musicplatform.entity.domain.Track;
+import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.exception.NotFoundException;
 import ru.smirnov.musicplatform.repository.domain.TrackRepository;
 
@@ -25,4 +27,12 @@ public class TrackValidator {
         return track;
     }
 
+    public Track safelyGetByIdWithActiveStatus(Long trackId) {
+        Track track = this.safelyGetById(trackId);
+
+        if (!track.getStatus().isAvailable())
+            throw new ForbiddenException("Unable to save track because of it's status: " + track.getStatus().name());
+
+        return track;
+    }
 }
