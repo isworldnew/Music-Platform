@@ -11,6 +11,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.config.MinioBuckets;
 import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelUpdateDto;
+import ru.smirnov.musicplatform.dto.domain.track.TrackDataDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackToCreateDto;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
@@ -19,6 +20,7 @@ import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.exception.BadRequestException;
 import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.mapper.TrackMapper;
+import ru.smirnov.musicplatform.projection.CoArtistProjection;
 import ru.smirnov.musicplatform.repository.domain.TrackRepository;
 import ru.smirnov.musicplatform.service.SecurityContextService;
 import ru.smirnov.musicplatform.service.minio.MinioService;
@@ -149,7 +151,7 @@ public class TrackService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public ResponseEntity<Void> setTrackAccessLevel(Long trackId, TrackAccessLevelUpdateDto dto) {
+    public ResponseEntity<TrackDataDto> setTrackAccessLevel(Long trackId, TrackAccessLevelUpdateDto dto) {
 
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
 
@@ -176,6 +178,25 @@ public class TrackService {
 
          this.trackRepository.save(track);
 
-         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+         return ResponseEntity.ok(
+                 this.getTrackDataById(trackId, false).getBody()
+         );
     }
+
+    public ResponseEntity<TrackDataDto> getTrackDataById(Long trackId, boolean safeUpload) {
+
+        // данный метод буду использовать в разных контекстах
+        // администратор и исполнитель могут получить полную информацию о треке вне зависимости от его статуса
+        // а вот гость и пользователь могут получить полную информацию только если трек доступен
+
+        Track track = this.trackValidator.safelyGetById(trackId);
+
+        List<CoArtistProjection> coArtists = this.coArtistService.getCoArtistProjections(trackId);
+
+        TrackDataDto dto = this.trackMapper.trackEntityToTrackDataDto(track, coArtists, safeUpload);
+
+        return ResponseEntity.ok(dto);
+
+    }
+
 }

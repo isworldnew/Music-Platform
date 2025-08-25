@@ -1,13 +1,15 @@
 package ru.smirnov.musicplatform.mapper;
 
 import org.springframework.stereotype.Component;
+import ru.smirnov.musicplatform.dto.domain.track.TrackDataDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackToCreateDto;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;
+import ru.smirnov.musicplatform.projection.CoArtistProjection;
 
-import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Component
 public class TrackMapper {
@@ -28,5 +30,30 @@ public class TrackMapper {
         track.setUploadDateTime(OffsetDateTime.now());
         return track;
     }
+
+    public TrackDataDto trackEntityToTrackDataDto(Track track, List<CoArtistProjection> coArtists, boolean safeUpload) {
+        TrackDataDto dto = new TrackDataDto();
+        dto.setId(track.getId());
+        dto.setName(track.getName());
+        dto.setArtist(new TrackDataDto.ArtistData(track.getArtist().getId(), track.getArtist().getName()));
+        dto.setCoArtists(coArtists);
+        dto.setGenre(track.getGenre());
+        dto.setCoverReference(track.getImageReference());
+        dto.setAudioReference(track.getAudiofileReference());
+        dto.setNumberOfPlays(track.getNumberOfPlays());
+        dto.setStatus(track.getStatus().name());
+        dto.setUploadDateTime(track.getUploadDateTime());
+
+        if (safeUpload) {
+            if (!track.getStatus().isAvailable()) {
+                dto.setCoverReference(null);
+                dto.setAudioReference(null);
+            }
+        }
+
+        return dto;
+    }
+
+
 
 }

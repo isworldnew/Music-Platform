@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelUpdateDto;
+import ru.smirnov.musicplatform.dto.domain.track.TrackDataDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackToCreateDto;
 import ru.smirnov.musicplatform.service.sql.domain.TrackService;
 
@@ -45,8 +46,19 @@ public class TrackController {
 
     @PatchMapping("/set-access-level/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'DISTRIBUTOR')")
-    public ResponseEntity<Void> setTrackAccessLevel(@NotNull @Positive @PathVariable Long id, @RequestBody @Valid TrackAccessLevelUpdateDto dto) {
+    public ResponseEntity<TrackDataDto> setTrackAccessLevel(@NotNull @Positive @PathVariable Long id, @RequestBody @Valid TrackAccessLevelUpdateDto dto) {
         return this.trackService.setTrackAccessLevel(id, dto);
+    }
+
+    @GetMapping("/get-track-by-id-safely/{id}")
+    public ResponseEntity<TrackDataDto> getTrackByIdSafely(@NotNull @Positive @PathVariable Long id) {
+        return this.trackService.getTrackDataById(id, true);
+    }
+
+    @GetMapping("/get-track-by-id/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DISTRIBUTOR')")
+    public ResponseEntity<TrackDataDto> getTrackById(@NotNull @Positive @PathVariable Long id) {
+        return this.trackService.getTrackDataById(id, false);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

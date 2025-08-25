@@ -55,7 +55,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/users/registration").permitAll()
                         .requestMatchers(
                                 "/artists/artist-data-by-id/**",
-                                "/tracks/listen/**"
+                                "/tracks/listen/**",
+                                "tracks/get-track-by-id-safely/**"
                         ).permitAll()
                         .requestMatchers("/authentication/refresh").hasAuthority(JwtToken.REFRESH_TOKEN.name())
                         .anyRequest().hasAuthority(JwtToken.ACCESS_TOKEN.name())
