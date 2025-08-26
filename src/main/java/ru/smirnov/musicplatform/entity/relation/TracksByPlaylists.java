@@ -7,7 +7,10 @@ import ru.smirnov.musicplatform.entity.domain.Playlist;
 import ru.smirnov.musicplatform.entity.domain.Track;
 
 @Entity
-@Table(name = "tracks_by_playlists")
+@Table(
+        name = "tracks_by_playlists",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"track_id", "playlist_id"})
+)
 @Data
 public class TracksByPlaylists {
 

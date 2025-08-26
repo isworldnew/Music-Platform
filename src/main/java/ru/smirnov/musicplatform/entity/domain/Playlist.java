@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import ru.smirnov.musicplatform.entity.audience.User;
 import ru.smirnov.musicplatform.entity.auxiliary.hierarchy.MusicCollection;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.PlaylistAccessLevel;
 import ru.smirnov.musicplatform.entity.relation.SavedPlaylists;
 import ru.smirnov.musicplatform.entity.relation.TracksByPlaylists;
 
@@ -17,10 +16,6 @@ import java.util.List;
 @Table(name = "playlists")
 @Data
 public class Playlist extends MusicCollection {
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "access_level", columnDefinition = "VARCHAR(255) DEFAULT 'PRIVATE'", nullable = false)
-    private PlaylistAccessLevel accessLevel = PlaylistAccessLevel.PRIVATE;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

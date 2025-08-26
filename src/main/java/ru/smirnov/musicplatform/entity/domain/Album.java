@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import ru.smirnov.musicplatform.entity.auxiliary.hierarchy.OfficialMusicCollection;
+import ru.smirnov.musicplatform.entity.auxiliary.hierarchy.MusicCollection;
 import ru.smirnov.musicplatform.entity.relation.SavedAlbums;
 import ru.smirnov.musicplatform.entity.relation.TracksByAlbums;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "albums")
 @Data
-public class Album extends OfficialMusicCollection {
+public class Album extends MusicCollection {
 
     @ManyToOne
     @JoinColumn(name = "artist_id")

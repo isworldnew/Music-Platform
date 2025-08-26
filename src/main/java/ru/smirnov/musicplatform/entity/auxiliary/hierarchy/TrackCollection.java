@@ -1,13 +1,17 @@
 package ru.smirnov.musicplatform.entity.auxiliary.hierarchy;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.MusicCollectionAccessLevel;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @MappedSuperclass @Data
-public abstract class MusicCollection {
+public abstract class TrackCollection<CollectionCreator, TrackByCollection, SavedCollection> {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,5 +34,18 @@ public abstract class MusicCollection {
     @Enumerated(EnumType.STRING)
     @Column(name = "access_level", columnDefinition = "VARCHAR(255) DEFAULT 'PRIVATE'", nullable = false)
     private MusicCollectionAccessLevel accessLevel = MusicCollectionAccessLevel.PRIVATE;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    @JsonBackReference
+    private CollectionCreator creator;
+
+    @OneToMany(mappedBy = "collection")
+    @JsonManagedReference
+    private List<TrackByCollection> tracks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "collection")
+    @JsonManagedReference
+    private List<SavedCollection> savedBy = new ArrayList<>();
 
 }

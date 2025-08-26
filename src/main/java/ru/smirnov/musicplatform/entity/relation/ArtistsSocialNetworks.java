@@ -6,7 +6,10 @@ import lombok.Data;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 
 @Entity
-@Table(name = "artists_social_networks")
+@Table(
+        name = "artists_social_networks",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"artist_id", "social_network"})
+)
 @Data
 public class ArtistsSocialNetworks {
 

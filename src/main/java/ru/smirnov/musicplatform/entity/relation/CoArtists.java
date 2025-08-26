@@ -7,7 +7,10 @@ import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;
 
 @Entity
-@Table(name = "co_artists")
+@Table(
+        name = "co_artists",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"track_id", "artist_id"})
+)
 @Data
 public class CoArtists {
 

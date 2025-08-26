@@ -1,6 +1,5 @@
 package ru.smirnov.musicplatform.validators;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.smirnov.musicplatform.exception.FileSizeExcessException;
