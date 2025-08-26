@@ -40,7 +40,8 @@ public class GlobalExceptionHandler {
             EmailOccupiedException.class,
             ArtistNameNonUniqueException.class,
             ReferenceConsistencyViolationException.class,
-            RelationBetweenArtistAndDistributorException.class
+            RelationBetweenArtistAndDistributorException.class,
+            ConflictException.class
     })
     public ResponseEntity<ExceptionDto> handleConflictExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(

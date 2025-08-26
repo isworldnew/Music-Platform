@@ -11,6 +11,11 @@ import ru.smirnov.musicplatform.exception.RelationBetweenArtistAndDistributorExc
 import ru.smirnov.musicplatform.repository.domain.ArtistRepository;
 import ru.smirnov.musicplatform.repository.relation.DistributorByArtistRepository;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Component
 public class ArtistValidatorImproved {
 
@@ -65,4 +70,23 @@ public class ArtistValidatorImproved {
 
         return artist;
     }
+
+    public Artist distributorIsAbleToInteractWithThisArtist(Long targetDistributorId, Long artistId, Set<Long> tracks) {
+
+        Artist artist = this.distributorIsAbleToInteractWithThisArtist(targetDistributorId, artistId);
+
+        List<Long> ownTracksOfArtist = artist.getTracks().stream().map(track -> track.getId()).toList();
+        List<Long> partnershipTracksOfArtist = artist.getCoAuthorshipTracks().stream().map(coArtist -> coArtist.getTrack().getId()).toList();
+
+        List<Long> tracksOfArtist = Stream.concat(ownTracksOfArtist.stream(), partnershipTracksOfArtist.stream()).toList();
+
+        boolean allTracksBelongToManagedArtist = tracks.stream().allMatch(track -> tracksOfArtist.contains(track));
+
+        if (!allTracksBelongToManagedArtist && !tracksOfArtist.isEmpty())
+            throw new ForbiddenException("There are tracks (" + tracks + ") which don't belong to the managed artist and he is not co-author of them (" + tracksOfArtist + ")");
+
+        return artist;
+
+    }
+
 }

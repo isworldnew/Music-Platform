@@ -17,4 +17,8 @@ public class MinioPathUtil {
         return (bucketName + "/" + (objectNameWithBlanks.replace(" ", "_")));
     }
 
+    public String generateFormattedReference(String bucketName, Long parentEntityId, Long childEntityId) {
+        return (bucketName + "/" + parentEntityId + "_" + childEntityId);
+    }
+
 }
