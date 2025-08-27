@@ -30,7 +30,7 @@ public class AlbumController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Long> createAlbum(@Valid @ModelAttribute MusicCollectionToCreateDto dto) {
+    public ResponseEntity<Long> createAlbum(@Valid @ModelAttribute AlbumToCreateDto dto) {
         return this.albumService.createAlbum(dto);
     }
 

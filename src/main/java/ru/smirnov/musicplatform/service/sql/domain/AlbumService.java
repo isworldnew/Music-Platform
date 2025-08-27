@@ -14,7 +14,6 @@ import ru.smirnov.musicplatform.dto.domain.MusicCollectionAuthorDto;
 import ru.smirnov.musicplatform.dto.domain.album.*;
 import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutDto;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.MusicCollectionAccessLevel;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.entity.domain.Album;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.exception.ForbiddenException;
@@ -77,7 +76,7 @@ public class AlbumService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public ResponseEntity<Long> createAlbum(MusicCollectionToCreateDto dto) {
+    public ResponseEntity<Long> createAlbum(AlbumToCreateDto dto) {
 
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
 
@@ -93,15 +92,15 @@ public class AlbumService {
         // [v] относятся к данному исполнителю (его собственные или он - соавтор)
         if (tracksAttached) {
             dto.getTracks().forEach(track -> this.trackValidator.safelyGetById(track));
-            artist = this.artistValidator.distributorIsAbleToInteractWithThisArtist(tokenData.getEntityId(), dto.getCreatorId(), dto.getTracks());
+            artist = this.artistValidator.distributorIsAbleToInteractWithThisArtist(tokenData.getEntityId(), dto.getArtistId(), dto.getTracks());
         }
         else
-            artist = this.artistValidator.distributorIsAbleToInteractWithThisArtist(tokenData.getEntityId(), dto.getCreatorId());
+            artist = this.artistValidator.distributorIsAbleToInteractWithThisArtist(tokenData.getEntityId(), dto.getArtistId());
 
         // [v] дополнительно проверяю, что у данного исполнителя ещё нет альбома с таким названием
-        this.albumValidator.checkAlbumNameUniquenessForArtist(dto.getName(), dto.getCreatorId());
+        this.albumValidator.checkAlbumNameUniquenessForArtist(dto.getName(), dto.getArtistId());
 
-        Album album = this.musicCollectionMapper.musicCollectionToCreateDtoToAlbumEntity(dto, artist);
+        Album album = this.musicCollectionMapper.albumToCreateDtoToAlbumEntity(dto, artist);
 
         // раннее сохранение, чтобы у нас был id альбома, который нужен
         // для создания ссылки на обложку и для сохранения треков в альбом
@@ -166,12 +165,6 @@ public class AlbumService {
                     );
                 }
             });
-
-//            io.minio.errors.ErrorResponseException: This copy request is illegal because it is trying to copy an object to itself without changing the object's metadata, storage class, website redirect location or encryption attributes.
-//            at io.minio.S3Base$1.onResponse(S3Base.java:789) ~[minio-8.5.17.jar:8.5.17]
-//            at io.minio.S3Base$1.onResponse(S3Base.java:625) ~[minio-8.5.17.jar:8.5.17]
-//            at okhttp3.internal.connection.RealCall$AsyncCall.run(RealCall.kt:519) ~[okhttp-4.12.0.jar:na]
-
         }
 
         if (coverAttached && !referenceExists) {

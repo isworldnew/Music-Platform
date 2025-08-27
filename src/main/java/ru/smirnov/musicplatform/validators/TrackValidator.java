@@ -31,7 +31,7 @@ public class TrackValidator {
         Track track = this.safelyGetById(trackId);
 
         if (!track.getStatus().isAvailable())
-            throw new ForbiddenException("Unable to save track because of it's status: " + track.getStatus().name());
+            throw new ForbiddenException("Unable to refer the track with id=" + trackId + " because of it's status: " + track.getStatus().name());
 
         return track;
     }
