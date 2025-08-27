@@ -3,6 +3,7 @@ package ru.smirnov.musicplatform.service.sql.relation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.musicplatform.exception.ConflictException;
 import ru.smirnov.musicplatform.repository.relation.TrackByAlbumRepository;
 
@@ -21,11 +22,12 @@ public class TrackByAlbumService {
 
     // предполагается, что метод этот вызывается из AlbumService
     // и что все необходимые предварительные проверки пройдены
-    public List<Long> addTracksToAlbum(Long albumId, List<Long> tracks) {
+    @Transactional
+    public List<Long> addTracksToAlbum(Long albumId, List<Long> tracksToAdd) {
 
         List<Long> relations = new ArrayList<>();
 
-        for (Long trackId : tracks) {
+        for (Long trackId : tracksToAdd) {
             try {
                 relations.add(this.trackByAlbumRepository.save(albumId, trackId));
             }
@@ -35,6 +37,13 @@ public class TrackByAlbumService {
         }
 
         return relations;
-
     }
+
+    // предполагается, что метод этот вызывается из AlbumService
+    // и что все необходимые предварительные проверки пройдены
+    @Transactional
+    public void removeTracksFromAlbum(Long albumId, List<Long> tracksToRemove) {
+        tracksToRemove.forEach(trackToRemove -> this.trackByAlbumRepository.delete(albumId, trackToRemove));
+    }
+
 }

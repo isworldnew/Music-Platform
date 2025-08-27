@@ -63,7 +63,7 @@ public class ArtistValidatorImproved {
         
         Long foundDistributorId = this.distributorByArtistRepository.activeDistributionStatusWithArtist(artistId).orElse(null);
 
-        System.out.println("TARGET DISTRIBUTOR ID = " + targetDistributorId + "; FOUND DISTRIBUTOR ID = " + foundDistributorId);
+        // System.out.println("TARGET DISTRIBUTOR ID = " + targetDistributorId + "; FOUND DISTRIBUTOR ID = " + foundDistributorId);
 
         if (!targetDistributorId.equals(foundDistributorId))
             throw new ForbiddenException("Distributor with id=" + targetDistributorId + " has no rights to manage artist with id=" + artistId);
@@ -83,7 +83,8 @@ public class ArtistValidatorImproved {
         boolean allTracksBelongToManagedArtist = tracks.stream().allMatch(track -> tracksOfArtist.contains(track));
 
         if (!allTracksBelongToManagedArtist && !tracksOfArtist.isEmpty())
-            throw new ForbiddenException("There are tracks (" + tracks + ") which don't belong to the managed artist and he is not co-author of them (" + tracksOfArtist + ")");
+//            throw new ForbiddenException("There are tracks (" + tracks + ") which don't belong to the managed artist and he is not co-author of them (" + tracksOfArtist + ")");
+            throw new ForbiddenException("There are tracks which don't belong to the managed artist and he is not co-author of them");
 
         return artist;
 

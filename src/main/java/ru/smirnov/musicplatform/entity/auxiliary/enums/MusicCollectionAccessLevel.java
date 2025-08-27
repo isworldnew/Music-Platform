@@ -1,5 +1,8 @@
 package ru.smirnov.musicplatform.entity.auxiliary.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum MusicCollectionAccessLevel {
 
     PRIVATE(false), PUBLIC(true);

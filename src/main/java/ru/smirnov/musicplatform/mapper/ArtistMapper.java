@@ -3,6 +3,7 @@ package ru.smirnov.musicplatform.mapper;
 import org.springframework.stereotype.Component;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistDataDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistExtendedDataDto;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistToCreateDto;
 import ru.smirnov.musicplatform.dto.relation.ArtistSocialNetworkDto;
 import ru.smirnov.musicplatform.entity.domain.Artist;
@@ -44,6 +45,13 @@ public class ArtistMapper {
         dto.setCoverReference(artist.getImageReference());
         dto.setSocialNetworks(artistSocialNetworkDtos);
         dto.setDistributors(distributorByArtistProjections);
+        return dto;
+    }
+
+    public ArtistShortcutDto artistEntityToArtistShortcutDto(Artist artist) {
+        ArtistShortcutDto dto = new ArtistShortcutDto();
+        dto.setId(artist.getId());
+        dto.setName(artist.getName());
         return dto;
     }
 }

@@ -2,16 +2,16 @@ package ru.smirnov.musicplatform.dto.validation.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import ru.smirnov.musicplatform.dto.validation.validator.MusicCollectionAccessLevelValidator;
 import ru.smirnov.musicplatform.dto.validation.validator.TrackAccessLevelValidator;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
-@Constraint(validatedBy = TrackAccessLevelValidator.class)
+@Constraint(validatedBy = MusicCollectionAccessLevelValidator.class)
 @Documented
-public @interface TrackAccessLevel {
+public @interface MusicCollectionAccessLevel {
 
     String message() default "Invalid track's access level";
 

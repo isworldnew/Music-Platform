@@ -59,7 +59,6 @@ public class MinioService {
 
     @Async @SneakyThrows
     public void replaceObjectInBucket(String bucketName, String oldObjectName, String newObjectName) {
-
         // кстати, тут как с транзакциями: я вызываю @Async метод из другого @Async метода того же класса
         // поэтому вызовется не прокси, а this
         // и оба метода выполнятся в одном потоке
@@ -79,6 +78,21 @@ public class MinioService {
 
         this.removeObject(bucketName, oldObjectName);
 
+        /*
+        io.minio.errors.ErrorResponseException: This copy request is illegal because it is trying to copy an object to itself without changing the object's metadata, storage class, website redirect location or encryption attributes.
+        at io.minio.S3Base$1.onResponse(S3Base.java:789) ~[minio-8.5.17.jar:8.5.17]
+        at io.minio.S3Base$1.onResponse(S3Base.java:625) ~[minio-8.5.17.jar:8.5.17]
+        at okhttp3.internal.connection.RealCall$AsyncCall.run(RealCall.kt:519) ~[okhttp-4.12.0.jar:na]
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[na:na]
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[na:na]
+        at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+        */
+    }
+
+    @Async @SneakyThrows
+    public void replaceObjectInBucket(String bucketName, String objectName, MultipartFile object) {
+        this.removeObject(bucketName, objectName);
+        this.uploadObjectWithMetadata(bucketName, objectName, object, null);
     }
 
 }

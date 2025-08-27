@@ -1,7 +1,10 @@
 package ru.smirnov.musicplatform.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackDataDto;
+import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackToCreateDto;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
@@ -13,6 +16,13 @@ import java.util.List;
 
 @Component
 public class TrackMapper {
+
+    private final ArtistMapper artistMapper;
+
+    @Autowired
+    public TrackMapper(ArtistMapper artistMapper) {
+        this.artistMapper = artistMapper;
+    }
 
     public Track createTrackEntity(
             TrackToCreateDto dto,
@@ -54,6 +64,22 @@ public class TrackMapper {
         return dto;
     }
 
+    public TrackShortcutDto trackEntityToTrackShortcutDto(Track track) {
+        ArtistShortcutDto artist = this.artistMapper.artistEntityToArtistShortcutDto(track.getArtist());
+        List<ArtistShortcutDto> coArtists = track.getCoArtists().stream()
+                .map(ca -> ca.getArtist())
+                .map(a -> this.artistMapper.artistEntityToArtistShortcutDto(a))
+                .toList();
+
+        TrackShortcutDto dto = new TrackShortcutDto();
+        dto.setId(track.getId());
+        dto.setName(track.getName());
+        dto.setArtist(artist);
+        dto.setCoArtists(coArtists);
+        dto.setCoverReference(track.getImageReference());
+        dto.setStatus(track.getStatus().name());
+        return dto;
+    }
 
 
 }

@@ -12,6 +12,7 @@ import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.config.MinioBuckets;
 import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelUpdateDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackDataDto;
+import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackToCreateDto;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
@@ -19,6 +20,7 @@ import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.exception.BadRequestException;
 import ru.smirnov.musicplatform.exception.ForbiddenException;
+import ru.smirnov.musicplatform.mapper.ArtistMapper;
 import ru.smirnov.musicplatform.mapper.TrackMapper;
 import ru.smirnov.musicplatform.projection.CoArtistProjection;
 import ru.smirnov.musicplatform.repository.domain.TrackRepository;
@@ -198,5 +200,20 @@ public class TrackService {
         return ResponseEntity.ok(dto);
 
     }
+
+    // вспомогательный метод, нужный для получения кратких сведений о треке в какой-либо коллекции
+    public List<TrackShortcutDto> getTracksShortcutData(List<Long> tracksId, boolean availableOnly) {
+        List<Track> tracks = this.trackRepository.findAllById(tracksId);
+
+        if (availableOnly)
+            tracks = tracks.stream().filter(track -> track.getStatus().isAvailable()).toList();
+
+        List<TrackShortcutDto> dtos = tracks.stream().map(
+                track -> this.trackMapper.trackEntityToTrackShortcutDto(track)
+        ).toList();
+
+        return dtos;
+    }
+
 
 }
