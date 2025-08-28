@@ -1,5 +1,6 @@
 package ru.smirnov.musicplatform.service.sql.domain;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +12,9 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.config.MinioBuckets;
-import ru.smirnov.musicplatform.dto.domain.album.MusicCollectionAccessLevelUpdateDto;
-import ru.smirnov.musicplatform.dto.domain.album.MusicCollectionToCreateDto;
-import ru.smirnov.musicplatform.dto.domain.album.MusicCollectionToUpdateDto;
-import ru.smirnov.musicplatform.dto.domain.album.MusicCollectionTracksDto;
+import ru.smirnov.musicplatform.dto.domain.MusicCollectionAuthorDto;
+import ru.smirnov.musicplatform.dto.domain.album.*;
+import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutDto;
 import ru.smirnov.musicplatform.entity.audience.Admin;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.MusicCollectionAccessLevel;
 import ru.smirnov.musicplatform.entity.domain.Chart;
@@ -33,6 +33,7 @@ import ru.smirnov.musicplatform.validators.TrackValidator;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -122,8 +123,8 @@ public class ChartService {
         return ResponseEntity.ok(chart.getId());
     }
 
-    @Transactional
-    public ResponseEntity<?> updateChart(MusicCollectionToUpdateDto dto) {
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ResponseEntity<Void> updateChart(MusicCollectionToUpdateDto dto) {
         // пока не уверен насчёт этой возможности, но как будто дать
         // администратору возможность редактировать любой чарт - нормально
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
@@ -187,8 +188,8 @@ public class ChartService {
 
     }
 
-    @Transactional
-    public ResponseEntity<?> updateChartAccessLevel(MusicCollectionAccessLevelUpdateDto dto) {
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ResponseEntity<Void> updateChartAccessLevel(MusicCollectionAccessLevelUpdateDto dto) {
         // пока не уверен насчёт этой возможности, но как будто дать
         // администратору возможность редактировать любой чарт - нормально
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
@@ -203,8 +204,8 @@ public class ChartService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @Transactional
-    public ResponseEntity<?> updateChartByTracks(MusicCollectionTracksDto dto) {
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public ResponseEntity<Void> updateChartByTracks(MusicCollectionTracksDto dto) {
         // пока не уверен насчёт этой возможности, но как будто дать
         // администратору возможность редактировать любой чарт - нормально
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
@@ -212,18 +213,81 @@ public class ChartService {
                 () -> new ForbiddenException("Admin's business-data wasn't found by admin's id in token")
         );
 
+        // [v] проверка на то, что переданный чарт существует
         Chart chart = this.chartValidator.getChartByIdSafely(dto.getMusicCollectionId());
 
-        Set<Long> tracks = dto.getTracks().stream()
-                .map(trackId -> this.trackValidator.safelyGetByIdWithActiveStatus(trackId).getId())
-                .collect(Collectors.toSet());
+        // [v] проверка на то, что все переданные треки в принципе существуют и что они доступны
+        for (Long trackId : dto.getTracks()) this.trackValidator.safelyGetByIdWithActiveStatus(trackId);
 
-        Set<Long> addedTracks = SetUtil.findAddedValues(tracks, dto.getTracks());
-        Set<Long> removedTracks = SetUtil.findRemovedValues(tracks, dto.getTracks());
+        Set<Long> tracksSetBeforeUpdate = chart.getTracks().stream().map(track -> track.getTrack().getId()).collect(Collectors.toSet());
+
+        Set<Long> addedTracks = SetUtil.findAddedValues(tracksSetBeforeUpdate, dto.getTracks());
+        Set<Long> removedTracks = SetUtil.findRemovedValues(tracksSetBeforeUpdate, dto.getTracks());
 
         this.trackByChartService.save(chart.getId(), addedTracks.stream().toList());
         this.trackByChartService.remove(chart.getId(), removedTracks.stream().toList());
 
+//        CompletableFuture<ResponseEntity<MusicCollectionDataDto>> entityAfterCommit = new CompletableFuture<>();
+//        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+//            @Override @SneakyThrows
+//            public void afterCommit() {
+//                ResponseEntity<MusicCollectionDataDto> response = getChartById(chart.getId());
+//                entityAfterCommit.complete(response);
+//            }
+//        });
+//
+//        return entityAfterCommit.join();
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    public ResponseEntity<MusicCollectionDataDto> getChartById(Long chartId) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        Admin admin = this.adminRepository.findById(tokenData.getEntityId()).orElseThrow(
+                () -> new ForbiddenException("Admin's business-data wasn't found by admin's id in token")
+        );
+
+        Chart chart = this.chartValidator.getChartByIdSafely(chartId);
+        List<Long> tracks = chart.getTracks().stream()
+                .map(track -> track.getTrack().getId())
+                .toList();
+
+        List<TrackShortcutDto> shortcuts = this.trackService.getTracksShortcutData(tracks, false);
+
+        MusicCollectionDataDto dto = this.musicCollectionMapper.musicCollectionToMusicCollectionDataDto(
+                chart,
+                new MusicCollectionAuthorDto(admin.getId(), admin.getAccount().getUsername() + "[PLATFORM]"),
+                shortcuts
+        );
+
+        return ResponseEntity.ok(dto);
+    }
+
+    @Transactional
+    public ResponseEntity<MusicCollectionDataDto> getChartByIdSafely(Long chartId) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        Admin admin = this.adminRepository.findById(tokenData.getEntityId()).orElseThrow(
+                () -> new ForbiddenException("Admin's business-data wasn't found by admin's id in token")
+        );
+
+        Chart chart = this.chartValidator.getChartByIdSafely(chartId);
+        chart.setNumberOfPlays(chart.getNumberOfPlays() + 1);
+        this.chartRepository.save(chart);
+
+        List<Long> tracks = chart.getTracks().stream()
+                .map(track -> track.getTrack().getId())
+                .toList();
+
+        List<TrackShortcutDto> shortcuts = this.trackService.getTracksShortcutData(tracks, true);
+
+        MusicCollectionDataDto dto = this.musicCollectionMapper.musicCollectionToMusicCollectionDataDto(
+                chart,
+                new MusicCollectionAuthorDto(admin.getId(), admin.getAccount().getUsername() + " [PLATFORM]"),
+                shortcuts
+        );
+
+        return ResponseEntity.ok(dto);
+
     }
 }

@@ -1,5 +1,6 @@
 package ru.smirnov.musicplatform.service.sql.domain;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import ru.smirnov.musicplatform.validators.TrackValidator;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -134,7 +136,7 @@ public class AlbumService {
     }
 
     @Transactional
-    public ResponseEntity<MusicCollectionDataDto> updateAlbum(MusicCollectionToUpdateDto dto) {
+    public ResponseEntity<Void> updateAlbum(MusicCollectionToUpdateDto dto) {
 
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
 
@@ -201,11 +203,11 @@ public class AlbumService {
 
         this.albumRepository.save(album);
 
-        return ResponseEntity.status(HttpStatus.OK).body(this.getAlbumById(album.getId()).getBody());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Transactional
-    public ResponseEntity<MusicCollectionDataDto> updateAccessLevel(MusicCollectionAccessLevelUpdateDto dto) {
+    public ResponseEntity<Void> updateAccessLevel(MusicCollectionAccessLevelUpdateDto dto) {
 
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
 
@@ -219,11 +221,11 @@ public class AlbumService {
 
         this.albumRepository.save(album);
 
-        return ResponseEntity.status(HttpStatus.OK).body(this.getAlbumById(album.getId()).getBody());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Transactional
-    public ResponseEntity<MusicCollectionDataDto> updateAlbumByTracks(MusicCollectionTracksDto dto) {
+    public ResponseEntity<Void> updateAlbumByTracks(MusicCollectionTracksDto dto) {
 
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
 
@@ -245,7 +247,7 @@ public class AlbumService {
         this.trackByAlbumService.addTracksToAlbum(album.getId(), tracksToAdd.stream().toList());
         this.trackByAlbumService.removeTracksFromAlbum(album.getId(), tracksToRemove.stream().toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(this.getAlbumById(album.getId()).getBody());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 

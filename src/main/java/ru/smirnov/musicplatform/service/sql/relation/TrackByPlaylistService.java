@@ -5,32 +5,32 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.musicplatform.exception.ConflictException;
-import ru.smirnov.musicplatform.repository.relation.TrackByChartRepository;
+import ru.smirnov.musicplatform.repository.relation.TrackByPlaylistRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class TrackByChartService {
+public class TrackByPlaylistService {
 
-    private final TrackByChartRepository trackByChartRepository;
+    private final TrackByPlaylistRepository trackByPlaylistRepository;
 
     @Autowired
-    public TrackByChartService(TrackByChartRepository trackByChartRepository) {
-        this.trackByChartRepository = trackByChartRepository;
+    public TrackByPlaylistService(TrackByPlaylistRepository trackByPlaylistRepository) {
+        this.trackByPlaylistRepository = trackByPlaylistRepository;
     }
 
     @Transactional
-    public List<Long> save(Long chartId, List<Long> tracksToAdd) {
+    public List<Long> save(Long playlistId, List<Long> tracksToAdd) {
         // нужно предварительно проверить существование каждого трека
         List<Long> relations = new ArrayList<>();
 
         for (Long trackId : tracksToAdd) {
             try {
-                relations.add(this.trackByChartRepository.save(chartId, trackId));
+                relations.add(this.trackByPlaylistRepository.save(playlistId, trackId));
             }
             catch (DataIntegrityViolationException e) {
-                throw new ConflictException("Track with id=" + trackId + " already exists in chart with id=" + chartId);
+                throw new ConflictException("Track with id=" + trackId + " already exists in playlist with id=" + playlistId);
             }
         }
 
@@ -38,8 +38,9 @@ public class TrackByChartService {
     }
 
     @Transactional
-    public void remove(Long chartId, List<Long> tracksToRemove) {
+    public void remove(Long playlistId, List<Long> tracksToRemove) {
         for (Long trackId : tracksToRemove)
-            this.trackByChartRepository.delete(chartId, trackId);
+            this.trackByPlaylistRepository.delete(playlistId, trackId);
     }
+
 }

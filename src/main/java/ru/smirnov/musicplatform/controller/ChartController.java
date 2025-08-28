@@ -12,55 +12,55 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.dto.domain.album.*;
-import ru.smirnov.musicplatform.service.sql.domain.AlbumService;
+import ru.smirnov.musicplatform.service.sql.domain.ChartService;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/albums")
-public class AlbumController {
+@RequestMapping("/charts")
+public class ChartController {
 
-    private final AlbumService albumService;
+    private final ChartService chartService;
 
     @Autowired
-    public AlbumController(AlbumService albumService) {
-        this.albumService = albumService;
+    public ChartController(ChartService chartService) {
+        this.chartService = chartService;
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Long> createAlbum(@Valid @ModelAttribute AlbumToCreateDto dto) {
-        return this.albumService.createAlbum(dto);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Long> createChart(@Valid @ModelAttribute MusicCollectionToCreateDto dto) {
+        return this.chartService.createChart(dto);
     }
 
     @PatchMapping("/update")
-    @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Void> updateAlbum(@Valid @ModelAttribute MusicCollectionToUpdateDto dto) {
-        return this.albumService.updateAlbum(dto);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> updateChart(@Valid @ModelAttribute MusicCollectionToUpdateDto dto) {
+        return this.chartService.updateChart(dto);
     }
 
     @PatchMapping("/update-access-level")
-    @PreAuthorize("hasRole('DISTRIBUTOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updateAccessLevel(@Valid @RequestBody MusicCollectionAccessLevelUpdateDto dto) {
-        return this.albumService.updateAccessLevel(dto);
+        return this.chartService.updateChartAccessLevel(dto);
     }
 
     @PatchMapping("/update-by-tracks")
-    @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Void> updateAlbumByTracks(@Valid @RequestBody MusicCollectionTracksDto dto) {
-        return this.albumService.updateAlbumByTracks(dto);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> updateChartByTracks(@Valid @RequestBody MusicCollectionTracksDto dto) {
+        return this.chartService.updateChartByTracks(dto);
     }
 
     @GetMapping("/get-by-id/{id}")
-    @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<MusicCollectionDataDto> getAlbumById(@NotNull @Positive @PathVariable("id") Long albumId) {
-        return this.albumService.getAlbumById(albumId);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<MusicCollectionDataDto> getChartById(@NotNull @Positive @PathVariable("id") Long chartId) {
+        return this.chartService.getChartById(chartId);
     }
 
     @GetMapping("/get-by-id-safely/{id}")
-    public ResponseEntity<MusicCollectionDataDto> getAlbumByIdSafely(@NotNull @Positive @PathVariable("id") Long albumId) {
-        return this.albumService.getAlbumByIdSafely(albumId);
+    public ResponseEntity<MusicCollectionDataDto> getChartByIdSafely(@NotNull @Positive @PathVariable("id") Long chartId) {
+        return this.chartService.getChartByIdSafely(chartId);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

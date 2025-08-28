@@ -1,9 +1,15 @@
-//package ru.smirnov.musicplatform.repository.domain;
-//
-//import org.springframework.stereotype.Repository;
-//import ru.smirnov.musicplatform.entity.domain.Playlist;
-//import ru.smirnov.musicplatform.repository.auxiliary.MusicCollectionRepository;
-//
-//@Repository
-//public interface PlaylistRepository extends MusicCollectionRepository<Playlist, Long> {
-//}
+package ru.smirnov.musicplatform.repository.domain;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ru.smirnov.musicplatform.entity.domain.Playlist;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
+
+    List<Playlist> findAllByUserId(Long userId);
+
+}
