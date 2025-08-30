@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.dto.FileToUpdateDto;
@@ -17,7 +16,7 @@ import ru.smirnov.musicplatform.dto.domain.artist.ArtistDataDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistExtendedDataDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistToCreateDto;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistToUpdateDto;
-import ru.smirnov.musicplatform.service.sql.domain.ArtistService;
+import ru.smirnov.musicplatform.service.sql.domain.ArtistServiceOld;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,10 +25,10 @@ import java.util.Map;
 @RequestMapping("/artists")
 public class ArtistController {
 
-    private final ArtistService artistService;
+    private final ArtistServiceOld artistService;
 
     @Autowired
-    public ArtistController(ArtistService artistService) {
+    public ArtistController(ArtistServiceOld artistService) {
         this.artistService = artistService;
     }
 

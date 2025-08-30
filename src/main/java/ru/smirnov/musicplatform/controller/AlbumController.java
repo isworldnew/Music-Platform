@@ -12,7 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.dto.domain.album.*;
-import ru.smirnov.musicplatform.service.sql.domain.AlbumService;
+import ru.smirnov.musicplatform.service.sql.domain.AlbumServiceOld;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +21,10 @@ import java.util.Map;
 @RequestMapping("/albums")
 public class AlbumController {
 
-    private final AlbumService albumService;
+    private final AlbumServiceOld albumService;
 
     @Autowired
-    public AlbumController(AlbumService albumService) {
+    public AlbumController(AlbumServiceOld albumService) {
         this.albumService = albumService;
     }
 

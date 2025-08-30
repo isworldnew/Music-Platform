@@ -12,7 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.dto.domain.album.*;
-import ru.smirnov.musicplatform.service.sql.domain.ChartService;
+import ru.smirnov.musicplatform.service.sql.domain.ChartServiceOld;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +21,10 @@ import java.util.Map;
 @RequestMapping("/charts")
 public class ChartController {
 
-    private final ChartService chartService;
+    private final ChartServiceOld chartService;
 
     @Autowired
-    public ChartController(ChartService chartService) {
+    public ChartController(ChartServiceOld chartService) {
         this.chartService = chartService;
     }
 

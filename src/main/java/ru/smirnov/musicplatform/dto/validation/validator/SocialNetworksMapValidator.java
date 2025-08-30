@@ -11,7 +11,7 @@ public class SocialNetworksMapValidator implements ConstraintValidator<SocialNet
     @Override
     public boolean isValid(Map<String, String> socialNetworks, ConstraintValidatorContext constraintValidatorContext) {
 
-        if (socialNetworks == null) return true;
+        // if (socialNetworks == null) return true;
 
         for (Map.Entry<String, String> entry : socialNetworks.entrySet()) {
             String key = entry.getKey();

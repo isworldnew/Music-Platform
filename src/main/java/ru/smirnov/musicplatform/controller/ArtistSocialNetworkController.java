@@ -9,7 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.smirnov.musicplatform.service.sql.relation.ArtistSocialNetworkService;
+import ru.smirnov.musicplatform.service.sql.relation.ArtistSocialNetworkServiceOld;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,10 +18,10 @@ import java.util.Map;
 @RequestMapping("/artists-social-networks")
 public class ArtistSocialNetworkController {
 
-    private final ArtistSocialNetworkService artistSocialNetworkService;
+    private final ArtistSocialNetworkServiceOld artistSocialNetworkService;
 
     @Autowired
-    public ArtistSocialNetworkController(ArtistSocialNetworkService artistSocialNetworkService) {
+    public ArtistSocialNetworkController(ArtistSocialNetworkServiceOld artistSocialNetworkService) {
         this.artistSocialNetworkService = artistSocialNetworkService;
     }
 

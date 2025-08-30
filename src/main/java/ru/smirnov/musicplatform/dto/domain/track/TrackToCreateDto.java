@@ -21,10 +21,10 @@ public class TrackToCreateDto {
     @NotNull // но необязательно пустой
     private Set<Long> coAuthors;
 
-    private MultipartFile cover;
-
-    @NotNull
-    private MultipartFile audio;
+//    private MultipartFile cover;
+//
+//    @NotNull
+//    private MultipartFile audio;
 
     @NotNull @NotBlank @NotEmpty
     private String genre;

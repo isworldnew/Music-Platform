@@ -4,7 +4,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.web.multipart.MultipartFile;
 import ru.smirnov.musicplatform.dto.validation.annotation.Image;
-import ru.smirnov.musicplatform.validators.enums.ContentType;
+import ru.smirnov.musicplatform.validators.old.enums.ContentType;
 
 public class ImageValidator implements ConstraintValidator<Image, MultipartFile> {
     @Override

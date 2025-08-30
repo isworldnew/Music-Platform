@@ -12,7 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.dto.domain.album.*;
-import ru.smirnov.musicplatform.service.sql.domain.PlaylistService;
+import ru.smirnov.musicplatform.service.sql.domain.PlaylistServiceOld;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +21,10 @@ import java.util.Map;
 @RequestMapping("/playlists")
 public class PlaylistController {
     
-    private final PlaylistService playlistService;
+    private final PlaylistServiceOld playlistService;
 
     @Autowired
-    public PlaylistController(PlaylistService playlistService) {
+    public PlaylistController(PlaylistServiceOld playlistService) {
         this.playlistService = playlistService;
     }
 

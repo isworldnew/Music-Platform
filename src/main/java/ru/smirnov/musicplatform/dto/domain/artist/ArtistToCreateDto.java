@@ -19,7 +19,7 @@ public class ArtistToCreateDto {
 
     private MultipartFile cover;
 
-    @SocialNetworksMap
+    @NotNull @SocialNetworksMap
     private Map<String, String> socialNetworks;
 
 }

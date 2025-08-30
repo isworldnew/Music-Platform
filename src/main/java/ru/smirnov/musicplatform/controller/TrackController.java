@@ -4,7 +4,6 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import org.simpleframework.xml.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +16,8 @@ import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelUpdateDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackDataDto;
 import ru.smirnov.musicplatform.dto.domain.track.TrackToCreateDto;
 import ru.smirnov.musicplatform.projection.SavedTrackProjection;
-import ru.smirnov.musicplatform.service.sql.domain.TrackService;
-import ru.smirnov.musicplatform.service.sql.relation.SavedTrackService;
+import ru.smirnov.musicplatform.service.sql.domain.TrackServiceOld;
+import ru.smirnov.musicplatform.service.sql.relation.SavedTrackServiceOld;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,11 +28,11 @@ import java.util.Map;
 @RequestMapping("/tracks")
 public class TrackController {
 
-    private final TrackService trackService;
-    private final SavedTrackService savedTrackService;
+    private final TrackServiceOld trackService;
+    private final SavedTrackServiceOld savedTrackService;
 
     @Autowired
-    public TrackController(TrackService trackService, SavedTrackService savedTrackService) {
+    public TrackController(TrackServiceOld trackService, SavedTrackServiceOld savedTrackService) {
         this.trackService = trackService;
         this.savedTrackService = savedTrackService;
     }
