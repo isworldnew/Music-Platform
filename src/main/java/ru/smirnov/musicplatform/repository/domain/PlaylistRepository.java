@@ -10,6 +10,8 @@ import java.util.Optional;
 @Repository
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
 
+    Optional<Playlist> findByNameAndUserId(String name, Long userId);
+
     List<Playlist> findAllByUserId(Long userId);
 
 }

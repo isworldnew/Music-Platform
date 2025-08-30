@@ -74,6 +74,8 @@ public class AlbumServiceImplementation implements AlbumService {
         this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), artistId);
         Album album = this.albumPreconditionService.getByIdIfExistsAndNameIsUnique(albumId, dto.getName());
 
+        нет проверки на то, что плейлист принадлежит исполнителю
+
         album.setName(dto.getName());
         album.setDescription(dto.getDescription());
 
@@ -92,6 +94,8 @@ public class AlbumServiceImplementation implements AlbumService {
         Artist artist = this.artistPreconditionService.getByIdIfExists(artistId);
         this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), artistId);
         Album album = this.albumPreconditionService.getByIdIfExists(albumId);
+
+        нет проверки на то, что плейлист принадлежит исполнителю
 
         album.setAccessLevel(MusicCollectionAccessLevel.valueOf(dto.getAccessLevel()));
 

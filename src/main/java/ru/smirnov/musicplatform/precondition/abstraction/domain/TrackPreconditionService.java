@@ -11,4 +11,6 @@ public interface TrackPreconditionService {
     Track getByIdIfExistsAndNameIsUniquePerArtist(Long trackId, String name);
 
     Track getIfOwnedOrCollaboratedByArtist(Long trackId, Long artistId);
+
+    Track getIfExistsAndPublic(Long trackId);
 }

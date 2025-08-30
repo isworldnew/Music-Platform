@@ -77,4 +77,14 @@ public class TrackPreconditionServiceImplementation implements TrackPrecondition
 
         return track;
     }
+
+    @Override
+    public Track getIfExistsAndPublic(Long trackId) {
+        Track track = this.getByIdIfExists(trackId);
+
+        if (!track.getStatus().isAvailable())
+            throw new ForbiddenException("Track (id=" + track.getId() + ") is not PUBLIC");
+
+        return track;
+    }
 }
