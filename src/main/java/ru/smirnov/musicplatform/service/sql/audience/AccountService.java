@@ -93,7 +93,8 @@ public class AccountService implements UserDetailsService {
                 .enabled(account.getStatus().isEnabled())
                 .authorities(authorities)
                 .accountId(account.getId())
-                .role("ROLE_" + account.getRole().name())
+                // это вспомогательное доп. поле для меня, а не SimpleGrantedAuthority, поэтому не буду его начинать с ROLE_
+                .role(account.getRole().name())
                 .entityId(entityId)
                 .build();
 

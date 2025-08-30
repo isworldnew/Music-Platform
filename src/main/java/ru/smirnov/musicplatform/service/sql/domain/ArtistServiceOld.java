@@ -22,13 +22,13 @@ import ru.smirnov.musicplatform.entity.relation.ArtistsSocialNetworks;
 import ru.smirnov.musicplatform.mapper.old.ArtistMapperOld;
 import ru.smirnov.musicplatform.projection.DistributorByArtistProjection;
 import ru.smirnov.musicplatform.repository.domain.ArtistRepository;
-import ru.smirnov.musicplatform.service.SecurityContextServiceImpl;
+import ru.smirnov.musicplatform.service.implementation.SecurityContextServiceImpl;
 import ru.smirnov.musicplatform.service.minio.MinioService;
 import ru.smirnov.musicplatform.service.sql.relation.ArtistSocialNetworkServiceOld;
 import ru.smirnov.musicplatform.service.sql.relation.DistributorByArtistServiceOld;
 import ru.smirnov.musicplatform.util.MinioPathUtil;
 import ru.smirnov.musicplatform.validators.old.ArtistValidator;
-import ru.smirnov.musicplatform.validators.old.enums.ContentType;
+import ru.smirnov.musicplatform.validation.ContentType;
 import ru.smirnov.musicplatform.validators.old.interfaces.FileValidator;
 
 import java.util.HashMap;

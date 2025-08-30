@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
-import ru.smirnov.musicplatform.dto.validation.annotation.SocialNetworksMap;
+import ru.smirnov.musicplatform.validation.annotation.SocialNetworksMap;
 
 import java.util.Map;
 

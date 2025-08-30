@@ -3,7 +3,7 @@ package ru.smirnov.musicplatform.validators.old;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.smirnov.musicplatform.exception.InvalidFileExtensionException;
-import ru.smirnov.musicplatform.validators.old.enums.ContentType;
+import ru.smirnov.musicplatform.validation.ContentType;
 import ru.smirnov.musicplatform.validators.old.interfaces.FileValidator;
 
 @Component

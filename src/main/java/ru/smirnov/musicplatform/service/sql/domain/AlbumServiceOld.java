@@ -19,7 +19,7 @@ import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.mapper.old.MusicCollectionMapperOld;
 import ru.smirnov.musicplatform.repository.domain.AlbumRepository;
-import ru.smirnov.musicplatform.service.SecurityContextServiceImpl;
+import ru.smirnov.musicplatform.service.implementation.SecurityContextServiceImpl;
 import ru.smirnov.musicplatform.service.minio.MinioService;
 import ru.smirnov.musicplatform.service.sql.relation.TrackByAlbumServiceOld;
 import ru.smirnov.musicplatform.util.MinioPathUtil;

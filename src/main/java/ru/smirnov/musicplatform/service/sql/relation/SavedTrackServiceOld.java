@@ -9,7 +9,7 @@ import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.exception.BadRequestException;
 import ru.smirnov.musicplatform.projection.SavedTrackProjection;
 import ru.smirnov.musicplatform.repository.relation.SavedTrackRepository;
-import ru.smirnov.musicplatform.service.SecurityContextServiceImpl;
+import ru.smirnov.musicplatform.service.implementation.SecurityContextServiceImpl;
 import ru.smirnov.musicplatform.validators.old.TrackValidator;
 
 import java.util.List;

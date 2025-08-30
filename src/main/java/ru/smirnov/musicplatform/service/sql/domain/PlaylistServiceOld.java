@@ -21,7 +21,7 @@ import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.mapper.old.MusicCollectionMapperOld;
 import ru.smirnov.musicplatform.repository.audience.UserRepository;
 import ru.smirnov.musicplatform.repository.domain.PlaylistRepository;
-import ru.smirnov.musicplatform.service.SecurityContextServiceImpl;
+import ru.smirnov.musicplatform.service.implementation.SecurityContextServiceImpl;
 import ru.smirnov.musicplatform.service.minio.MinioService;
 import ru.smirnov.musicplatform.service.sql.relation.TrackByPlaylistServiceOld;
 import ru.smirnov.musicplatform.util.MinioPathUtil;

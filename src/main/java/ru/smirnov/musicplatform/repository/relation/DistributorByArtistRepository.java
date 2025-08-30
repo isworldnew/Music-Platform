@@ -16,6 +16,32 @@ public interface DistributorByArtistRepository extends JpaRepository<Distributor
 
     @Query(
             value = """
+                    INSERT INTO distributors_by_artists(distributor_id, artist_id, status)
+                    VALUES (:distributorId, :artistId, :status)
+                    RETURNING id
+                    """,
+            nativeQuery = true
+    )
+    Long save(@Param("distributorId") Long distributorId, @Param("artistId") Long artistId, @Param("status") String status);
+
+    @Query(
+            value = """
+                    SELECT
+                    	COUNT(*)
+                    FROM distributors_by_artists
+                    WHERE
+                    	distributors_by_artists.distributor_id = :distributorId
+                    AND
+                    	distributors_by_artists.artist_id = :artistId
+                    AND
+                    	distributors_by_artists.status = 'ACTIVE'
+                    """,
+            nativeQuery = true
+    )
+    Long findActiveRelationBetweenDistributorAndArtist(@Param("distributorId") Long distributorId, @Param("artistId") Long artistId);
+
+    /*@Query(
+            value = """
                     INSERT INTO distributors_by_artists (distributor_id, artist_id, status)
                     VALUES (:distributorId, :artistId, :status)
                     RETURNING id
@@ -84,7 +110,7 @@ public interface DistributorByArtistRepository extends JpaRepository<Distributor
                     """,
             nativeQuery = true
     )
-    Optional<Integer> countAmountOfActiveRelations(@Param("artistId") Long artistId);
+    Optional<Integer> countAmountOfActiveRelations(@Param("artistId") Long artistId);*/
 
 
 }

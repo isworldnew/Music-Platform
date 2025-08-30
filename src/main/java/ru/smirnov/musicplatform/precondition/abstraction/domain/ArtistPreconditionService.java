@@ -6,6 +6,7 @@ public interface ArtistPreconditionService {
 
     void existsByName(String name);
 
-    Artist safelyGetById(Long artistId);
+    Artist getByIdIfExists(Long artistId);
 
+    Artist getByIdIfExistsAndNameIsUnique(Long artistId, String name);
 }

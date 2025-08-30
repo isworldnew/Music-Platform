@@ -33,16 +33,16 @@ public class Track {
     private Long numberOfPlays = 0L;
 
     @Column(name = "upload_date_time", columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP", nullable = false)
-    private OffsetDateTime uploadDateTime;
+    private OffsetDateTime uploadDateTime = OffsetDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TrackStatus status;
+    @Column(name = "access_level", columnDefinition = "VARCHAR(255) DEFAULT 'UPLOADED_AND_HIDDEN'", nullable = false)
+    private TrackStatus status = TrackStatus.UPLOADED_AND_HIDDEN;
 
     @Column(name = "image_reference", columnDefinition = "TEXT")
     private String imageReference;
 
-    @Column(name = "audiofile_reference", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "audiofile_reference", columnDefinition = "TEXT")
     private String audiofileReference;
 
     // так... ну трек у меня не удаляется, он упраялется через статус

@@ -7,6 +7,7 @@ import ru.smirnov.musicplatform.exception.NotFoundException;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.ArtistPreconditionService;
 import ru.smirnov.musicplatform.repository.domain.ArtistRepository;
 
+
 public class ArtistPreconditionServiceImplementation implements ArtistPreconditionService {
 
     private final ArtistRepository artistRepository;
@@ -23,11 +24,32 @@ public class ArtistPreconditionServiceImplementation implements ArtistPreconditi
     }
 
     @Override
-    public Artist safelyGetById(Long artistId) {
+    public Artist getByIdIfExists(Long artistId) {
         return this.artistRepository.findById(artistId).orElseThrow(
                 () -> new NotFoundException("Artist with id=" + artistId + " was not found")
         );
     }
 
+    @Override
+    public Artist getByIdIfExistsAndNameIsUnique(Long artistId, String name) {
+        /*
+        Комплексная проверка:
+        [v] Исполнитель с таким id существует
+        [v] Переданное имя принадлежит либо ему (то есть оно не обновилось)
+        [v] Либо переданное имя уникально среди исполнителей
+        */
+        Artist artistFoundById = this.getByIdIfExists(artistId);
+
+        if (artistFoundById.getName().equals(name))
+            return artistFoundById;
+
+        // второй запрос и не понадобится, если имена совпали
+        Artist artistFoundByName = this.artistRepository.findByName(name).orElse(null);
+
+        if (artistFoundByName != null/*&& (!artistFoundByName.getId().equals(artistId))*/)
+            throw new ConflictException("Artist with such name already exists");
+
+        return artistFoundById;
+    }
 
 }

@@ -23,13 +23,13 @@ import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.mapper.old.TrackMapperOld;
 import ru.smirnov.musicplatform.projection.CoArtistProjection;
 import ru.smirnov.musicplatform.repository.domain.TrackRepository;
-import ru.smirnov.musicplatform.service.SecurityContextServiceImpl;
+import ru.smirnov.musicplatform.service.implementation.SecurityContextServiceImpl;
 import ru.smirnov.musicplatform.service.minio.MinioService;
 import ru.smirnov.musicplatform.service.sql.relation.CoArtistServiceOld;
 import ru.smirnov.musicplatform.util.MinioPathUtil;
 import ru.smirnov.musicplatform.validators.old.ArtistValidatorImproved;
 import ru.smirnov.musicplatform.validators.old.TrackValidator;
-import ru.smirnov.musicplatform.validators.old.enums.ContentType;
+import ru.smirnov.musicplatform.validation.ContentType;
 import ru.smirnov.musicplatform.validators.old.interfaces.FileValidator;
 
 import java.util.List;
