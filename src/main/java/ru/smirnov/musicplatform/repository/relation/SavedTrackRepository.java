@@ -35,4 +35,5 @@ public interface SavedTrackRepository extends JpaRepository<SavedTracks, Long> {
     @Modifying
     void delete(@Param("userId") Long userId, @Param("trackId") Long trackId);
 
+    Optional<SavedTracks> findByTrackIdAndUserId(Long trackId, Long userId);
 }
