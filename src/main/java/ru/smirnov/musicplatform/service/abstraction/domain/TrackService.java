@@ -16,10 +16,10 @@ public interface TrackService {
 
     void listenToTrack(Long trackId);
 
-    TrackResponse getTrackByIdWithNoRestrictions(Long trackId);
+    TrackResponse getTrackByIdWithNoRestrictions(Long trackId, DataForToken tokenData);
 
     TrackResponse getTrackById(Long trackId);
 
-    ExtendedTrackResponse getTrackWithPossibleRestrictions(Long trackId);
+    ExtendedTrackResponse getTrackWithPossibleRestrictions(Long trackId, DataForToken tokenData);
 
 }

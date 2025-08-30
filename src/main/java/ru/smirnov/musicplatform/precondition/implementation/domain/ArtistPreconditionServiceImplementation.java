@@ -1,13 +1,14 @@
 package ru.smirnov.musicplatform.precondition.implementation.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.exception.ConflictException;
 import ru.smirnov.musicplatform.exception.NotFoundException;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.ArtistPreconditionService;
 import ru.smirnov.musicplatform.repository.domain.ArtistRepository;
 
-
+@Service
 public class ArtistPreconditionServiceImplementation implements ArtistPreconditionService {
 
     private final ArtistRepository artistRepository;

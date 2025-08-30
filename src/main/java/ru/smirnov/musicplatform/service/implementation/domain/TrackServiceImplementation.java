@@ -11,7 +11,6 @@ import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.exception.ForbiddenException;
-import ru.smirnov.musicplatform.mapper.abstraction.ArtistMapper;
 import ru.smirnov.musicplatform.mapper.abstraction.TrackMapper;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.ArtistPreconditionService;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.TrackPreconditionService;
@@ -20,6 +19,7 @@ import ru.smirnov.musicplatform.repository.domain.TrackRepository;
 import ru.smirnov.musicplatform.service.abstraction.domain.TrackService;
 
 import java.util.List;
+
 
 @Service
 public class TrackServiceImplementation implements TrackService {
@@ -31,23 +31,19 @@ public class TrackServiceImplementation implements TrackService {
     private final ArtistPreconditionService artistPreconditionService;
     private final DistributorByArtistPreconditionService distributorByArtistPreconditionService;
 
-    private final ArtistMapper artistMapper;
-
     @Autowired
     public TrackServiceImplementation(
             TrackRepository trackRepository,
             TrackPreconditionService trackPreconditionService,
             TrackMapper trackMapper,
             ArtistPreconditionService artistPreconditionService,
-            DistributorByArtistPreconditionService distributorByArtistPreconditionService,
-            ArtistMapper artistMapper
+            DistributorByArtistPreconditionService distributorByArtistPreconditionService
     ) {
         this.trackRepository = trackRepository;
         this.trackPreconditionService = trackPreconditionService;
         this.trackMapper = trackMapper;
         this.artistPreconditionService = artistPreconditionService;
         this.distributorByArtistPreconditionService = distributorByArtistPreconditionService;
-        this.artistMapper = artistMapper;
     }
 
     @Override
@@ -131,7 +127,7 @@ public class TrackServiceImplementation implements TrackService {
     Полноценный просмотр:
     - ADMIN и DISTRIBUTOR: получить всю информацию о треке вне зависимости от его статуса (+ соавторы)
 
-    - USER: вообще, нужно сделать правило, что трек должен быть сохранён для добавления его в плейлист или для пометки тегом
+    - USER: вообще, нужно сделать правило для юзера, что трек должен быть сохранён для добавления его в плейлист или для пометки тегом
     -- если трек не сохранён и не PUBLIC, то просто FORBIDDEN
     -- если трек не сохранён и PUBLIC, то полная информация, но без тегов
     -- если трек сохранён и не PUBLIC, то информация с тегами, но со скрытыми ссылками
@@ -147,10 +143,32 @@ public class TrackServiceImplementation implements TrackService {
     */
 
     @Override
-    public TrackResponse getTrackByIdWithNoRestrictions(Long trackId) {
+    public TrackResponse getTrackByIdWithNoRestrictions(Long trackId, DataForToken tokenData) {
         // для ADMIN и DISTRIBUTOR
-        // так... а дистрибьютор может просматривать вообще все треки? Просто, как будто, только своего исполнителя (ещё и статус надо учесть)
+        // так... а дистрибьютор может просматривать вообще все треки? Просто, как будто, только своего исполнителя (ещё и статус надо учесть (опять наверное ACTIVE))
         // и если его исполнитель есть в соавторстве у данного трека
+        // а вот админ может просмотреть любой трек
+
+        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
+
+        /*
+        Дистрибьютор в целом не имеет влияения на трек, если исполнитель, с которым у данного дистрибьютора есть ACTIVE-связь,
+        указан в данном треке просто как соавтор... (разве что может добавить такой трек в альбом или удалить оттуда) Соответственно,
+        и смысла давать возможность просматривать чужой трек, где твой ACTIVE-исполнитель является соавтором - нет
+
+        или наоборот - смысл есть? Мол, тебе же надо видеть, какой трек ты в альбом добавляешь
+        */
+        /*
+        Нужно взять список ACTIVE-исполнителей обратившегося дистрибьютора, а затем посмортеть, есть ли кто-то из них
+        среди соавторов запрашиваемого трека
+        */
+        if (tokenData.getRole().equals(Role.DISTRIBUTOR.name())) {
+            List<Long> coArtists = track.getCoArtists().stream().map(coArtist -> coArtist.getArtist().getId()).toList();
+
+            // тогда нужен ещё метод просмотра всех соавторств у своих исполнителей
+        }
+
+        return this.trackMapper.trackEntityToTrackResponse(track);
     }
 
     @Override
@@ -159,20 +177,24 @@ public class TrackServiceImplementation implements TrackService {
         Track track = this.trackPreconditionService.getByIdIfExists(trackId);
 
         if (!track.getStatus().isAvailable())
-            throw new ForbiddenException("Track (id=" + trackId + ") is unavailable");
+            throw new ForbiddenException("Track (id=" + trackId + ") is unavailable (non-PUBLIC status)");
 
-        ArtistShortcutResponse artist = this.artistMapper.artistEntityToArtistShortcutResponse(track.getArtist());
-        List<ArtistShortcutResponse> coArtists = track.getCoArtists().stream()
-                .map(ca -> ca.getArtist())
-                .map(a -> this.artistMapper.artistEntityToArtistShortcutResponse(a))
-                .toList();
-
-        return this.trackMapper.trackEntityToTrackResponse(track, artist, coArtists);
+        return this.trackMapper.trackEntityToTrackResponse(track);
     }
 
     @Override
-    public ExtendedTrackResponse getTrackWithPossibleRestrictions(Long trackId) {
+    public ExtendedTrackResponse getTrackWithPossibleRestrictions(Long trackId, DataForToken tokenData) {
         // для USER
+        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
+
+        // если трек не сохранён и не-PUBLIC -> Forbidden
+
+        // если трек не сохранён и PUBLIC -> TrackResponse
+
+        // если трек сохранён и не-PUBLIC -> ExtendedTrackResponse, но со скрытыми ссылками на обложку и аудио
+
+        // если трек сохранён и PUBLIC -> ExtendedTrackResponse
+
     }
 
     // а выбор всех:

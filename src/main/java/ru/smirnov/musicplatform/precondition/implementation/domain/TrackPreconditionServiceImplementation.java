@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.exception.ConflictException;
+import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.exception.NotFoundException;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.TrackPreconditionService;
 import ru.smirnov.musicplatform.repository.domain.TrackRepository;
+
+import java.util.List;
 
 @Service
 public class TrackPreconditionServiceImplementation implements TrackPreconditionService {
@@ -60,4 +63,18 @@ public class TrackPreconditionServiceImplementation implements TrackPrecondition
         return trackFoundById;
     }
 
+    @Override
+    public Track getIfOwnedOrCollaboratedByArtist(Long trackId, Long artistId) {
+        /*
+        метод, который комплексно проверяет существование трека и его принадлежность к артисту (он должен быть автором или соавтором)
+        */
+        Track track = this.getByIdIfExists(trackId);
+
+        List<Long> coArtists = track.getCoArtists().stream().map(coArtist -> coArtist.getArtist().getId()).toList();
+
+        if (!track.getArtist().getId().equals(artistId) && !coArtists.contains(artistId))
+            throw new ForbiddenException("Track (id=" + track.getId() + ") doesn't owned or collaborated by artist (id=" + artistId + ")");
+
+        return track;
+    }
 }
