@@ -11,9 +11,9 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.config.MinioBuckets;
-import ru.smirnov.musicplatform.dto.domain.MusicCollectionAuthorDto;
-import ru.smirnov.musicplatform.dto.domain.album.*;
-import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutDto;
+import ru.smirnov.musicplatform.dto.old.domain.MusicCollectionAuthorDto;
+import ru.smirnov.musicplatform.dto.old.domain.album.*;
+import ru.smirnov.musicplatform.dto.old.domain.track.TrackShortcutDto;
 import ru.smirnov.musicplatform.entity.audience.Admin;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.MusicCollectionAccessLevel;
 import ru.smirnov.musicplatform.entity.domain.Chart;

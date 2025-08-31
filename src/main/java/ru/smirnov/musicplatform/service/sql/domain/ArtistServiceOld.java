@@ -11,11 +11,11 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.config.MinioBuckets;
 import ru.smirnov.musicplatform.dto.FileToUpdateDto;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistDataDto;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistExtendedDataDto;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistToCreateDto;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistToUpdateDto;
-import ru.smirnov.musicplatform.dto.relation.ArtistSocialNetworkDto;
+import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistDataDto;
+import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistExtendedDataDto;
+import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistToCreateDto;
+import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistToUpdateDto;
+import ru.smirnov.musicplatform.dto.old.relation.ArtistSocialNetworkDto;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributionStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.relation.ArtistsSocialNetworks;

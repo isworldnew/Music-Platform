@@ -1,14 +1,12 @@
-package ru.smirnov.musicplatform.dto.domain.track;
+package ru.smirnov.musicplatform.dto.old.domain.track;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistDataDto;
 import ru.smirnov.musicplatform.projection.CoArtistProjection;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Data @NoArgsConstructor
 public class TrackDataDto {

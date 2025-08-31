@@ -1,13 +1,15 @@
-package ru.smirnov.musicplatform.dto.domain.artist;
+package ru.smirnov.musicplatform.dto.old.relation;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor
-public class ArtistShortcutDto {
+public class ArtistSocialNetworkDto {
 
     private Long id;
 
     private String name;
+
+    private String reference;
 
 }

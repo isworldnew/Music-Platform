@@ -7,7 +7,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.smirnov.musicplatform.dto.exception.ExceptionDto;
+import ru.smirnov.musicplatform.dto.exception.ExceptionResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -17,9 +17,9 @@ public class GlobalExceptionHandler {
             BadCredentialsException.class,
             SecurityContextException.class
     })
-    public ResponseEntity<ExceptionDto> handleUnauthorizedExceptions(Exception ex) {
+    public ResponseEntity<ExceptionResponse> handleUnauthorizedExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                new ExceptionDto(ex.getMessage())
+                new ExceptionResponse(ex.getMessage())
         );
     }
 
@@ -27,9 +27,9 @@ public class GlobalExceptionHandler {
             DisabledException.class,
             ForbiddenException.class
     })
-    public ResponseEntity<ExceptionDto> handleForbiddenExceptions(Exception ex) {
+    public ResponseEntity<ExceptionResponse> handleForbiddenExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                new ExceptionDto(ex.getMessage())
+                new ExceptionResponse(ex.getMessage())
         );
     }
 
@@ -43,9 +43,9 @@ public class GlobalExceptionHandler {
             RelationBetweenArtistAndDistributorException.class,
             ConflictException.class
     })
-    public ResponseEntity<ExceptionDto> handleConflictExceptions(Exception ex) {
+    public ResponseEntity<ExceptionResponse> handleConflictExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                new ExceptionDto(ex.getMessage())
+                new ExceptionResponse(ex.getMessage())
         );
     }
 
@@ -54,27 +54,27 @@ public class GlobalExceptionHandler {
             InvalidFileExtensionException.class,
             BadRequestException.class
     })
-    public ResponseEntity<ExceptionDto> handleBadRequestExceptions(Exception ex) {
+    public ResponseEntity<ExceptionResponse> handleBadRequestExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new ExceptionDto(ex.getMessage())
+                new ExceptionResponse(ex.getMessage())
         );
     }
 
     @ExceptionHandler({
             NotFoundException.class
     })
-    public ResponseEntity<ExceptionDto> handleNotFoundExceptions(Exception ex) {
+    public ResponseEntity<ExceptionResponse> handleNotFoundExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ExceptionDto(ex.getMessage())
+                new ExceptionResponse(ex.getMessage())
         );
     }
 
     @ExceptionHandler({
             MinioException.class
     })
-    public ResponseEntity<ExceptionDto> handleInternalServerErrorExceptions(Exception ex) {
+    public ResponseEntity<ExceptionResponse> handleInternalServerErrorExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                new ExceptionDto(ex.getMessage())
+                new ExceptionResponse(ex.getMessage())
         );
     }
 

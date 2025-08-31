@@ -24,6 +24,15 @@ public interface CoArtistRepository extends JpaRepository<CoArtists, Long> {
 
     @Query(
             value = """
+                    DELETE FROM co_artists
+                    WHERE co_artists.track_id = :trackId AND co_artists.artist_id = :artistId
+                    """,
+            nativeQuery = true
+    )
+    void delete(@Param("trackId") Long trackId, @Param("artistId") Long artistId);
+
+    @Query(
+            value = """
                     SELECT
                     	co_artists.id AS id,
                     	co_artists.id AS artist_id,

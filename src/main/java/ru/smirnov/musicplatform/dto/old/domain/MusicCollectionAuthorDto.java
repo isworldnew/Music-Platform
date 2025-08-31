@@ -1,4 +1,4 @@
-package ru.smirnov.musicplatform.dto.domain;
+package ru.smirnov.musicplatform.dto.old.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

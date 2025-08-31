@@ -2,10 +2,10 @@ package ru.smirnov.musicplatform.mapper.old;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutDto;
-import ru.smirnov.musicplatform.dto.domain.track.TrackDataDto;
-import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutDto;
-import ru.smirnov.musicplatform.dto.domain.track.TrackToCreateDto;
+import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistShortcutDto;
+import ru.smirnov.musicplatform.dto.old.domain.track.TrackDataDto;
+import ru.smirnov.musicplatform.dto.old.domain.track.TrackShortcutDto;
+import ru.smirnov.musicplatform.dto.old.domain.track.TrackToCreateDto;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;

@@ -1,8 +1,8 @@
-package ru.smirnov.musicplatform.dto.domain.artist;
+package ru.smirnov.musicplatform.dto.old.domain.artist;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.smirnov.musicplatform.dto.relation.ArtistSocialNetworkDto;
+import ru.smirnov.musicplatform.dto.old.relation.ArtistSocialNetworkDto;
 import ru.smirnov.musicplatform.projection.DistributorByArtistProjection;
 
 import java.util.List;

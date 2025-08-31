@@ -1,4 +1,4 @@
-package ru.smirnov.musicplatform.dto.domain.album;
+package ru.smirnov.musicplatform.dto.old.domain.album;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

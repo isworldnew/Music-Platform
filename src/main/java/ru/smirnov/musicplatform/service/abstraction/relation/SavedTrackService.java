@@ -6,5 +6,5 @@ public interface SavedTrackService {
 
     Long saveTrack(Long trackId, DataForToken tokenData);
 
-    void deleteTrack(Long trackId, DataForToken tokenData);
+    void deleteTrackFromSaved(Long trackId, DataForToken tokenData);
 }

@@ -1,8 +1,8 @@
-package ru.smirnov.musicplatform.dto.domain.track;
+package ru.smirnov.musicplatform.dto.old.domain.track;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutDto;
+import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistShortcutDto;
 
 import java.util.List;
 
