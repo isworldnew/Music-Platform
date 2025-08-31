@@ -26,7 +26,7 @@ public class Tag {
     @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "tag")
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonManagedReference
     private List<TaggedTracks> tracks = new ArrayList<>();
 

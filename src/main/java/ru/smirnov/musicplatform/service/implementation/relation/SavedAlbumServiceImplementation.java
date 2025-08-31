@@ -11,7 +11,7 @@ import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.AlbumPreconditionService;
 import ru.smirnov.musicplatform.repository.relation.SavedAlbumRepository;
 import ru.smirnov.musicplatform.service.abstraction.relation.SavedAlbumService;
-
+// [v] checked
 @Service
 public class SavedAlbumServiceImplementation implements SavedAlbumService {
 
@@ -32,8 +32,6 @@ public class SavedAlbumServiceImplementation implements SavedAlbumService {
     public Long addAlbum(Long albumId, DataForToken tokenData) {
         Album album = this.albumPreconditionService.getByIdIfExists(albumId);
 
-        а если он станет не PUBLIC после сохранения?
-
         if (!album.getAccessLevel().isAvailable())
             throw new ForbiddenException("Album (id=" + albumId + ") is not PUBLIC");
 
@@ -49,6 +47,7 @@ public class SavedAlbumServiceImplementation implements SavedAlbumService {
     @Override
     @Transactional
     public void removeAlbum(Long albumId, DataForToken tokenData) {
+        Album album = this.albumPreconditionService.getByIdIfExists(albumId);
         this.savedAlbumRepository.delete(tokenData.getEntityId(), albumId);
     }
 }

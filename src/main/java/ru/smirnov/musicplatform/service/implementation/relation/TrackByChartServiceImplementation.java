@@ -13,6 +13,7 @@ import ru.smirnov.musicplatform.precondition.abstraction.domain.TrackPreconditio
 import ru.smirnov.musicplatform.repository.relation.TrackByChartRepository;
 import ru.smirnov.musicplatform.service.abstraction.relation.TrackByChartService;
 
+// [v] checked
 @Service
 public class TrackByChartServiceImplementation implements TrackByChartService {
 
@@ -49,6 +50,8 @@ public class TrackByChartServiceImplementation implements TrackByChartService {
     @Override
     @Transactional
     public void removeTrack(Long chartId, Long trackId, DataForToken tokenData) {
+        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
+        Chart chart = this.chartPreconditionService.getByIdIfExists(chartId);
         this.trackByChartRepository.delete(chartId, trackId);
     }
 

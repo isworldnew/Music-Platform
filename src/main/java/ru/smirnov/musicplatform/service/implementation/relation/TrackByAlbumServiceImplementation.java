@@ -14,7 +14,7 @@ import ru.smirnov.musicplatform.precondition.abstraction.relation.DistributorByA
 import ru.smirnov.musicplatform.repository.relation.TrackByAlbumRepository;
 import ru.smirnov.musicplatform.service.abstraction.relation.TrackByAlbumService;
 
-
+// [v] checked
 @Service
 public class TrackByAlbumServiceImplementation implements TrackByAlbumService {
 
@@ -40,12 +40,6 @@ public class TrackByAlbumServiceImplementation implements TrackByAlbumService {
     @Override
     @Transactional
     public Long addTrack(Long albumId, Long trackId, DataForToken tokenData) {
-        /*
-        Проверки:
-        [v] Данный альбом существует
-        [v] Дистрибьютор имеет право им управлять
-        [v] Трек существует, притом исполнитель в нём либо автор, либо соавтор
-        */
         Album album = this.albumPreconditionService.getByIdIfExists(albumId);
         this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), album.getArtist().getId());
         Track track = this.trackPreconditionService.getIfOwnedOrCollaboratedByArtist(trackId, album.getArtist().getId());
@@ -63,7 +57,8 @@ public class TrackByAlbumServiceImplementation implements TrackByAlbumService {
     public void removeTrack(Long albumId, Long trackId, DataForToken tokenData) {
         Album album = this.albumPreconditionService.getByIdIfExists(albumId);
         this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), album.getArtist().getId());
-        Track track = this.trackPreconditionService.getIfOwnedOrCollaboratedByArtist(trackId, album.getArtist().getId());
+        // Track track = this.trackPreconditionService.getIfOwnedOrCollaboratedByArtist(trackId, album.getArtist().getId());
+        Track track = trackPreconditionService.getByIdIfExists(trackId);
 
         this.trackByAlbumRepository.delete(albumId, trackId);
     }

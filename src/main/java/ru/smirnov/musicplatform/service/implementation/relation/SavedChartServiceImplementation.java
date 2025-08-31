@@ -12,6 +12,8 @@ import ru.smirnov.musicplatform.precondition.abstraction.domain.ChartPreconditio
 import ru.smirnov.musicplatform.repository.relation.SavedChartRepository;
 import ru.smirnov.musicplatform.service.abstraction.relation.SavedChartService;
 
+
+// [v] checked
 @Service
 public class SavedChartServiceImplementation implements SavedChartService {
 
@@ -46,6 +48,7 @@ public class SavedChartServiceImplementation implements SavedChartService {
     @Override
     @Transactional
     public void removeChart(Long chartId, DataForToken tokenData) {
+        Chart chart = this.chartPreconditionService.getByIdIfExists(chartId);
         this.savedChartRepository.delete(tokenData.getEntityId(), chartId);
     }
 }

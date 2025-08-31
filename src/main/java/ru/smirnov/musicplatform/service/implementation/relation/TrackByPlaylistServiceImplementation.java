@@ -14,6 +14,7 @@ import ru.smirnov.musicplatform.precondition.abstraction.relation.SavedTrackPrec
 import ru.smirnov.musicplatform.repository.relation.TrackByPlaylistRepository;
 import ru.smirnov.musicplatform.service.abstraction.relation.TrackByPlaylistService;
 
+// [v] checked
 @Service
 public class TrackByPlaylistServiceImplementation implements TrackByPlaylistService {
 
@@ -28,7 +29,7 @@ public class TrackByPlaylistServiceImplementation implements TrackByPlaylistServ
             TrackByPlaylistRepository trackByPlaylistRepository,
             TrackPreconditionService trackPreconditionService,
             PlaylistPreconditionService playlistPreconditionService,
-            SavedTrackPreconditionService savedTrackPreconditionService,
+            SavedTrackPreconditionService savedTrackPreconditionService
     ) {
         this.trackByPlaylistRepository = trackByPlaylistRepository;
         this.trackPreconditionService = trackPreconditionService;
@@ -39,8 +40,6 @@ public class TrackByPlaylistServiceImplementation implements TrackByPlaylistServ
     @Override
     @Transactional
     public Long addTrack(Long playlistId, Long trackId, DataForToken tokenData) {
-        а не хочешь проверить, что плейлист пользователю принадлежит?
-        и то, что трек - сохранён?
         Playlist playlist = this.playlistPreconditionService.existsAndBelongToUser(playlistId, tokenData.getEntityId());
         Track track = this.trackPreconditionService.getIfExistsAndPublic(trackId);
         this.savedTrackPreconditionService.trackIsSavedCheck(trackId, tokenData.getEntityId());
@@ -56,7 +55,8 @@ public class TrackByPlaylistServiceImplementation implements TrackByPlaylistServ
     @Override
     @Transactional
     public void removeTrack(Long playlistId, Long trackId, DataForToken tokenData) {
-        если удалить сохранённый трек - он же в плейлистах пользователя останется
-        и в тегах тоже...
+        Playlist playlist = this.playlistPreconditionService.existsAndBelongToUser(playlistId, tokenData.getEntityId());
+        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
+        this.trackByPlaylistRepository.save(playlistId, trackId);
     }
 }

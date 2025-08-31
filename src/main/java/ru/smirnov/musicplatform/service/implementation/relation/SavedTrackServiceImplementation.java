@@ -47,6 +47,8 @@ public class SavedTrackServiceImplementation implements SavedTrackService {
         Track track = this.trackPreconditionService.getByIdIfExists(trackId);
 
         this.savedTrackRepository.delete(tokenData.getEntityId(), trackId);
+
+        при удалении сохранённого трека нужно удалять записи с данным track_id из tagged_tracks
     }
 
 }

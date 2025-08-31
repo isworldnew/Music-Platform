@@ -12,6 +12,7 @@ import ru.smirnov.musicplatform.precondition.abstraction.domain.PlaylistPrecondi
 import ru.smirnov.musicplatform.repository.relation.SavedPlaylistRepository;
 import ru.smirnov.musicplatform.service.abstraction.relation.SavedPlaylistService;
 
+// [v] checked
 @Service
 public class SavedPlaylistServiceImplementation implements SavedPlaylistService {
 
@@ -50,6 +51,7 @@ public class SavedPlaylistServiceImplementation implements SavedPlaylistService 
     @Override
     @Transactional
     public void removePlaylist(Long playlistId, DataForToken tokenData) {
+        Playlist playlist = this.playlistPreconditionService.getByIdIfExists(playlistId);
         this.savedPlaylistRepository.delete(tokenData.getEntityId(), playlistId);
     }
 
