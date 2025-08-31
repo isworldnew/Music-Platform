@@ -62,17 +62,15 @@ public class AlbumServiceImplementation implements AlbumService {
 
     @Override
     @Transactional
-    public void updateAlbum(Long artistId, Long albumId, MusicCollectionRequest dto, DataForToken tokenData) {
+    public void updateAlbum(Long albumId, MusicCollectionRequest dto, DataForToken tokenData) {
         /*
         Проверяем, что:
-        [v] Данный исполнитель вообще существует
-        [v] Дистрибьютор, сделавший запрос, имеет ACTIVE-связь с данным исполнителем
         [v] Данный альбом вообще существует
         [v] Переданное имя либо не изменилось, либо уникально среди альбомов исполнителя
+        [v] Дистрибьютор, сделавший запрос, имеет ACTIVE-связь с данным исполнителем
         */
-        Artist artist = this.artistPreconditionService.getByIdIfExists(artistId);
-        this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), artistId);
         Album album = this.albumPreconditionService.getByIdIfExistsAndNameIsUnique(albumId, dto.getName());
+        this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), album.getArtist().getId());
 
         нет проверки на то, что плейлист принадлежит исполнителю
 
@@ -84,16 +82,14 @@ public class AlbumServiceImplementation implements AlbumService {
 
     @Override
     @Transactional
-    public void updateAlbumAccessLevel(Long artistId, Long albumId, MusicCollectionAccessLevelRequest dto, DataForToken tokenData) {
+    public void updateAlbumAccessLevel(Long albumId, MusicCollectionAccessLevelRequest dto, DataForToken tokenData) {
         /*
         Проверяем, что:
-        [v] Данный исполнитель вообще существует
-        [v] Дистрибьютор, сделавший запрос, имеет ACTIVE-связь с данным исполнителем
         [v] Данный альбом вообще существует
+        [v] Дистрибьютор, сделавший запрос, имеет ACTIVE-связь с исполнителем данного альбома
         */
-        Artist artist = this.artistPreconditionService.getByIdIfExists(artistId);
-        this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), artistId);
         Album album = this.albumPreconditionService.getByIdIfExists(albumId);
+        this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), album.getArtist().getId());
 
         нет проверки на то, что плейлист принадлежит исполнителю
 

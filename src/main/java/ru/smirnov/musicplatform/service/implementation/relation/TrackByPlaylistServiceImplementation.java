@@ -39,6 +39,8 @@ public class TrackByPlaylistServiceImplementation implements TrackByPlaylistServ
     @Override
     @Transactional
     public Long addTrack(Long playlistId, Long trackId, DataForToken tokenData) {
+        а не хочешь проверить, что плейлист пользователю принадлежит?
+        и то, что трек - сохранён?
         Playlist playlist = this.playlistPreconditionService.existsAndBelongToUser(playlistId, tokenData.getEntityId());
         Track track = this.trackPreconditionService.getIfExistsAndPublic(trackId);
         this.savedTrackPreconditionService.trackIsSavedCheck(trackId, tokenData.getEntityId());

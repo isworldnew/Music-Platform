@@ -8,7 +8,7 @@ public interface AlbumService {
 
     Long createAlbum(Long artistId, MusicCollectionRequest dto, DataForToken tokenData);
 
-    void updateAlbum(Long artistId, Long albumId, MusicCollectionRequest dto, DataForToken tokenData);
+    void updateAlbum(Long albumId, MusicCollectionRequest dto, DataForToken tokenData);
 
-    void updateAlbumAccessLevel(Long artistId, Long albumId, MusicCollectionAccessLevelRequest dto, DataForToken tokenData);
+    void updateAlbumAccessLevel(Long albumId, MusicCollectionAccessLevelRequest dto, DataForToken tokenData);
 }

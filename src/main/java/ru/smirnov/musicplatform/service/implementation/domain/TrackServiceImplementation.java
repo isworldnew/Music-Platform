@@ -95,6 +95,9 @@ public class TrackServiceImplementation implements TrackService {
     public void updateTrackAccessLevel(Long trackId, TrackAccessLevelRequest dto, DataForToken tokenData) {
         Track track = this.trackPreconditionService.getByIdIfExists(trackId);
 
+        if (!dto.getAccessLevel().equals(TrackStatus.PUBLISHED.name()) && track.getAudiofileReference() == null)
+            throw new ForbiddenException("Track (id=" + trackId + ") can't be PUBLISHED because it has no audiofile uploaded");
+
         if (tokenData.getRole().equals(Role.DISTRIBUTOR.name())) {
             this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), track.getArtist().getId());
 
@@ -112,7 +115,7 @@ public class TrackServiceImplementation implements TrackService {
     @Override
     @Transactional
     public void listenToTrack(Long trackId) {
-        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
+        Track track = this.trackPreconditionService.getIfExistsAndPublic(trackId);
         track.setNumberOfPlays(track.getNumberOfPlays() + 1);
         this.trackRepository.save(track);
     }
