@@ -69,4 +69,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler({
+            MinioException.class
+    })
+    public ResponseEntity<ExceptionDto> handleInternalServerErrorExceptions(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new ExceptionDto(ex.getMessage())
+        );
+    }
+
 }
