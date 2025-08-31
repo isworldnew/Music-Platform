@@ -9,7 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.smirnov.musicplatform.service.sql.relation.ArtistSocialNetworkServiceOld;
+import ru.smirnov.musicplatform.service.deprecated.sql.relation.ArtistSocialNetworkServiceOld;
 
 import java.util.HashMap;
 import java.util.Map;

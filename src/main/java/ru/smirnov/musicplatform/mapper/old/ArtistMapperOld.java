@@ -1,11 +1,11 @@
 package ru.smirnov.musicplatform.mapper.old;
 
 import org.springframework.stereotype.Component;
-import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistDataDto;
-import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistExtendedDataDto;
-import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistShortcutDto;
-import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistToCreateDto;
-import ru.smirnov.musicplatform.dto.old.relation.ArtistSocialNetworkDto;
+import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistDataDto;
+import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistExtendedDataDto;
+import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistShortcutDto;
+import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistToCreateDto;
+import ru.smirnov.musicplatform.dto.deprecated.relation.ArtistSocialNetworkDto;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.projection.DistributorByArtistProjection;
 

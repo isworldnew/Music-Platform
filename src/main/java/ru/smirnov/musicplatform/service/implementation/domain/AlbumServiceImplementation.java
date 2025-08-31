@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.musicplatform.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.tmp.MusicCollectionAccessLevelRequest;
-import ru.smirnov.musicplatform.dto.tmp.MusicCollectionRequest;
+import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionAccessLevelRequest;
+import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionRequest;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.MusicCollectionAccessLevel;
 import ru.smirnov.musicplatform.entity.domain.Album;
 import ru.smirnov.musicplatform.entity.domain.Artist;
@@ -96,6 +96,8 @@ public class AlbumServiceImplementation implements AlbumService {
         album.setAccessLevel(MusicCollectionAccessLevel.valueOf(dto.getAccessLevel()));
 
         this.albumRepository.save(album);
+
+        не нужно ли удалить плейлист из сохранённых, если он был PUBLIC, а стал PRIVATE?
     }
 
 

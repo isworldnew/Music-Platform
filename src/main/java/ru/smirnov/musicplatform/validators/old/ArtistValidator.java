@@ -7,7 +7,7 @@ import ru.smirnov.musicplatform.exception.ArtistNameNonUniqueException;
 import ru.smirnov.musicplatform.exception.NotFoundException;
 import ru.smirnov.musicplatform.exception.ReferenceConsistencyViolationException;
 import ru.smirnov.musicplatform.repository.domain.ArtistRepository;
-import ru.smirnov.musicplatform.service.sql.relation.DistributorByArtistServiceOld;
+import ru.smirnov.musicplatform.service.deprecated.sql.relation.DistributorByArtistServiceOld;
 
 @Component
 public class ArtistValidator {

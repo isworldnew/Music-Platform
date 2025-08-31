@@ -11,8 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import ru.smirnov.musicplatform.dto.old.domain.album.*;
-import ru.smirnov.musicplatform.service.sql.domain.ChartServiceOld;
+import ru.smirnov.musicplatform.dto.deprecated.domain.album.*;
+import ru.smirnov.musicplatform.service.deprecated.sql.domain.ChartServiceOld;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,8 +1,8 @@
 package ru.smirnov.musicplatform.service.abstraction.minio;
 
 import ru.smirnov.musicplatform.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.tmp.AudioFileRequest;
-import ru.smirnov.musicplatform.dto.tmp.ImageFileRequest;
+import ru.smirnov.musicplatform.dto.file.AudioFileRequest;
+import ru.smirnov.musicplatform.dto.file.ImageFileRequest;
 
 public interface TrackFileManagementService {
 

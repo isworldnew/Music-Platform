@@ -1,7 +1,7 @@
 package ru.smirnov.musicplatform.mapper.abstraction;
 
-import ru.smirnov.musicplatform.dto.tmp.TrackRequest;
-import ru.smirnov.musicplatform.dto.tmp.TrackResponse;
+import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
+import ru.smirnov.musicplatform.dto.domain.track.TrackResponse;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;
 

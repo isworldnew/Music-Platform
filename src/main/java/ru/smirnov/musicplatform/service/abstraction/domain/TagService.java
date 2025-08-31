@@ -1,8 +1,8 @@
 package ru.smirnov.musicplatform.service.abstraction.domain;
 
 import ru.smirnov.musicplatform.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.tmp.TagRequest;
-import ru.smirnov.musicplatform.dto.tmp.TagResponse;
+import ru.smirnov.musicplatform.dto.domain.tag.TagRequest;
+import ru.smirnov.musicplatform.dto.domain.tag.TagResponse;
 
 import java.util.List;
 

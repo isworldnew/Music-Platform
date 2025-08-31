@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.config.MinioBuckets;
-import ru.smirnov.musicplatform.dto.tmp.ImageFileRequest;
+import ru.smirnov.musicplatform.dto.file.ImageFileRequest;
 import ru.smirnov.musicplatform.entity.domain.Chart;
 import ru.smirnov.musicplatform.exception.MinioException;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.ChartPreconditionService;

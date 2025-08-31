@@ -1,9 +1,9 @@
 package ru.smirnov.musicplatform.mapper.abstraction;
 
-import ru.smirnov.musicplatform.dto.tmp.ArtistRequest;
-import ru.smirnov.musicplatform.dto.tmp.ArtistResponse;
-import ru.smirnov.musicplatform.dto.tmp.ArtistShortcutResponse;
-import ru.smirnov.musicplatform.dto.tmp.ExtendedArtistResponse;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistRequest;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistResponse;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutResponse;
+import ru.smirnov.musicplatform.dto.domain.artist.ExtendedArtistResponse;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 
 public interface ArtistMapper {

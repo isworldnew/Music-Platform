@@ -1,8 +1,8 @@
 package ru.smirnov.musicplatform.service.abstraction.domain;
 
 import ru.smirnov.musicplatform.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.tmp.MusicCollectionAccessLevelRequest;
-import ru.smirnov.musicplatform.dto.tmp.MusicCollectionRequest;
+import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionAccessLevelRequest;
+import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionRequest;
 
 public interface ChartService {
 

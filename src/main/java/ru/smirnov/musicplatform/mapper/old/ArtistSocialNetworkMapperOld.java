@@ -1,7 +1,7 @@
 package ru.smirnov.musicplatform.mapper.old;
 
 import org.springframework.stereotype.Component;
-import ru.smirnov.musicplatform.dto.old.relation.ArtistSocialNetworkDto;
+import ru.smirnov.musicplatform.dto.deprecated.relation.ArtistSocialNetworkDto;
 import ru.smirnov.musicplatform.entity.relation.ArtistsSocialNetworks;
 
 @Component

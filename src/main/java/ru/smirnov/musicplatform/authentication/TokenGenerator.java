@@ -15,8 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import ru.smirnov.musicplatform.dto.authentication.JwtResponseDto;
-import ru.smirnov.musicplatform.dto.authentication.LoginRequestDto;
+import ru.smirnov.musicplatform.dto.authentication.JwtResponse;
+import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
 
 import java.util.*;
 
@@ -34,7 +34,7 @@ public class TokenGenerator {
         this.tokenUtils = tokenUtils;
     }
 
-    public ResponseEntity<JwtResponseDto> createTokens(LoginRequestDto dto) {
+    public ResponseEntity<JwtResponse> createTokens(LoginRequest dto) {
 
         try {
             this.authenticationManager.authenticate(
@@ -55,7 +55,7 @@ public class TokenGenerator {
         UserDetails dataForToken = this.userDetailsService.loadUserByUsername(dto.getUsername());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                new JwtResponseDto(
+                new JwtResponse(
                     this.generateJwtToken(dataForToken, JwtToken.ACCESS_TOKEN),
                     this.generateJwtToken(dataForToken, JwtToken.REFRESH_TOKEN)
                 )
@@ -76,12 +76,12 @@ public class TokenGenerator {
 
     тут как бэ... даже проверять ничего не нужно - фильтр на себя всю валидацию забирает
     */
-    public ResponseEntity<JwtResponseDto> refreshTokens() {
+    public ResponseEntity<JwtResponse> refreshTokens() {
 
         UserDetails dataForToken = this.userDetailsService.loadUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                new JwtResponseDto(
+                new JwtResponse(
                         this.generateJwtToken(dataForToken, JwtToken.ACCESS_TOKEN),
                         this.generateJwtToken(dataForToken, JwtToken.REFRESH_TOKEN)
                 )

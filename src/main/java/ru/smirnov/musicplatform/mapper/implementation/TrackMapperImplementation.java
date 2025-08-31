@@ -2,9 +2,9 @@ package ru.smirnov.musicplatform.mapper.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.smirnov.musicplatform.dto.tmp.ArtistShortcutResponse;
-import ru.smirnov.musicplatform.dto.tmp.TrackRequest;
-import ru.smirnov.musicplatform.dto.tmp.TrackResponse;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutResponse;
+import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
+import ru.smirnov.musicplatform.dto.domain.track.TrackResponse;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.mapper.abstraction.ArtistMapper;

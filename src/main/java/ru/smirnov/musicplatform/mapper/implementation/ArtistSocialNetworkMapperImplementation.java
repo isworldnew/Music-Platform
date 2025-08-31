@@ -1,7 +1,7 @@
 package ru.smirnov.musicplatform.mapper.implementation;
 
 import org.springframework.stereotype.Component;
-import ru.smirnov.musicplatform.dto.tmp.ArtistSocialNetworkResponse;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistSocialNetworkResponse;
 import ru.smirnov.musicplatform.entity.relation.ArtistsSocialNetworks;
 import ru.smirnov.musicplatform.mapper.abstraction.ArtistSocialNetworkMapper;
 

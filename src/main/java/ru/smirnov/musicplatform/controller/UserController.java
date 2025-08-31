@@ -9,11 +9,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.TokenGenerator;
-import ru.smirnov.musicplatform.dto.audience.user.UserPersonalDataRegistrationDto;
-import ru.smirnov.musicplatform.dto.authentication.JwtResponseDto;
-import ru.smirnov.musicplatform.dto.authentication.LoginRequestDto;
+import ru.smirnov.musicplatform.dto.audience.user.UserRequest;
+import ru.smirnov.musicplatform.dto.authentication.JwtResponse;
+import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
 import ru.smirnov.musicplatform.entity.audience.User;
-import ru.smirnov.musicplatform.service.sql.audience.UserService;
+import ru.smirnov.musicplatform.service.deprecated.sql.audience.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,10 +32,10 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<JwtResponseDto> userRegistration(@RequestBody @Valid UserPersonalDataRegistrationDto dto) {
+    public ResponseEntity<JwtResponse> userRegistration(@RequestBody @Valid UserRequest dto) {
         User user = this.userService.userRegistration(dto);
         return this.tokenGenerator.createTokens(
-                new LoginRequestDto(dto.getAccountData().getUsername(), dto.getAccountData().getPassword())
+                new LoginRequest(dto.getAccountData().getUsername(), dto.getAccountData().getPassword())
         );
     }
 

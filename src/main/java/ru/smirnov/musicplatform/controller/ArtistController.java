@@ -11,12 +11,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import ru.smirnov.musicplatform.dto.FileToUpdateDto;
-import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistDataDto;
-import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistExtendedDataDto;
-import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistToCreateDto;
-import ru.smirnov.musicplatform.dto.old.domain.artist.ArtistToUpdateDto;
-import ru.smirnov.musicplatform.service.sql.domain.ArtistServiceOld;
+import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistDataDto;
+import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistExtendedDataDto;
+import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistToCreateDto;
+import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistToUpdateDto;
+import ru.smirnov.musicplatform.service.deprecated.sql.domain.ArtistServiceOld;
 
 import java.util.HashMap;
 import java.util.Map;

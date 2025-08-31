@@ -1,7 +1,7 @@
 package ru.smirnov.musicplatform.service.abstraction.relation;
 
 import ru.smirnov.musicplatform.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.tmp.CoArtistRequest;
+import ru.smirnov.musicplatform.dto.relation.CoArtistRequest;
 
 public interface CoArtistService {
 

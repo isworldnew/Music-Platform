@@ -9,8 +9,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.TokenGenerator;
-import ru.smirnov.musicplatform.dto.authentication.LoginRequestDto;
-import ru.smirnov.musicplatform.dto.authentication.JwtResponseDto;
+import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
+import ru.smirnov.musicplatform.dto.authentication.JwtResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,12 +27,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDto> createTokens(@RequestBody @Valid LoginRequestDto dto) throws Exception {
+    public ResponseEntity<JwtResponse> createTokens(@RequestBody @Valid LoginRequest dto) throws Exception {
         return this.tokenGenerator.createTokens(dto);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<JwtResponseDto> refreshTokens() {
+    public ResponseEntity<JwtResponse> refreshTokens() {
         return this.tokenGenerator.refreshTokens();
     }
 

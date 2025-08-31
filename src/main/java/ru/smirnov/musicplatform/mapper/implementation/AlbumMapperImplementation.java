@@ -1,7 +1,7 @@
 package ru.smirnov.musicplatform.mapper.implementation;
 
 import org.springframework.stereotype.Component;
-import ru.smirnov.musicplatform.dto.tmp.MusicCollectionRequest;
+import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionRequest;
 import ru.smirnov.musicplatform.entity.domain.Album;
 import ru.smirnov.musicplatform.mapper.abstraction.AlbumMapper;
 
