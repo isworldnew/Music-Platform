@@ -12,7 +12,7 @@ public interface TagService {
 
     TagResponse getTagById(Long tagId, DataForToken tokenData);
 
-    List<TagResponse> getAllTags(DataForToken tokenData);
+    List<TagResponse> getAllUserTags(DataForToken tokenData);
 
     void updateTag(Long tagId, TagRequest dto, DataForToken tokenData);
 

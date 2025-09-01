@@ -46,23 +46,7 @@ public class FileController {
         this.chartFileManagementService = chartFileManagementService;
     }
 
+    public void
 
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().stream()
-                .forEach(error -> {
-                    String fieldName = ((FieldError)error).getField();
-                    String errorMessage = error.getDefaultMessage();
-                    errors.put(fieldName, errorMessage);
-                });
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
-        return ResponseEntity.badRequest().body("Validation failed: " + ex.getMessage());
-    }
 }

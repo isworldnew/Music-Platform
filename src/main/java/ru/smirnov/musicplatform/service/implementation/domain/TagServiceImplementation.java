@@ -61,7 +61,7 @@ public class TagServiceImplementation implements TagService {
     }
 
     @Override
-    public List<TagResponse> getAllTags(DataForToken tokenData) {
+    public List<TagResponse> getAllUserTags(DataForToken tokenData) {
         return this.tagRepository.findAllByUserId(tokenData.getEntityId()).stream()
                 .map(tag -> this.tagMapper.tagEntityToTagResponse(tag))
                 .toList();
