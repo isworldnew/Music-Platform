@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.file.AudioFileRequest;
 import ru.smirnov.musicplatform.dto.file.ImageFileRequest;
-import ru.smirnov.musicplatform.service.abstraction.SecurityContextService;
+import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 import ru.smirnov.musicplatform.service.abstraction.minio.*;
 
 

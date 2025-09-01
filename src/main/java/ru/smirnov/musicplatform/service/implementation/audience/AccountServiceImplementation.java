@@ -1,4 +1,4 @@
-package ru.smirnov.musicplatform.service;
+package ru.smirnov.musicplatform.service.implementation.audience;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
@@ -18,6 +18,7 @@ import ru.smirnov.musicplatform.exception.NonUniqueAccountPerEntity;
 import ru.smirnov.musicplatform.exception.UsernameOccupiedException;
 import ru.smirnov.musicplatform.repository.audience.AccountRepository;
 import ru.smirnov.musicplatform.repository.auxiliary.EntityRepository;
+import ru.smirnov.musicplatform.service.abstraction.audience.AccountService;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,14 +26,14 @@ import java.util.Map;
 
 // ещё не переписал под интерфейсы
 @Service
-public class AccountService implements UserDetailsService {
+public class AccountServiceImplementation implements UserDetailsService, AccountService {
 
     private final AccountRepository accountRepository;
     private final Map<String, EntityRepository<?, Long>> entityRepositories;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public AccountService(
+    public AccountServiceImplementation(
             AccountRepository accountRepository,
             Map<String, EntityRepository<?, Long>> entityRepositories,
             BCryptPasswordEncoder bCryptPasswordEncoder
@@ -105,7 +106,9 @@ public class AccountService implements UserDetailsService {
 
     // обычные методы для работы с данной сущностью (не относящиеся к UserDetailsService)
 
-    // подразумеваю, что данный метод не будет вызываться самостоятельно, поэтому уровень изоляции оставляю по умолчанию
+    // подразумеваю, что данный метод не будет вызываться самостоятельно (только при создании сущности с бизнес-данными),
+    // поэтому уровень изоляции оставляю по умолчанию
+    @Override
     @Transactional
     public Account createAccount(LoginRequest dto, Role role, AccountStatus accountStatus) {
 
@@ -120,6 +123,13 @@ public class AccountService implements UserDetailsService {
 
         return this.accountRepository.save(newAccount);
 
+    }
+
+    @Override
+    public void updateAccount(Long accountId, LoginRequest dto) {
+        /*
+        проверить, уникален ли новый username или он не изменился (а изменился только пароль)
+        */
     }
 
 }

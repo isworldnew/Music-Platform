@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.relation.CoArtistRequest;
-import ru.smirnov.musicplatform.service.abstraction.SecurityContextService;
+import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 import ru.smirnov.musicplatform.service.abstraction.relation.CoArtistService;
 
 @RestController

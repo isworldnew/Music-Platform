@@ -1,23 +1,16 @@
 package ru.smirnov.musicplatform.dto.audience.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import lombok.Data;
-import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
 
 import java.sql.Date;
 
-@Data
-public class UserRequest {
+public class UserDataUpdateRequest {
 
-    @NotNull @Valid
-    private LoginRequest accountData;
-
-    @NotNull @NotBlank @NotEmpty
+    @NotBlank
     private String lastname;
 
-    @NotNull @NotBlank @NotEmpty
+    @NotBlank
     private String firstname;
 
     @NotNull @JsonFormat(pattern = "dd-MM-yyyy") @Past
@@ -25,11 +18,10 @@ public class UserRequest {
     // чтобы по какой-нибудь политике из конфигурации проверять возраст
     private Date dateOfBirth;
 
-    @NotNull @NotBlank @NotEmpty
+    @NotBlank
     @Size(min = 11, max = 11, message = "Phone number must be exactly 11 characters")
     private String phonenumber;
 
-    @NotNull @NotBlank @NotEmpty @Email
+    @NotBlank @Email
     private String email;
-
 }

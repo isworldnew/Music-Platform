@@ -1,4 +1,4 @@
-package ru.smirnov.musicplatform.service.abstraction;
+package ru.smirnov.musicplatform.service.abstraction.security;
 
 import ru.smirnov.musicplatform.authentication.DataForToken;
 

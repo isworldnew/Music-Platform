@@ -14,7 +14,7 @@ import ru.smirnov.musicplatform.dto.domain.artist.ArtistResponse;
 import ru.smirnov.musicplatform.dto.domain.artist.ExtendedArtistResponse;
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionRequest;
 import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
-import ru.smirnov.musicplatform.service.abstraction.SecurityContextService;
+import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 import ru.smirnov.musicplatform.service.abstraction.domain.AlbumService;
 import ru.smirnov.musicplatform.service.abstraction.domain.ArtistService;
 import ru.smirnov.musicplatform.service.abstraction.domain.TrackService;

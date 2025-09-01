@@ -1,10 +1,13 @@
-package ru.smirnov.musicplatform.service;
+package ru.smirnov.musicplatform.service.implementation.audience;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.smirnov.musicplatform.dto.audience.user.UserRequest;
+import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.musicplatform.dto.audience.user.UserDataUpdateRequest;
+import ru.smirnov.musicplatform.dto.audience.user.UserRegistrationRequest;
+import ru.smirnov.musicplatform.dto.audience.user.UserResponse;
 import ru.smirnov.musicplatform.entity.audience.Account;
 import ru.smirnov.musicplatform.entity.audience.User;
 import ru.smirnov.musicplatform.entity.auxiliary.embedding.CommonPersonData;
@@ -13,24 +16,27 @@ import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.exception.EmailOccupiedException;
 import ru.smirnov.musicplatform.exception.PhonenumberOccupiedException;
 import ru.smirnov.musicplatform.repository.audience.UserRepository;
+import ru.smirnov.musicplatform.service.abstraction.audience.AccountService;
+import ru.smirnov.musicplatform.service.abstraction.audience.UserService;
 
 // ещё не переписал под интерфейсы
 @Service
-public class UserService {
+public class UserServiceImplementation implements UserService {
 
     private final UserRepository userRepository;
     private final AccountService accountService;
 
     @Autowired
-    public UserService(UserRepository userRepository, AccountService accountService) {
+    public UserServiceImplementation(UserRepository userRepository, AccountService accountService) {
         this.userRepository = userRepository;
         this.accountService = accountService;
     }
 
     // такой уровень изоляции, потому что я хочу быть уверенным, что в рамках транзакции не появится
     // пользователей с таким же телефоном / почтой и аккаунтов с таким же юзернеймом
+    @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public User userRegistration(UserRequest dto) {
+    public User userRegistration(UserRegistrationRequest dto) {
 
         // вот это всё хорошо бы прям вынести в какой-нибудь chain-of-responsibility...
 
@@ -64,6 +70,17 @@ public class UserService {
         // но по факту там мы сталкиваемся с блокировкой и сразу возвращаем ошибку
 
         return this.userRepository.save(user);
+
+    }
+
+    @Override
+    public UserResponse getUserData(DataForToken tokenData) {
+
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void updateUserData(UserDataUpdateRequest dto, DataForToken tokenData) {
 
     }
 

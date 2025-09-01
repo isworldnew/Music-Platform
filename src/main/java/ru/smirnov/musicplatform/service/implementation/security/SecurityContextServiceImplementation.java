@@ -1,14 +1,14 @@
-package ru.smirnov.musicplatform.service.implementation;
+package ru.smirnov.musicplatform.service.implementation.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.exception.SecurityContextException;
-import ru.smirnov.musicplatform.service.abstraction.SecurityContextService;
+import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 
 @Service
-public class SecurityContextServiceImpl implements SecurityContextService {
+public class SecurityContextServiceImplementation implements SecurityContextService {
 
     @Override
     public DataForToken safelyExtractTokenDataFromSecurityContext() {
