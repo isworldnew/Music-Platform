@@ -94,4 +94,6 @@ public class ArtistServiceImplementation implements ArtistService {
     // а поиск по ним?
     // тут тоже шорткаты понадобятся
 
+    // все треки/альбомы исполнителя
+
 }

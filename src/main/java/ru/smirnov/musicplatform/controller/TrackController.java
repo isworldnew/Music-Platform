@@ -9,78 +9,50 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import ru.smirnov.musicplatform.dto.deprecated.domain.track.TrackAccessLevelUpdateDto;
-import ru.smirnov.musicplatform.dto.deprecated.domain.track.TrackDataDto;
-import ru.smirnov.musicplatform.dto.deprecated.domain.track.TrackToCreateDto;
-import ru.smirnov.musicplatform.projection.SavedTrackProjection;
-import ru.smirnov.musicplatform.service.deprecated.sql.domain.TrackServiceOld;
-import ru.smirnov.musicplatform.service.deprecated.sql.relation.SavedTrackServiceOld;
+import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelRequest;
+import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
+import ru.smirnov.musicplatform.service.abstraction.SecurityContextService;
+import ru.smirnov.musicplatform.service.abstraction.domain.TrackService;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-@Validated
 @RestController
 @RequestMapping("/tracks")
 public class TrackController {
 
-    private final TrackServiceOld trackService;
-    private final SavedTrackServiceOld savedTrackService;
+    private final TrackService trackService;
+    private final SecurityContextService securityContextService;
 
     @Autowired
-    public TrackController(TrackServiceOld trackService, SavedTrackServiceOld savedTrackService) {
+    public TrackController(TrackService trackService, SecurityContextService securityContextService) {
         this.trackService = trackService;
-        this.savedTrackService = savedTrackService;
+        this.securityContextService = securityContextService;
     }
 
-    @PostMapping("/upload-track")
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Long> uploadTrack(@Valid @ModelAttribute TrackToCreateDto dto) {
-        return this.trackService.uploadTrack(dto);
+    public void updateTrack(@NotNull @Positive @PathVariable("id") Long trackId, @RequestBody @Valid TrackRequest dto) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        this.trackService.updateTrack(trackId, dto, tokenData);
     }
 
-    @PatchMapping("/listen/{id}")
-    public ResponseEntity<Void> listenTo(@NotNull @Positive @PathVariable("id") Long trackId) {
-        return this.trackService.listenTo(trackId);
+    @PatchMapping("/{id}/access-level")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('DISTRIBUTOR')")
+    public void updateTrackAccessLevel(@NotNull @Positive @PathVariable("id") Long trackId, @RequestBody @Valid TrackAccessLevelRequest dto) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        this.trackService.updateTrackAccessLevel(trackId, dto, tokenData);
     }
 
-    @PatchMapping("/set-access-level/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DISTRIBUTOR')")
-    public ResponseEntity<TrackDataDto> setTrackAccessLevel(@NotNull @Positive @PathVariable Long id, @RequestBody @Valid TrackAccessLevelUpdateDto dto) {
-        return this.trackService.setTrackAccessLevel(id, dto);
-    }
-
-    @GetMapping("/get-track-by-id-safely/{id}")
-    public ResponseEntity<TrackDataDto> getTrackByIdSafely(@NotNull @Positive @PathVariable Long id) {
-        return this.trackService.getTrackDataById(id, true);
-    }
-
-    @GetMapping("/get-track-by-id/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DISTRIBUTOR')")
-    public ResponseEntity<TrackDataDto> getTrackById(@NotNull @Positive @PathVariable Long id) {
-        return this.trackService.getTrackDataById(id, false);
-    }
-
-    @PostMapping("/save/{id}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Long> saveTrack(@NotNull @Positive @PathVariable Long id) {
-        return this.savedTrackService.save(id);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> deleteTrack(@NotNull @Positive @PathVariable Long id) {
-        return this.savedTrackService.delete(id);
-    }
-
-    @GetMapping("/saved")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<SavedTrackProjection>> getAllSavedTracks() {
-        return this.savedTrackService.getAllSavedTracks();
+    @PatchMapping("/{id}/listen")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void listenToTrack(@NotNull @Positive @PathVariable("id") Long trackId) {
+        this.trackService.listenToTrack(trackId);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
@@ -100,5 +72,4 @@ public class TrackController {
     public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
         return ResponseEntity.badRequest().body("Validation failed: " + ex.getMessage());
     }
-
 }

@@ -11,11 +11,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistDataDto;
-import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistExtendedDataDto;
-import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistToCreateDto;
-import ru.smirnov.musicplatform.dto.deprecated.domain.artist.ArtistToUpdateDto;
-import ru.smirnov.musicplatform.service.deprecated.sql.domain.ArtistServiceOld;
+import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistRequest;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistResponse;
+import ru.smirnov.musicplatform.dto.domain.artist.ExtendedArtistResponse;
+import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
+import ru.smirnov.musicplatform.service.abstraction.SecurityContextService;
+import ru.smirnov.musicplatform.service.abstraction.domain.ArtistService;
+import ru.smirnov.musicplatform.service.abstraction.domain.TrackService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,43 +27,53 @@ import java.util.Map;
 @RequestMapping("/artists")
 public class ArtistController {
 
-    private final ArtistServiceOld artistService;
+    private final SecurityContextService securityContextService;
+
+    private final ArtistService artistService;
+    private final TrackService trackService;
 
     @Autowired
-    public ArtistController(ArtistServiceOld artistService) {
+    public ArtistController(SecurityContextService securityContextService, ArtistService artistService, TrackService trackService) {
+        this.securityContextService = securityContextService;
         this.artistService = artistService;
+        this.trackService = trackService;
     }
 
-    @PostMapping("/create")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    // @Validated // вроде и без этого работало, но тут прикол в том, что тут связка @ModelAttribute и @Valid
-    // а вот связка @RequestBody и @Valid без @Validated над контроллером или эндпоинтом - не сработает
-    public ResponseEntity<Long> createArtist(@ModelAttribute @Valid ArtistToCreateDto dto) {
-        return this.artistService.createArtist(dto);
+    public Long createArtist(@RequestBody @Valid ArtistRequest dto) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.artistService.createArtist(dto, tokenData);
     }
 
-    @GetMapping("/artist-data-by-id/{id}")
-    public ResponseEntity<ArtistDataDto> getArtistDataById(@NotNull @Positive @PathVariable Long id) {
-        return this.artistService.getArtistDataById(id);
-        // ПРОВЕРКА НА ТО, ЧТО У ИСПОЛНИТЕЛЯ НЕТ АКТИВНЫХ СВЯЗЕЙ И ВСЁ ВОТ ЭТО
-    }
-
-    @GetMapping("/artist-extended-data-by-id/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DISTRIBUTOR')")
-    public ResponseEntity<ArtistExtendedDataDto> getArtistExtendedDataById(@NotNull @Positive @PathVariable Long id) {
-        return this.artistService.getArtistExtendedDataById(id);
-    }
-
-    @PatchMapping("/update-artist/{id}")
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<ArtistExtendedDataDto> updateArtistBasicData(@NotNull @Positive @PathVariable("id") Long artistId, @Valid @RequestBody ArtistToUpdateDto dto) {
-        return this.artistService.updateArtistBasicData(artistId, dto);
+    public void updateArtist(@NotNull @Positive @PathVariable("id") Long artistId, @RequestBody @Valid ArtistRequest dto) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        this.artistService.updateArtist(artistId, dto, tokenData);
     }
 
-    @PatchMapping("/update-cover/{id}")
+    @GetMapping("/{id}/extended")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('DISTRIBUTOR', 'ADMIN')")
+    public ExtendedArtistResponse getArtistWithDetails(@NotNull @Positive @PathVariable("id") Long artistId) {
+        return this.artistService.getExtendedArtistDataById(artistId);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ArtistResponse getArtist(@NotNull @Positive @PathVariable("id") Long artistId) {
+        return this.artistService.getArtistDataById(artistId);
+    }
+
+    @PostMapping("/{id}/tracks")
+    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<ArtistExtendedDataDto> updateArtistCover(@NotNull @Positive @PathVariable("id") Long artistId, @Valid @ModelAttribute FileToUpdateDto dto) {
-        return this.artistService.updateArtistCover(artistId, dto);
+    public Long uploadTrack(@NotNull @Positive @PathVariable("id") Long artistId, @RequestBody @Valid TrackRequest dto) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.trackService.uploadTrack(artistId, dto, tokenData);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

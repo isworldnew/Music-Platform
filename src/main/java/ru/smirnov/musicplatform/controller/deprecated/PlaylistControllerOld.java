@@ -1,4 +1,4 @@
-package ru.smirnov.musicplatform.controller;
+package ru.smirnov.musicplatform.controller.deprecated;
 
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
@@ -12,55 +12,49 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.dto.deprecated.domain.album.*;
-import ru.smirnov.musicplatform.service.deprecated.sql.domain.AlbumServiceOld;
+import ru.smirnov.musicplatform.service.deprecated.sql.domain.PlaylistServiceOld;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/albums")
-public class AlbumController {
-
-    private final AlbumServiceOld albumService;
+@RequestMapping("/playlists")
+public class PlaylistControllerOld {
+    
+    private final PlaylistServiceOld playlistService;
 
     @Autowired
-    public AlbumController(AlbumServiceOld albumService) {
-        this.albumService = albumService;
+    public PlaylistControllerOld(PlaylistServiceOld playlistService) {
+        this.playlistService = playlistService;
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Long> createAlbum(@Valid @ModelAttribute AlbumToCreateDto dto) {
-        return this.albumService.createAlbum(dto);
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Long> createPlaylist(@Valid @ModelAttribute MusicCollectionToCreateDto dto) {
+        return this.playlistService.createPlaylist(dto);
     }
 
     @PatchMapping("/update")
-    @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Void> updateAlbum(@Valid @ModelAttribute MusicCollectionToUpdateDto dto) {
-        return this.albumService.updateAlbum(dto);
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> updatePlaylist(@Valid @ModelAttribute MusicCollectionToUpdateDto dto) {
+        return this.playlistService.updatePlaylist(dto);
     }
 
     @PatchMapping("/update-access-level")
-    @PreAuthorize("hasRole('DISTRIBUTOR')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> updateAccessLevel(@Valid @RequestBody MusicCollectionAccessLevelUpdateDto dto) {
-        return this.albumService.updateAccessLevel(dto);
+        return this.playlistService.updatePlaylistAccessLevel(dto);
     }
 
     @PatchMapping("/update-by-tracks")
-    @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<Void> updateAlbumByTracks(@Valid @RequestBody MusicCollectionTracksDto dto) {
-        return this.albumService.updateAlbumByTracks(dto);
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> updatePlaylistByTracks(@Valid @RequestBody MusicCollectionTracksDto dto) {
+        return this.playlistService.updatePlaylistByTracks(dto);
     }
 
     @GetMapping("/get-by-id/{id}")
-    @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public ResponseEntity<MusicCollectionDataDto> getAlbumById(@NotNull @Positive @PathVariable("id") Long albumId) {
-        return this.albumService.getAlbumById(albumId);
-    }
-
-    @GetMapping("/get-by-id-safely/{id}")
-    public ResponseEntity<MusicCollectionDataDto> getAlbumByIdSafely(@NotNull @Positive @PathVariable("id") Long albumId) {
-        return this.albumService.getAlbumByIdSafely(albumId);
+    public ResponseEntity<MusicCollectionDataDto> getPlaylistById(@NotNull @Positive @PathVariable("id") Long chartId) {
+        return this.playlistService.getPlaylistById(chartId);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
@@ -80,5 +74,4 @@ public class AlbumController {
     public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
         return ResponseEntity.badRequest().body("Validation failed: " + ex.getMessage());
     }
-
 }

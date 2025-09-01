@@ -1,4 +1,4 @@
-package ru.smirnov.musicplatform.controller;
+package ru.smirnov.musicplatform.controller.deprecated;
 
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
@@ -19,12 +19,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/charts")
-public class ChartController {
+public class ChartControllerOld {
 
     private final ChartServiceOld chartService;
 
     @Autowired
-    public ChartController(ChartServiceOld chartService) {
+    public ChartControllerOld(ChartServiceOld chartService) {
         this.chartService = chartService;
     }
 

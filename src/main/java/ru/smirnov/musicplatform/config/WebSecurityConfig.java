@@ -3,6 +3,7 @@ package ru.smirnov.musicplatform.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -53,14 +54,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/authentication/login", "/error").permitAll()
                         .requestMatchers("/users/registration").permitAll()
-                        .requestMatchers(
-                                "/artists/artist-data-by-id/**",
-                                "/tracks/listen/**",
-                                "/tracks/get-track-by-id-safely/**",
-                                "/albums/get-by-id-safely/**",
-                                "/chart/get-by-id-safely/**",
-                                "/playlists/get-by-id/**"
-                        ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/artists/{id}").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/tracks/{id}/listen").permitAll()
                         .requestMatchers("/authentication/refresh").hasAuthority(JwtToken.REFRESH_TOKEN.name())
                         .anyRequest().hasAuthority(JwtToken.ACCESS_TOKEN.name())
                 )

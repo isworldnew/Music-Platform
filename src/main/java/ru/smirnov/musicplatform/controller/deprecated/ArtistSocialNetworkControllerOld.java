@@ -1,4 +1,4 @@
-package ru.smirnov.musicplatform.controller;
+package ru.smirnov.musicplatform.controller.deprecated;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +16,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/artists-social-networks")
-public class ArtistSocialNetworkController {
+public class ArtistSocialNetworkControllerOld {
 
     private final ArtistSocialNetworkServiceOld artistSocialNetworkService;
 
     @Autowired
-    public ArtistSocialNetworkController(ArtistSocialNetworkServiceOld artistSocialNetworkService) {
+    public ArtistSocialNetworkControllerOld(ArtistSocialNetworkServiceOld artistSocialNetworkService) {
         this.artistSocialNetworkService = artistSocialNetworkService;
     }
 
