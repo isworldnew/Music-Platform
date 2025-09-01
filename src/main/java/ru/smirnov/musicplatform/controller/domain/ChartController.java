@@ -12,43 +12,44 @@ import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionAccessLevelRequest;
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionRequest;
 import ru.smirnov.musicplatform.service.abstraction.SecurityContextService;
-import ru.smirnov.musicplatform.service.abstraction.domain.PlaylistService;
+import ru.smirnov.musicplatform.service.abstraction.domain.ChartService;
 
 @RestController
-@RequestMapping("/playlists")
+@RequestMapping("/charts")
 @Validated
-public class PlaylistController {
+public class ChartController {
 
     private final SecurityContextService securityContextService;
-    private final PlaylistService playlistService;
+    private final ChartService chartService;
 
     @Autowired
-    public PlaylistController(SecurityContextService securityContextService, PlaylistService playlistService) {
+    public ChartController(SecurityContextService securityContextService, ChartService chartService) {
         this.securityContextService = securityContextService;
-        this.playlistService = playlistService;
+        this.chartService = chartService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('USER')")
-    public Long createPlaylist(@RequestBody @Valid MusicCollectionRequest dto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public Long createChart(@RequestBody @Valid MusicCollectionRequest dto) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
-        return this.playlistService.createPlaylist(dto, tokenData);
+        return this.chartService.createChart(dto, tokenData);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('USER')")
-    public void updatePlaylist(@NotNull @Positive @PathVariable("id") Long playlistId, @RequestBody @Valid MusicCollectionRequest dto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void updateChart(@NotNull @Positive @PathVariable("id") Long chartId, @RequestBody @Valid MusicCollectionRequest dto) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
-        this.playlistService.updatePlaylist(playlistId, dto, tokenData);
+        this.chartService.updateChart(chartId, dto, tokenData);
     }
 
     @PatchMapping("/{id}/access-level")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('USER')")
-    public void updatePlaylistAccessLevel(@NotNull @Positive @PathVariable("id") Long playlistId, @RequestBody @Valid MusicCollectionAccessLevelRequest dto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void updateChartAccessLevel(@NotNull @Positive @PathVariable("id") Long chartId, @RequestBody @Valid MusicCollectionAccessLevelRequest dto) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
-        this.playlistService.updatePlaylistAccessLevel(playlistId, dto, tokenData);
+        this.chartService.updateChartAccessLevel(chartId, dto, tokenData);
     }
+
 }
