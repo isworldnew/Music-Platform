@@ -9,46 +9,38 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelRequest;
-import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
+import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionAccessLevelRequest;
+import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionRequest;
 import ru.smirnov.musicplatform.service.abstraction.SecurityContextService;
-import ru.smirnov.musicplatform.service.abstraction.domain.TrackService;
-
+import ru.smirnov.musicplatform.service.abstraction.domain.AlbumService;
 
 @RestController
-@RequestMapping("/tracks")
+@RequestMapping("/albums")
 @Validated
-public class TrackController {
+public class AlbumController {
 
     private final SecurityContextService securityContextService;
-    private final TrackService trackService;
+    private final AlbumService albumService;
 
     @Autowired
-    public TrackController(TrackService trackService, SecurityContextService securityContextService) {
-        this.trackService = trackService;
+    public AlbumController(SecurityContextService securityContextService, AlbumService albumService) {
         this.securityContextService = securityContextService;
+        this.albumService = albumService;
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public void updateTrack(@NotNull @Positive @PathVariable("id") Long trackId, @RequestBody @Valid TrackRequest dto) {
+    public void updateAlbum(@NotNull @Positive @PathVariable Long albumId, @RequestBody @Valid MusicCollectionRequest dto) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
-        this.trackService.updateTrack(trackId, dto, tokenData);
+        this.albumService.updateAlbum(albumId, dto, tokenData);
     }
 
     @PatchMapping("/{id}/access-level")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public void updateTrackAccessLevel(@NotNull @Positive @PathVariable("id") Long trackId, @RequestBody @Valid TrackAccessLevelRequest dto) {
+    public void updateAlbumAccessLevel(@NotNull @Positive @PathVariable Long albumId, @RequestBody @Valid MusicCollectionAccessLevelRequest dto) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
-        this.trackService.updateTrackAccessLevel(trackId, dto, tokenData);
+        this.albumService.updateAlbumAccessLevel(albumId, dto, tokenData);
     }
-
-    @PatchMapping("/{id}/listen")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void listenToTrack(@NotNull @Positive @PathVariable("id") Long trackId) {
-        this.trackService.listenToTrack(trackId);
-    }
-
 }
