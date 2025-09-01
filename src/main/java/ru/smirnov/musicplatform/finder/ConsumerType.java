@@ -1,16 +1,17 @@
 package ru.smirnov.musicplatform.finder;
 
-import lombok.Getter;
 
-@Getter
 public enum ConsumerType {
 
    GUEST(false), USER(true);
 
-   ConsumerType(boolean showUnavailableShortcuts) {
-      this.showUnavailableShortcuts = showUnavailableShortcuts;
+   private final boolean ableToSaveAlbumsAndGetUnavailableShortcuts;
+
+   ConsumerType(boolean ableToSaveAlbumsAndGetUnavailableShortcuts) {
+      this.ableToSaveAlbumsAndGetUnavailableShortcuts = ableToSaveAlbumsAndGetUnavailableShortcuts;
    }
 
-   private final boolean showUnavailableShortcuts;
-
+   public boolean ableToSaveAlbumsAndGetUnavailableShortcuts() {
+      return ableToSaveAlbumsAndGetUnavailableShortcuts;
+   }
 }
