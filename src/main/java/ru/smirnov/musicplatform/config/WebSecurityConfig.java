@@ -54,10 +54,19 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/authentication/login", "/error").permitAll()
                         .requestMatchers("/users/registration").permitAll()
+
                         .requestMatchers(HttpMethod.GET, "/artists/{id}").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/tracks/{id}/listen").permitAll()
-                        .requestMatchers("/test").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
+
+                        .requestMatchers(HttpMethod.PATCH, "/tracks/{id}/listen").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
+
+                        .requestMatchers("/tracks/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
+                        .requestMatchers("/albums/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
+                        .requestMatchers("/playlists/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
+                        .requestMatchers("/charts/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
+
+
                         .requestMatchers("/authentication/refresh").hasAuthority(JwtToken.REFRESH_TOKEN.name())
+
                         .anyRequest().hasAuthority(JwtToken.ACCESS_TOKEN.name())
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

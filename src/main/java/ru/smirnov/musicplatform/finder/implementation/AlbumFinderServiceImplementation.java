@@ -7,7 +7,6 @@ import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionShortc
 import ru.smirnov.musicplatform.entity.audience.User;
 import ru.smirnov.musicplatform.entity.domain.Album;
 import ru.smirnov.musicplatform.exception.ForbiddenException;
-import ru.smirnov.musicplatform.finder.SearchResult;
 import ru.smirnov.musicplatform.finder.abstraction.AlbumFinderService;
 import ru.smirnov.musicplatform.mapper.abstraction.AlbumMapper;
 import ru.smirnov.musicplatform.repository.audience.UserRepository;

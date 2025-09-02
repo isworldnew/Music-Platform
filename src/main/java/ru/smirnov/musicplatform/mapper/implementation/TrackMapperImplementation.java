@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutResponse;
 import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
 import ru.smirnov.musicplatform.dto.domain.track.TrackResponse;
+import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutResponse;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.mapper.abstraction.ArtistMapper;
@@ -52,5 +53,31 @@ public class TrackMapperImplementation implements TrackMapper {
         trackResponse.setArtist(artist);
         trackResponse.setCoArtists(coArtists);
         return trackResponse;
+    }
+
+    @Override
+    public TrackShortcutResponse trackEntityToTrackShortcutResponse(Track track, Boolean isSaved) {
+        ArtistShortcutResponse artist = new ArtistShortcutResponse(track.getArtist().getId(), track.getArtist().getName());
+        List<ArtistShortcutResponse> coArtists = track.getCoArtists().stream()
+                .map(coArtist -> new ArtistShortcutResponse(coArtist.getArtist().getId(), coArtist.getArtist().getName()))
+                .toList();
+
+        TrackShortcutResponse dto = new TrackShortcutResponse();
+        dto.setId(track.getId());
+        dto.setName(track.getName());
+        dto.setCoverReference(track.getImageReference());
+        dto.setAudioReference(track.getAudiofileReference());
+        dto.setGenre(track.getGenre());
+        dto.setStatus(track.getStatus().name());
+        dto.setSaved(isSaved);
+        dto.setArtist(artist);
+        dto.setCoArtists(coArtists);
+
+        if (!track.getStatus().isAvailable()) {
+            dto.setCoverReference(null);
+            dto.setAudioReference(null);
+        }
+
+        return dto;
     }
 }

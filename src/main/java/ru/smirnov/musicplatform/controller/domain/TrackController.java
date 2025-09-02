@@ -47,6 +47,7 @@ public class TrackController {
 
     @PatchMapping("/{id}/listen")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('USER', 'ANONYMOUS')")
     public void listenToTrack(@NotNull @Positive @PathVariable("id") Long trackId) {
         this.trackService.listenToTrack(trackId);
     }

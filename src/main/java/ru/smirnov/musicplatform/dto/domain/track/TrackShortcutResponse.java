@@ -20,7 +20,7 @@ public class TrackShortcutResponse {
 
     private String status;
 
-    private boolean isSaved; // для пользователя
+    private boolean isSaved;
 
     private ArtistShortcutResponse artist;
 

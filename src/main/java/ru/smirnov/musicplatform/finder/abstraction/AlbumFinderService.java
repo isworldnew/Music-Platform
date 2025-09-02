@@ -4,7 +4,6 @@ import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionShortcutResponse;
 import ru.smirnov.musicplatform.entity.audience.User;
 import ru.smirnov.musicplatform.entity.domain.Album;
-import ru.smirnov.musicplatform.finder.SearchResult;
 
 import java.util.List;
 
