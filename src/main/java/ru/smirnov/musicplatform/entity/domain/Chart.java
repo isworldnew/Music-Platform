@@ -22,11 +22,11 @@ public class Chart extends MusicCollection {
     @JsonBackReference
     private Admin admin;
 
-    @OneToMany(mappedBy = "chart")
+    @OneToMany(mappedBy = "chart", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<TracksByCharts> tracks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "chart")
+    @OneToMany(mappedBy = "chart", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<SavedCharts> savedBy = new ArrayList<>();
 

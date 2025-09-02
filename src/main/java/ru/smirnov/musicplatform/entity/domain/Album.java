@@ -21,11 +21,11 @@ public class Album extends MusicCollection {
     @JsonBackReference
     private Artist artist;
 
-    @OneToMany(mappedBy = "album")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<TracksByAlbums> tracks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "album")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<SavedAlbums> savedBy = new ArrayList<>();
 

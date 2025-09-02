@@ -22,11 +22,11 @@ public class Playlist extends MusicCollection {
     @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "playlist")
+    @OneToMany(mappedBy = "playlist", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<TracksByPlaylists> tracks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "playlist")
+    @OneToMany(mappedBy = "playlist", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<SavedPlaylists> savedBy = new ArrayList<>();
 
