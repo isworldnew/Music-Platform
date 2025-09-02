@@ -1,5 +1,6 @@
 package ru.smirnov.musicplatform.service.abstraction.audience;
 
+import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
 import ru.smirnov.musicplatform.entity.audience.Account;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;
@@ -11,7 +12,7 @@ public interface AccountService {
     Account createAccount(LoginRequest dto, Role role, AccountStatus accountStatus);
 
     // обновление данных аккаунта (username + password)
-    void updateAccount(Long accountId, LoginRequest dto);
+    void updateAccount(LoginRequest dto, DataForToken tokenData);
 
     // обновление роли, наверное, в целом - не предусмотрено
 

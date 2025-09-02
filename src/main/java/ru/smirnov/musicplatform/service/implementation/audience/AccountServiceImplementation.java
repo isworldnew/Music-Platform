@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
@@ -16,10 +17,12 @@ import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.exception.NonUniqueAccountPerEntity;
 import ru.smirnov.musicplatform.exception.UsernameOccupiedException;
+import ru.smirnov.musicplatform.precondition.abstraction.audience.AccountPreconditionService;
 import ru.smirnov.musicplatform.repository.audience.AccountRepository;
 import ru.smirnov.musicplatform.repository.auxiliary.EntityRepository;
 import ru.smirnov.musicplatform.service.abstraction.audience.AccountService;
 
+import javax.xml.crypto.Data;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,15 +35,19 @@ public class AccountServiceImplementation implements UserDetailsService, Account
     private final Map<String, EntityRepository<?, Long>> entityRepositories;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final AccountPreconditionService accountPreconditionService;
+
     @Autowired
     public AccountServiceImplementation(
             AccountRepository accountRepository,
             Map<String, EntityRepository<?, Long>> entityRepositories,
-            BCryptPasswordEncoder bCryptPasswordEncoder
+            BCryptPasswordEncoder bCryptPasswordEncoder,
+            AccountPreconditionService accountPreconditionService
     ) {
         this.accountRepository = accountRepository;
         this.entityRepositories = entityRepositories;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.accountPreconditionService = accountPreconditionService;
     }
 
     @Override
@@ -126,10 +133,14 @@ public class AccountServiceImplementation implements UserDetailsService, Account
     }
 
     @Override
-    public void updateAccount(Long accountId, LoginRequest dto) {
-        /*
-        проверить, уникален ли новый username или он не изменился (а изменился только пароль)
-        */
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void updateAccount(LoginRequest dto, DataForToken tokenData) {
+        Account account = this.accountPreconditionService.checkUsernameUniqueness(tokenData.getAccountId(), dto.getUsername());
+
+        account.setUsername(dto.getUsername());
+        account.setPassword(this.bCryptPasswordEncoder.encode(dto.getPassword()));
+
+        this.accountRepository.save(account);
     }
 
 }

@@ -2,9 +2,11 @@ package ru.smirnov.musicplatform.dto.audience.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
 import java.sql.Date;
 
+@Data
 public class UserDataUpdateRequest {
 
     @NotBlank

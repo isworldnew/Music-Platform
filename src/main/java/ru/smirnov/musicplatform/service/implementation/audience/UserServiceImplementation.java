@@ -15,6 +15,8 @@ import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.exception.EmailOccupiedException;
 import ru.smirnov.musicplatform.exception.PhonenumberOccupiedException;
+import ru.smirnov.musicplatform.mapper.abstraction.UserMapper;
+import ru.smirnov.musicplatform.precondition.abstraction.audience.UserPreconditionService;
 import ru.smirnov.musicplatform.repository.audience.UserRepository;
 import ru.smirnov.musicplatform.service.abstraction.audience.AccountService;
 import ru.smirnov.musicplatform.service.abstraction.audience.UserService;
@@ -26,10 +28,20 @@ public class UserServiceImplementation implements UserService {
     private final UserRepository userRepository;
     private final AccountService accountService;
 
+    private final UserPreconditionService userPreconditionService;
+    private final UserMapper userMapper;
+
     @Autowired
-    public UserServiceImplementation(UserRepository userRepository, AccountService accountService) {
+    public UserServiceImplementation(
+            UserRepository userRepository,
+            AccountService accountService,
+            UserPreconditionService userPreconditionService,
+            UserMapper userMapper
+            ) {
         this.userRepository = userRepository;
         this.accountService = accountService;
+        this.userPreconditionService = userPreconditionService;
+        this.userMapper = userMapper;
     }
 
     // такой уровень изоляции, потому что я хочу быть уверенным, что в рамках транзакции не появится
@@ -75,13 +87,28 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public UserResponse getUserData(DataForToken tokenData) {
-
+        User user = this.userPreconditionService.findById(tokenData.getEntityId());
+        return this.userMapper.userEntityToUserResponse(user);
     }
 
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void updateUserData(UserDataUpdateRequest dto, DataForToken tokenData) {
+        /*уникальность номера телефона и почты*/
+        User user = this.userPreconditionService.checkPhonenumberAndEmailUniqueness(dto.getPhonenumber(), dto.getEmail(), tokenData.getEntityId());
 
+        CommonPersonData data = user.getData();
+
+        data.setEmail(dto.getEmail());
+        data.setPhonenumber(dto.getPhonenumber());
+        data.setFirstname(dto.getLastname());
+        data.setLastname(dto.getFirstname());
+
+        user.setData(data);
+        // можно проверить на возраст
+        user.setDateOfBirth(dto.getDateOfBirth());
+
+        this.userRepository.save(user);
     }
 
 }
