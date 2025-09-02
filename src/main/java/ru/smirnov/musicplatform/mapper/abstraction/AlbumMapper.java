@@ -5,6 +5,8 @@ import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionShortc
 import ru.smirnov.musicplatform.entity.domain.Album;
 import ru.smirnov.musicplatform.finder.SearchResult;
 
+import java.util.Map;
+
 
 public interface AlbumMapper {
 
@@ -14,7 +16,6 @@ public interface AlbumMapper {
 //
 //    MusicCollectionShortcutResponse albumEntityToMusicCollectionShortcutResponse(Album album);
 
-    MusicCollectionShortcutResponse albumEntityToMusicCollectionShortcutResponse(Album album, SearchResult searchResultFor);
-
+    MusicCollectionShortcutResponse albumEntityToMusicCollectionShortcutResponse(Album album, Boolean isSaved);
 
 }

@@ -24,17 +24,14 @@ public class AlbumQueryController {
 
     private final SecurityContextService securityContextService;
     private final AlbumFinderService albumFinderService;
-    private final UserRepository userRepository;
 
     @Autowired
     public AlbumQueryController(
             @Qualifier("anonymousSecurityContextServiceImplementation") SecurityContextService securityContextService,
-            AlbumFinderService albumFinderRepository,
-            UserRepository userRepository
+            AlbumFinderService albumFinderRepository
     ) {
         this.securityContextService = securityContextService;
         this.albumFinderService = albumFinderRepository;
-        this.userRepository = userRepository;
     }
 
     @GetMapping("/search")
@@ -51,15 +48,12 @@ public class AlbumQueryController {
         );
 
         if (isAnonymous)
-            return this.albumFinderService.searchAlbums(searchRequest, null, false, SearchResult.GUEST);
+            return this.albumFinderService.searchAlbums(searchRequest, null, false);
 
-        User user = this.userRepository.findById(tokenData.getEntityId()).orElseThrow(
-                () -> new ForbiddenException("User's business-data wasn't found by users's id in token")
-        );
 
-        if (savedOnly == null || savedOnly == false)
-            return this.albumFinderService.searchAlbums(searchRequest, user, false, SearchResult.USER);
+        if (savedOnly == null)
+            return this.albumFinderService.searchAlbums(searchRequest, tokenData.getEntityId(), false);
 
-        return this.albumFinderService.searchAlbums(searchRequest, user, true, SearchResult.USER_SAVED);
+        return this.albumFinderService.searchAlbums(searchRequest, tokenData.getEntityId(), savedOnly);
     }
 }

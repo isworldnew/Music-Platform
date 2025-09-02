@@ -22,20 +22,20 @@ public class AlbumFinderRepositoryImplementation implements AlbumFinderRepositor
     private EntityManager entityManager;
 
     @Override
-    public Map<Album, Boolean> searchAlbums(String searchRequest, User user, boolean savedOnly) {
-        if (user == null && savedOnly)
+    public Map<Album, Boolean> searchAlbums(String searchRequest, Long userId, boolean savedOnly) {
+        if (userId == null && savedOnly)
             throw new IllegalStateException("'savedOnly' flag can only be used with not-null userId");
 
         // глобальный поиск среди альбомов для гостя (только PUBLIC-альбомы и без информации о сохранении)
-        if (user == null) return this.searchAlbumsGloballyGuest(searchRequest);
+        if (userId == null) return this.searchAlbumsGloballyGuest(searchRequest);
 
         // глобальный поиск среди альбомов для пользователя (получим все PUBLIC-альбомы + альбомы любого уровня доступа, но сохранённые)
-        // user != null && !savedOnly
-        else if (!savedOnly) return this.searchAlbumsGloballyUser(searchRequest, user.getId());
+        // userId != null && !savedOnly
+        else if (!savedOnly) return this.searchAlbumsGloballyUser(searchRequest, userId);
 
         // поиск среди сохранённых альбомов пользователя (в результате могут быть альбомы любого уровня доступа)
-        // user != null && savedOnly
-        else return this.searchSavedAlbums(searchRequest, user.getId());
+        // userId != null && savedOnly
+        else return this.searchSavedAlbums(searchRequest, userId);
     }
 
     private Map<Album, Boolean> searchAlbumsGloballyGuest(String searchRequest) {

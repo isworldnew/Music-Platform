@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AlbumFinderService {
 
-    List<MusicCollectionShortcutResponse> searchAlbums(String searchRequest, User user, boolean savedOnly, SearchResult searchResult);
+    List<MusicCollectionShortcutResponse> searchAlbums(String searchRequest, Long userId, boolean savedOnly);
 
     // метод чтения альбома для гостя и пользователя
 

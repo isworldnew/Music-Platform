@@ -10,6 +10,7 @@ import ru.smirnov.musicplatform.finder.SearchResult;
 import ru.smirnov.musicplatform.mapper.abstraction.AlbumMapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class AlbumMapperImplementation implements AlbumMapper {
@@ -23,16 +24,26 @@ public class AlbumMapperImplementation implements AlbumMapper {
     }
 
     @Override
-    public MusicCollectionShortcutResponse albumEntityToMusicCollectionShortcutResponse(Album album, SearchResult searchResultFor) {
+    public MusicCollectionShortcutResponse albumEntityToMusicCollectionShortcutResponse(Album album, Boolean isSaved) {
+
+        MusicCollectionOwnerResponse owner = new MusicCollectionOwnerResponse(album.getArtist().getId(), album.getArtist().getName());
 
         MusicCollectionShortcutResponse dto = new MusicCollectionShortcutResponse();
 
+        dto.setId(album.getId());
+        dto.setOwner(owner);
+        dto.setName(album.getName());
+        dto.setCoverReference(album.getImageReference());
+        dto.setIsSaved(isSaved);
+        dto.setAccessLevel(album.getAccessLevel().name());
 
+        if (!album.getAccessLevel().isAvailable())
+            dto.setCoverReference(null);
 
         return dto;
     }
 
-    /*
+/*
     @Override
     public MusicCollectionShortcutResponse albumEntityToMusicCollectionShortcutResponse(Album album, boolean albumIsSaved) {
 

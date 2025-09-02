@@ -14,6 +14,7 @@ import ru.smirnov.musicplatform.repository.audience.UserRepository;
 import ru.smirnov.musicplatform.repository.domain.finder.AlbumFinderRepository;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AlbumFinderServiceImplementation implements AlbumFinderService {
@@ -34,12 +35,15 @@ public class AlbumFinderServiceImplementation implements AlbumFinderService {
     // + глянь комментарии в интерфейсе этого сервиса
 
     @Override
-    public List<MusicCollectionShortcutResponse> searchAlbums(String searchRequest, User user, boolean savedOnly, SearchResult searchResultFor) {
+    public List<MusicCollectionShortcutResponse> searchAlbums(String searchRequest, Long userId, boolean savedOnly) {
 
-        List<Album> albums = this.albumFinderRepository.searchAlbums(searchRequest, user, savedOnly);
+        Map<Album, Boolean> albums = this.albumFinderRepository.searchAlbums(searchRequest, userId, savedOnly);
 
+        List<MusicCollectionShortcutResponse> albumShortcuts = albums.keySet().stream()
+                .map(album -> this.albumMapper.albumEntityToMusicCollectionShortcutResponse(album, albums.get(album)))
+                .toList();
 
-
+        return albumShortcuts;
     }
 
 
