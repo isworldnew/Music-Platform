@@ -4,7 +4,7 @@ import ru.smirnov.musicplatform.entity.audience.User;
 
 public interface UserPreconditionService {
 
-    User findById(Long userId);
+    User findByIdIfExists(Long userId);
 
     User checkPhonenumberAndEmailUniqueness(String phonenumber, String email, Long userId);
 }
