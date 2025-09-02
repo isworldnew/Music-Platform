@@ -7,9 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.smirnov.musicplatform.entity.relation.SavedTracks;
-import ru.smirnov.musicplatform.projection.SavedTrackProjection;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

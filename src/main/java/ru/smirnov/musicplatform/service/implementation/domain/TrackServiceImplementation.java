@@ -148,69 +148,69 @@ public class TrackServiceImplementation implements TrackService {
 
     */
 
-    @Override
-    public TrackResponse getTrackByIdWithNoRestrictions(Long trackId, DataForToken tokenData) {
-        // для ADMIN и DISTRIBUTOR
-        // так... а дистрибьютор может просматривать вообще все треки? Просто, как будто, только своего исполнителя (ещё и статус надо учесть (опять наверное ACTIVE))
-        // и если его исполнитель есть в соавторстве у данного трека
-        // а вот админ может просмотреть любой трек
-
-        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
-
-        /*
-        Дистрибьютор в целом не имеет влияения на трек, если исполнитель, с которым у данного дистрибьютора есть ACTIVE-связь,
-        указан в данном треке просто как соавтор... (разве что может добавить такой трек в альбом или удалить оттуда) Соответственно,
-        и смысла давать возможность просматривать чужой трек, где твой ACTIVE-исполнитель является соавтором - нет
-
-        или наоборот - смысл есть? Мол, тебе же надо видеть, какой трек ты в альбом добавляешь
-        */
-        /*
-        Нужно взять список ACTIVE-исполнителей обратившегося дистрибьютора, а затем посмортеть, есть ли кто-то из них
-        среди соавторов запрашиваемого трека
-        */
-        if (tokenData.getRole().equals(Role.DISTRIBUTOR.name())) {
-            List<Long> coArtists = track.getCoArtists().stream().map(coArtist -> coArtist.getArtist().getId()).toList();
-
-            // тогда нужен ещё метод просмотра всех соавторств у своих исполнителей
-        }
-
-        return this.trackMapper.trackEntityToTrackResponse(track);
-    }
-
-    @Override
-    public TrackResponse getTrackById(Long trackId) {
-        // для GUEST
-        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
-
-        if (!track.getStatus().isAvailable())
-            throw new ForbiddenException("Track (id=" + trackId + ") is unavailable (non-PUBLIC status)");
-
-        return this.trackMapper.trackEntityToTrackResponse(track);
-    }
-
-    @Override
-    public ExtendedTrackResponse getTrackWithPossibleRestrictions(Long trackId, DataForToken tokenData) {
-        // для USER
-        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
-
-        // если трек не сохранён и не-PUBLIC -> Forbidden
-
-        // если трек не сохранён и PUBLIC -> TrackResponse
-
-        // если трек сохранён и не-PUBLIC -> ExtendedTrackResponse, но со скрытыми ссылками на обложку и аудио
-
-        // если трек сохранён и PUBLIC -> ExtendedTrackResponse
-
-    }
-
-    // а выбор всех:
-    // сохраннёных треков?
-    // тегнутых треков?
-    // треков в плейлисте (своём / чужом)
-    // треков в альбоме (сохранённом / или для дистрибьютора)
-    // треков в чарте (сохранённом / или для админа)
-    // ?
-    // ну это больше к шорткатам...
+//    @Override
+//    public TrackResponse getTrackByIdWithNoRestrictions(Long trackId, DataForToken tokenData) {
+//        // для ADMIN и DISTRIBUTOR
+//        // так... а дистрибьютор может просматривать вообще все треки? Просто, как будто, только своего исполнителя (ещё и статус надо учесть (опять наверное ACTIVE))
+//        // и если его исполнитель есть в соавторстве у данного трека
+//        // а вот админ может просмотреть любой трек
+//
+//        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
+//
+//        /*
+//        Дистрибьютор в целом не имеет влияения на трек, если исполнитель, с которым у данного дистрибьютора есть ACTIVE-связь,
+//        указан в данном треке просто как соавтор... (разве что может добавить такой трек в альбом или удалить оттуда) Соответственно,
+//        и смысла давать возможность просматривать чужой трек, где твой ACTIVE-исполнитель является соавтором - нет
+//
+//        или наоборот - смысл есть? Мол, тебе же надо видеть, какой трек ты в альбом добавляешь
+//        */
+//        /*
+//        Нужно взять список ACTIVE-исполнителей обратившегося дистрибьютора, а затем посмортеть, есть ли кто-то из них
+//        среди соавторов запрашиваемого трека
+//        */
+//        if (tokenData.getRole().equals(Role.DISTRIBUTOR.name())) {
+//            List<Long> coArtists = track.getCoArtists().stream().map(coArtist -> coArtist.getArtist().getId()).toList();
+//
+//            // тогда нужен ещё метод просмотра всех соавторств у своих исполнителей
+//        }
+//
+//        return this.trackMapper.trackEntityToTrackResponse(track);
+//    }
+//
+//    @Override
+//    public TrackResponse getTrackById(Long trackId) {
+//        // для GUEST
+//        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
+//
+//        if (!track.getStatus().isAvailable())
+//            throw new ForbiddenException("Track (id=" + trackId + ") is unavailable (non-PUBLIC status)");
+//
+//        return this.trackMapper.trackEntityToTrackResponse(track);
+//    }
+//
+//    @Override
+//    public ExtendedTrackResponse getTrackWithPossibleRestrictions(Long trackId, DataForToken tokenData) {
+//        // для USER
+//        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
+//
+//        // если трек не сохранён и не-PUBLIC -> Forbidden
+//
+//        // если трек не сохранён и PUBLIC -> TrackResponse
+//
+//        // если трек сохранён и не-PUBLIC -> ExtendedTrackResponse, но со скрытыми ссылками на обложку и аудио
+//
+//        // если трек сохранён и PUBLIC -> ExtendedTrackResponse
+//
+//    }
+//
+//    // а выбор всех:
+//    // сохраннёных треков?
+//    // тегнутых треков?
+//    // треков в плейлисте (своём / чужом)
+//    // треков в альбоме (сохранённом / или для дистрибьютора)
+//    // треков в чарте (сохранённом / или для админа)
+//    // ?
+//    // ну это больше к шорткатам...
 
 
 }

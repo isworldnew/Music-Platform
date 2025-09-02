@@ -20,7 +20,7 @@ public class UserPreconditionServiceImplementation implements UserPreconditionSe
     }
 
     @Override
-    public User findById(Long userId) {
+    public User findByIdIfExists(Long userId) {
         return this.userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("User with id=" + userId + " was not found")
         );
@@ -28,7 +28,7 @@ public class UserPreconditionServiceImplementation implements UserPreconditionSe
 
     @Override
     public User checkPhonenumberAndEmailUniqueness(String phonenumber, String email, Long userId) {
-        User userFoundById = this.findById(userId);
+        User userFoundById = this.findByIdIfExists(userId);
 
         boolean phonenumberMatches = userFoundById.getData().getPhonenumber().equals(phonenumber);
         boolean emailMatches = userFoundById.getData().getEmail().equals(email);

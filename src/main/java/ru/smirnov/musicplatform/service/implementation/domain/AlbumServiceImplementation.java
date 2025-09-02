@@ -72,8 +72,6 @@ public class AlbumServiceImplementation implements AlbumService {
         Album album = this.albumPreconditionService.getByIdIfExistsAndNameIsUnique(albumId, dto.getName());
         this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), album.getArtist().getId());
 
-        нет проверки на то, что плейлист принадлежит исполнителю
-
         album.setName(dto.getName());
         album.setDescription(dto.getDescription());
 
@@ -91,14 +89,9 @@ public class AlbumServiceImplementation implements AlbumService {
         Album album = this.albumPreconditionService.getByIdIfExists(albumId);
         this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), album.getArtist().getId());
 
-        нет проверки на то, что плейлист принадлежит исполнителю
-
         album.setAccessLevel(MusicCollectionAccessLevel.valueOf(dto.getAccessLevel()));
 
         this.albumRepository.save(album);
-
-        не нужно ли удалить плейлист из сохранённых, если он был PUBLIC, а стал PRIVATE?
     }
-
 
 }

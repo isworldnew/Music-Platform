@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.smirnov.musicplatform.entity.audience.Account;
 import ru.smirnov.musicplatform.exception.NotFoundException;
 import ru.smirnov.musicplatform.exception.UsernameOccupiedException;
-import ru.smirnov.musicplatform.precondition.abstraction.audience.AccountPreconditionService;
 import ru.smirnov.musicplatform.repository.audience.AccountRepository;
+import ru.smirnov.musicplatform.precondition.abstraction.audience.AccountPreconditionService;
 
 @Service
 public class AccountPreconditionServiceImplementation implements AccountPreconditionService {
@@ -18,12 +18,8 @@ public class AccountPreconditionServiceImplementation implements AccountPrecondi
         this.accountRepository = accountRepository;
     }
 
-    // найти по имени, сравнить id аккаунта
-
-    // имя может прийти новое, а может - старое
-
     @Override
-    public Account findById(Long accountId) {
+    public Account findByIdIfExists(Long accountId) {
         return this.accountRepository.findById(accountId).orElseThrow(
                 () -> new NotFoundException("Account with id=" + accountId + " was not found")
          );
@@ -31,7 +27,7 @@ public class AccountPreconditionServiceImplementation implements AccountPrecondi
 
     @Override
     public Account checkUsernameUniqueness(Long accountId, String requestName) {
-        Account accountFoundById = this.findById(accountId);
+        Account accountFoundById = this.findByIdIfExists(accountId);
 
         // значит, пользователь решил не обновлять username
         if (accountFoundById.getUsername().equals(requestName))

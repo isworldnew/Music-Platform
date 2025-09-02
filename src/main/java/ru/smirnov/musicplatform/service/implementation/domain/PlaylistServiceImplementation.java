@@ -87,8 +87,6 @@ public class PlaylistServiceImplementation implements PlaylistService {
 
         playlist.setAccessLevel(MusicCollectionAccessLevel.valueOf(dto.getAccessLevel()));
         this.playlistRepository.save(playlist);
-
-        не нужно ли удалить плейлист из сохранённых, если он был PUBLIC, а стал PRIVATE?
     }
 
 }

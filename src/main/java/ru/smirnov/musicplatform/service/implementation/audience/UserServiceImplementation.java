@@ -87,7 +87,7 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public UserResponse getUserData(DataForToken tokenData) {
-        User user = this.userPreconditionService.findById(tokenData.getEntityId());
+        User user = this.userPreconditionService.findByIdIfExists(tokenData.getEntityId());
         return this.userMapper.userEntityToUserResponse(user);
     }
 

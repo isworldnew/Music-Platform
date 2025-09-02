@@ -70,8 +70,6 @@ public class ChartServiceImplementation implements ChartService {
         Chart chart = this.chartPreconditionService.getByIdIfExists(chartId);
         chart.setAccessLevel(MusicCollectionAccessLevel.valueOf(dto.getAccessLevel()));
         this.chartRepository.save(chart);
-
-        не нужно ли удалить плейлист из сохранённых, если он был PUBLIC, а стал PRIVATE?
     }
 
 }
