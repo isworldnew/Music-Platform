@@ -1,14 +1,11 @@
 package ru.smirnov.musicplatform.repository.domain.finder;
 
-import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionShortcutResponse;
+import ru.smirnov.musicplatform.entity.audience.User;
 import ru.smirnov.musicplatform.entity.domain.Album;
 
-import java.util.List;
+import java.util.Map;
 
 public interface AlbumFinderRepository {
 
-    List<Album> searchAlbums(String searchRequest);
-
-    List<Album> searchSavedAlbums(String searchRequest, Long userId);
-
+    Map<Album, Boolean> searchAlbums(String searchRequest, User user, boolean savedOnly);
 }

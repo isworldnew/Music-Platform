@@ -6,6 +6,7 @@ import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionReques
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionShortcutResponse;
 import ru.smirnov.musicplatform.entity.audience.User;
 import ru.smirnov.musicplatform.entity.domain.Album;
+import ru.smirnov.musicplatform.finder.SearchResult;
 import ru.smirnov.musicplatform.mapper.abstraction.AlbumMapper;
 
 import java.util.List;
@@ -21,6 +22,17 @@ public class AlbumMapperImplementation implements AlbumMapper {
         return album;
     }
 
+    @Override
+    public MusicCollectionShortcutResponse albumEntityToMusicCollectionShortcutResponse(Album album, SearchResult searchResultFor) {
+
+        MusicCollectionShortcutResponse dto = new MusicCollectionShortcutResponse();
+
+
+
+        return dto;
+    }
+
+    /*
     @Override
     public MusicCollectionShortcutResponse albumEntityToMusicCollectionShortcutResponse(Album album, boolean albumIsSaved) {
 
@@ -62,5 +74,5 @@ public class AlbumMapperImplementation implements AlbumMapper {
         dto.setOwner(owner);
         return dto;
     }
-
+    */
 }

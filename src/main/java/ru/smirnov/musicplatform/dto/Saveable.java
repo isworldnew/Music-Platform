@@ -1,6 +1,6 @@
-package ru.smirnov.musicplatform.dto;
-
-public interface Saveable {
-
-    boolean isSaved();
-}
+//package ru.smirnov.musicplatform.dto;
+//
+//public interface Saveable {
+//
+//    boolean isSaved();
+//}
