@@ -32,7 +32,9 @@ public class DistributorServiceImplementation implements DistributorService {
 
     @Override
     public void updateDistributorData(DistributorRequest dto, DataForToken tokenData) {
-        Distributor distributor = this.distributorPreconditionService.nameUniquenessDuringUpdate(tokenData.getEntityId(), dto.getName());
+//        Distributor distributor = this.distributorPreconditionService.nameUniquenessDuringUpdate(tokenData.getEntityId(), dto.getName());
+
+        Distributor distributor = this.distributorPreconditionService.getByIdIfExists(tokenData.getEntityId());
 
         distributor.setName(dto.getName());
         distributor.setDescription(dto.getDescription());

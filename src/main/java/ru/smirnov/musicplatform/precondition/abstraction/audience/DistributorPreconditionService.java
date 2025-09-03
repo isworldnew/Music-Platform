@@ -6,5 +6,5 @@ public interface DistributorPreconditionService {
 
     Distributor getByIdIfExists(Long distributorId);
 
-    Distributor nameUniquenessDuringUpdate(Long distributorId, String name);
+//    Distributor nameUniquenessDuringUpdate(Long distributorId, String name);
 }

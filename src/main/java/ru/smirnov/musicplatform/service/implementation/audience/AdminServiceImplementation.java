@@ -39,7 +39,7 @@ public class AdminServiceImplementation implements AdminService {
     public void updateAdminData(AdminRequest dto, DataForToken tokenData) {
         Admin admin = this.adminPreconditionService.getByIdIfExists(tokenData.getEntityId());
 
-        admin.set();
+//        admin.set();
 
         this.adminRepository.save(admin);
     }
