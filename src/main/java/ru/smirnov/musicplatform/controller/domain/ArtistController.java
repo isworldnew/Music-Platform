@@ -14,6 +14,8 @@ import ru.smirnov.musicplatform.dto.domain.artist.ArtistResponse;
 import ru.smirnov.musicplatform.dto.domain.artist.ExtendedArtistResponse;
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionRequest;
 import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
+import ru.smirnov.musicplatform.dto.relation.ArtistSocialNetworkRequest;
+import ru.smirnov.musicplatform.service.abstraction.relation.ArtistSocialNetworkService;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 import ru.smirnov.musicplatform.service.abstraction.domain.AlbumService;
 import ru.smirnov.musicplatform.service.abstraction.domain.ArtistService;
@@ -29,18 +31,21 @@ public class ArtistController {
     private final ArtistService artistService;
     private final TrackService trackService;
     private final AlbumService albumService;
+    private final ArtistSocialNetworkService artistSocialNetworkService;
 
     @Autowired
     public ArtistController(
             SecurityContextService securityContextService,
             ArtistService artistService,
             TrackService trackService,
-            AlbumService albumService
+            AlbumService albumService,
+            ArtistSocialNetworkService artistSocialNetworkService
     ) {
         this.securityContextService = securityContextService;
         this.artistService = artistService;
         this.trackService = trackService;
         this.albumService = albumService;
+        this.artistSocialNetworkService = artistSocialNetworkService;
     }
 
     @PostMapping
@@ -88,4 +93,14 @@ public class ArtistController {
         return this.albumService.createAlbum(artistId, dto, tokenData);
     }
 
+    @PostMapping("/{id}/social-networks")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('DISTRIBUTOR')")
+    public Long addSocialNetwork(
+            @NotNull @Positive @PathVariable("id") Long artistId,
+            @RequestBody @Valid ArtistSocialNetworkRequest dto
+    ) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.artistSocialNetworkService.addSocialNetwork(artistId, dto, tokenData);
+    }
 }
