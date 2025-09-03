@@ -3,6 +3,8 @@ package ru.smirnov.musicplatform.precondition.implementation.audience;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.smirnov.musicplatform.entity.audience.Distributor;
+import ru.smirnov.musicplatform.exception.ConflictException;
+import ru.smirnov.musicplatform.exception.NotFoundException;
 import ru.smirnov.musicplatform.precondition.abstraction.audience.DistributorPreconditionService;
 import ru.smirnov.musicplatform.repository.audience.DistributorRepository;
 import ru.smirnov.musicplatform.service.abstraction.audience.DistributorService;
@@ -18,7 +20,25 @@ public class DistributorPreconditionServiceImplementation implements Distributor
     }
 
     @Override
-    public Distributor findByIdIfExists(Long distributorId) {
-        return null;
+    public Distributor getByIdIfExists(Long distributorId) {
+        return this.distributorRepository.findById(distributorId).orElseThrow(
+                () -> new NotFoundException("Distributor with id=" + distributorId + " was not found")
+        );
     }
+
+    // зачем ему уникальное имя? достаточно уникального username
+//    @Override
+//    public Distributor nameUniquenessDuringUpdate(Long distributorId, String name) {
+//        Distributor distributorFoundById = this.getByIdIfExists(distributorId);
+//
+//        if (distributorFoundById.getName().equals(name))
+//            return distributorFoundById;
+//
+//        Distributor distributorFoundByName = this.distributorRepository.findByName(name).orElse(null);
+//
+//        if (distributorFoundByName != null)
+//            throw new ConflictException("Name '" + name + "' is occupied by distributor (id=" + distributorFoundByName.getId() + ")");
+//
+//        return distributorFoundById;
+//    }
 }

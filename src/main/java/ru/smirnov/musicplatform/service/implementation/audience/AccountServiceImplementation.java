@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-// ещё не переписал под интерфейсы
 @Service
 public class AccountServiceImplementation implements UserDetailsService, AccountService {
 

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorRequest;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorResponse;
+import ru.smirnov.musicplatform.entity.audience.Distributor;
+import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributorType;
 import ru.smirnov.musicplatform.mapper.abstraction.DistributorMapper;
 import ru.smirnov.musicplatform.precondition.abstraction.audience.DistributorPreconditionService;
 import ru.smirnov.musicplatform.repository.audience.DistributorRepository;
@@ -29,12 +31,20 @@ public class DistributorServiceImplementation implements DistributorService {
     }
 
     @Override
-    public DistributorResponse getDistributorData(DataForToken tokenData) {
-        return null;
+    public void updateDistributorData(DistributorRequest dto, DataForToken tokenData) {
+        Distributor distributor = this.distributorPreconditionService.nameUniquenessDuringUpdate(tokenData.getEntityId(), dto.getName());
+
+        distributor.setName(dto.getName());
+        distributor.setDescription(dto.getDescription());
+        distributor.setDistributorType(DistributorType.valueOf(dto.getDistributorType()));
+
+        this.distributorRepository.save(distributor);
     }
 
     @Override
-    public void updateDistributorData(DistributorRequest dto, DataForToken tokenData) {
-
+    public DistributorResponse getDistributorData(DataForToken tokenData) {
+        Distributor distributor = this.distributorPreconditionService.getByIdIfExists(tokenData.getEntityId());
+        return this.distributorMapper.distributorEntityToDistributorResponse(distributor);
     }
+
 }

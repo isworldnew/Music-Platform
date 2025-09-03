@@ -4,6 +4,7 @@ import ru.smirnov.musicplatform.entity.audience.Distributor;
 
 public interface DistributorPreconditionService {
 
-    Distributor findByIdIfExists(Long distributorId);
+    Distributor getByIdIfExists(Long distributorId);
 
+    Distributor nameUniquenessDuringUpdate(Long distributorId, String name);
 }
