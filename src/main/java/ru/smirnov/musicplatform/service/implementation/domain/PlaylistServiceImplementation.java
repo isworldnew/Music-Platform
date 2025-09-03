@@ -89,4 +89,9 @@ public class PlaylistServiceImplementation implements PlaylistService {
         this.playlistRepository.save(playlist);
     }
 
+    @Override
+    public void deletePlaylist(Long playlistId, DataForToken tokenData) {
+        Playlist playlist = this.playlistPreconditionService.existsAndBelongToUser(playlistId, tokenData.getEntityId());
+        this.playlistRepository.deleteById(playlistId);
+    }
 }

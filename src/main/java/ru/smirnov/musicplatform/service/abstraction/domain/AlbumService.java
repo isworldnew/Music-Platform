@@ -11,4 +11,6 @@ public interface AlbumService {
     void updateAlbum(Long albumId, MusicCollectionRequest dto, DataForToken tokenData);
 
     void updateAlbumAccessLevel(Long albumId, MusicCollectionAccessLevelRequest dto, DataForToken tokenData);
+
+    void deleteAlbum(Long albumId, DataForToken tokenData);
 }

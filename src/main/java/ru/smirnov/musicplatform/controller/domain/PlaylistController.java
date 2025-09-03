@@ -51,4 +51,12 @@ public class PlaylistController {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         this.playlistService.updatePlaylistAccessLevel(playlistId, dto, tokenData);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('USER')")
+    public void deletePlaylist(@NotNull @Positive @PathVariable("id") Long playlistId) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        this.playlistService.deletePlaylist(playlistId, tokenData);
+    }
 }

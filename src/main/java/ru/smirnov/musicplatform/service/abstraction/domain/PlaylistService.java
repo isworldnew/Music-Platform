@@ -11,4 +11,6 @@ public interface PlaylistService {
     void updatePlaylist(Long playlistId, MusicCollectionRequest dto, DataForToken tokenData);
 
     void updatePlaylistAccessLevel(Long playlistId, MusicCollectionAccessLevelRequest dto, DataForToken tokenData);
+
+    void deletePlaylist(Long playlistId, DataForToken tokenData);
 }

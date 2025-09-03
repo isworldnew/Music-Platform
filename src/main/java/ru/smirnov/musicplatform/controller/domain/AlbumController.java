@@ -31,7 +31,7 @@ public class AlbumController {
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public void updateAlbum(@NotNull @Positive @PathVariable Long albumId, @RequestBody @Valid MusicCollectionRequest dto) {
+    public void updateAlbum(@NotNull @Positive @PathVariable("id") Long albumId, @RequestBody @Valid MusicCollectionRequest dto) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         this.albumService.updateAlbum(albumId, dto, tokenData);
     }
@@ -39,8 +39,16 @@ public class AlbumController {
     @PatchMapping("/{id}/access-level")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('DISTRIBUTOR')")
-    public void updateAlbumAccessLevel(@NotNull @Positive @PathVariable Long albumId, @RequestBody @Valid MusicCollectionAccessLevelRequest dto) {
+    public void updateAlbumAccessLevel(@NotNull @Positive @PathVariable("id") Long albumId, @RequestBody @Valid MusicCollectionAccessLevelRequest dto) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         this.albumService.updateAlbumAccessLevel(albumId, dto, tokenData);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('DISTRIBUTOR')")
+    public void deleteAlbum(@NotNull @Positive @PathVariable("id") Long albumId) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        this.albumService.deleteAlbum(albumId, tokenData);
     }
 }

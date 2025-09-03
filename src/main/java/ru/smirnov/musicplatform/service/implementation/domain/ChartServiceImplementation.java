@@ -72,4 +72,9 @@ public class ChartServiceImplementation implements ChartService {
         this.chartRepository.save(chart);
     }
 
+    @Override
+    public void deleteChart(Long chartId, DataForToken tokenData) {
+        Chart chart = this.chartPreconditionService.getByIdIfExists(chartId);
+        this.chartRepository.deleteById(chartId);
+    }
 }

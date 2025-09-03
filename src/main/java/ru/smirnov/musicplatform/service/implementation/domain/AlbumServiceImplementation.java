@@ -94,4 +94,13 @@ public class AlbumServiceImplementation implements AlbumService {
         this.albumRepository.save(album);
     }
 
+    @Override
+    public void deleteAlbum(Long albumId, DataForToken tokenData) {
+        Album album = this.albumPreconditionService.getByIdIfExists(albumId);
+        this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(
+                tokenData.getEntityId(), album.getArtist().getId()
+        );
+
+        this.albumRepository.deleteById(albumId);
+    }
 }

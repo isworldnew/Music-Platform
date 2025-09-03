@@ -52,4 +52,12 @@ public class ChartController {
         this.chartService.updateChartAccessLevel(chartId, dto, tokenData);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteChart(@NotNull @Positive @PathVariable("id") Long chartId) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        this.chartService.deleteChart(chartId, tokenData);
+    }
+
 }

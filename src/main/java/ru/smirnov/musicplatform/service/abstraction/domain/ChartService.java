@@ -11,4 +11,6 @@ public interface ChartService {
     void updateChart(Long chartId, MusicCollectionRequest dto, DataForToken tokenData);
 
     void updateChartAccessLevel(Long chartId, MusicCollectionAccessLevelRequest dto, DataForToken tokenData);
+
+    void deleteChart(Long chartId, DataForToken tokenData);
 }
