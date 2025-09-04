@@ -46,12 +46,10 @@ public class TrackFileManagementServiceImplementation implements TrackFileManage
         this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), track.getArtist().getId());
 
         boolean referenceExists = (track.getImageReference() != null);
-        boolean coverAttached = (dto.getImageFile() != null && dto.getImageFile().isEmpty());
+        boolean coverAttached = (dto.getImageFile() != null && !dto.getImageFile().isEmpty());
 
-        System.out.println("действие");
 
         if (!referenceExists && coverAttached) {
-            System.out.println("действие 1");
             String coverReference = MinioPathUtil.generateFormattedReference(MinioBuckets.TRACK_COVER.getBucketName(), track.getArtist().getId(), trackId);
             track.setImageReference(coverReference);
             try {
@@ -71,7 +69,6 @@ public class TrackFileManagementServiceImplementation implements TrackFileManage
         }
 
         if (referenceExists && !coverAttached) {
-            System.out.println("действие 2");
             String coverReference = track.getImageReference();
             track.setImageReference(null);
             try {
@@ -88,7 +85,6 @@ public class TrackFileManagementServiceImplementation implements TrackFileManage
         }
 
         if (referenceExists && coverAttached) {
-            System.out.println("действие 3");
             String coverReference = track.getImageReference();
             try {
                 this.minioService.replaceObjectInBucket(
@@ -113,7 +109,7 @@ public class TrackFileManagementServiceImplementation implements TrackFileManage
             throw new ForbiddenException("Track (id=" + trackId + ") is PUBLIC: audiofile update is not allowed");
 
         boolean referenceExists = (track.getImageReference() != null);
-        boolean audioAttached = (dto.getAudioFile() != null && dto.getAudioFile().isEmpty());
+        boolean audioAttached = (dto.getAudioFile() != null && !dto.getAudioFile().isEmpty());
 
         if (!referenceExists && audioAttached) {
             String audioReference = MinioPathUtil.generateFormattedReference(MinioBuckets.TRACK_AUDIO.getBucketName(), track.getArtist().getId(), trackId);

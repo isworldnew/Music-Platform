@@ -36,7 +36,7 @@ public class Track {
     private OffsetDateTime uploadDateTime = OffsetDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "access_level", columnDefinition = "VARCHAR(255) DEFAULT 'UPLOADED_AND_HIDDEN'", nullable = false)
+    @Column(name = "status", columnDefinition = "VARCHAR(255) DEFAULT 'UPLOADED_AND_HIDDEN'", nullable = false)
     private TrackStatus status = TrackStatus.UPLOADED_AND_HIDDEN;
 
     @Column(name = "image_reference", columnDefinition = "TEXT")

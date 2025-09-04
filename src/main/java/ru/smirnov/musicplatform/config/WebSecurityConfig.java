@@ -59,7 +59,7 @@ public class WebSecurityConfig {
 
                         .requestMatchers(HttpMethod.PATCH, "/tracks/{id}/listen").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
 
-                        .requestMatchers("/tracks/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
+                        .requestMatchers("/tracks/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS") //.anonymous()
                         .requestMatchers("/albums/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
                         .requestMatchers("/artists/search").permitAll()
 

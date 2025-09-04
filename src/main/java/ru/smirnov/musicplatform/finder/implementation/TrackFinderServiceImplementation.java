@@ -6,6 +6,8 @@ import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutResponse;
 import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.finder.abstraction.TrackFinderService;
 import ru.smirnov.musicplatform.mapper.abstraction.TrackMapper;
+import ru.smirnov.musicplatform.projection.TrackShortcutProjection;
+import ru.smirnov.musicplatform.projection.TrackShortcutProjectionImplementation;
 import ru.smirnov.musicplatform.repository.domain.finder.TrackFinderRepository;
 
 import java.util.List;
@@ -24,14 +26,16 @@ public class TrackFinderServiceImplementation implements TrackFinderService {
     }
 
     @Override
-    public List<TrackShortcutResponse> searchTracks(String searchRequest, Long userId, boolean savedOnly) {
+    public List<TrackShortcutProjection> searchTracks(String searchRequest, Long userId, boolean savedOnly) {
 
-        Map<Track, Boolean> tracks = this.trackFinderRepository.searchTracks(searchRequest, userId, savedOnly);
+        List<TrackShortcutProjection> tracks = this.trackFinderRepository.searchTracks(searchRequest, userId, savedOnly);
 
-        List<TrackShortcutResponse> trackShortcuts = tracks.keySet().stream()
-                .map(track -> this.trackMapper.trackEntityToTrackShortcutResponse(track, tracks.get(track)))
-                .toList();
+        for (TrackShortcutProjection track : tracks) {
+            if (!track.getStatus().isAvailable()) {
+                ((TrackShortcutProjectionImplementation) track).setImageReference(null);
+            }
+        }
 
-        return trackShortcuts;
+        return tracks;
     }
 }

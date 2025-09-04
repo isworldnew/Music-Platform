@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutResponse;
 import ru.smirnov.musicplatform.finder.abstraction.TrackFinderService;
+import ru.smirnov.musicplatform.projection.TrackShortcutProjection;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class TrackQueryController {
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('USER', 'ANONYMOUS')")
-    public List<TrackShortcutResponse> searchTracks(
+    public List<TrackShortcutProjection> searchTracks(
             @RequestParam(required = true) @NotBlank String searchRequest,
             @RequestParam(required = false) Boolean savedOnly
     ) {
