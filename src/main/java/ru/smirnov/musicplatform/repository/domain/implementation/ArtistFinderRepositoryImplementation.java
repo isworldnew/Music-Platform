@@ -28,7 +28,7 @@ public class ArtistFinderRepositoryImplementation implements ArtistFinderReposit
 
         Predicate artistNamePredicate = criteriaBuilder.like(
                 criteriaBuilder.lower(artistRoot.get("name")),
-                "%" + searchRequest + "%"
+                "%" + searchRequest.toLowerCase() + "%"
         );
 
         query.select(artistRoot).where(artistNamePredicate);

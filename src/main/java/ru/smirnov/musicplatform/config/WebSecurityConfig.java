@@ -61,11 +61,10 @@ public class WebSecurityConfig {
 
                         .requestMatchers("/tracks/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
                         .requestMatchers("/albums/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
-                        .requestMatchers("/playlists/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
-                        .requestMatchers("/charts/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
-
+                        .requestMatchers("/artists/search").permitAll()
 
                         .requestMatchers("/authentication/refresh").hasAuthority(JwtToken.REFRESH_TOKEN.name())
+
 
                         .anyRequest().hasAuthority(JwtToken.ACCESS_TOKEN.name())
                 )

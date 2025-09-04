@@ -73,6 +73,7 @@ public class ArtistController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('USER', 'ANONYMOUS')")
     public ArtistResponse getArtist(@NotNull @Positive @PathVariable("id") Long artistId) {
         return this.artistService.getArtistDataById(artistId);
     }

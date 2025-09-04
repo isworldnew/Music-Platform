@@ -49,24 +49,24 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
         Join<Track, Artist> artistJoin = trackRoot.join("artist", JoinType.INNER);
         Join<Track, CoArtists> coArtistsJoin = trackRoot.join("coArtists", JoinType.LEFT);
 
-        Predicate trackAccessLevel = criteriaBuilder.equal(
-                trackRoot.get("accessLevel"),
+        Predicate trackStatus = criteriaBuilder.equal(
+                trackRoot.get("status"),
                 TrackStatus.PUBLISHED
         );
 
         Predicate trackNamePredicate = criteriaBuilder.like(
                 criteriaBuilder.lower(trackRoot.get("name")),
-                "%" + searchRequest + "%"
+                "%" + searchRequest.toLowerCase() + "%"
         );
 
         Predicate artistNamePredicate = criteriaBuilder.like(
                 criteriaBuilder.lower(artistJoin.get("name")),
-                "%" + searchRequest + "%"
+                "%" + searchRequest.toLowerCase() + "%"
         );
 
         Predicate coArtistNamePredicate = criteriaBuilder.like(
                 criteriaBuilder.lower(coArtistsJoin.get("artist").get("name")),
-                "%" + searchRequest + "%"
+                "%" + searchRequest.toLowerCase() + "%"
         );
 
         Predicate namePredicate = criteriaBuilder.or(
@@ -75,11 +75,13 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
                 coArtistNamePredicate
         );
 
-        Predicate finalPredicate = criteriaBuilder.and(trackAccessLevel, namePredicate);
+        Predicate finalPredicate = criteriaBuilder.and(trackStatus, namePredicate);
 
         query.select(trackRoot).where(finalPredicate);
 
         List<Track> tracks = this.entityManager.createQuery(query).getResultList();
+
+        System.out.println(tracks);
 
         Map<Track, Boolean> tracksWithSavedInfo = new HashMap<>();
 
@@ -100,23 +102,23 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
 
         // трек сохранён или PUBLIC
         Predicate trackIsPublic = criteriaBuilder.equal(
-                trackRoot.get("accessLevel"),
+                trackRoot.get("status"),
                 TrackStatus.PUBLISHED
         );
 
         Predicate trackNamePredicate = criteriaBuilder.like(
                 criteriaBuilder.lower(trackRoot.get("name")),
-                "%" + searchRequest + "%"
+                "%" + searchRequest.toLowerCase() + "%"
         );
 
         Predicate artistNamePredicate = criteriaBuilder.like(
                 criteriaBuilder.lower(artistJoin.get("name")),
-                "%" + searchRequest + "%"
+                "%" + searchRequest.toLowerCase() + "%"
         );
 
         Predicate coArtistNamePredicate = criteriaBuilder.like(
                 criteriaBuilder.lower(coArtistsJoin.get("artist").get("name")),
-                "%" + searchRequest + "%"
+                "%" + searchRequest.toLowerCase() + "%"
         );
 
         Predicate trackIsSaved = criteriaBuilder.equal(savedTracksJoin.get("user").get("id"), userId);
@@ -165,17 +167,17 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
 
         Predicate trackNamePredicate = criteriaBuilder.like(
                 criteriaBuilder.lower(trackRoot.get("name")),
-                "%" + searchRequest + "%"
+                "%" + searchRequest.toLowerCase() + "%"
         );
 
         Predicate artistNamePredicate = criteriaBuilder.like(
                 criteriaBuilder.lower(artistJoin.get("name")),
-                "%" + searchRequest + "%"
+                "%" + searchRequest.toLowerCase() + "%"
         );
 
         Predicate coArtistNamePredicate = criteriaBuilder.like(
                 criteriaBuilder.lower(coArtistsJoin.get("artist").get("name")),
-                "%" + searchRequest + "%"
+                "%" + searchRequest.toLowerCase() + "%"
         );
 
         Predicate trackIsSaved = criteriaBuilder.equal(savedTracksJoin.get("user").get("id"), userId);

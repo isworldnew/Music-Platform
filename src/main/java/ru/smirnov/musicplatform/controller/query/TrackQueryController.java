@@ -31,7 +31,7 @@ public class TrackQueryController {
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('USER, ANONYMOUS')")
+    @PreAuthorize("hasAnyRole('USER', 'ANONYMOUS')")
     public List<TrackShortcutResponse> searchTracks(
             @RequestParam(required = true) @NotBlank String searchRequest,
             @RequestParam(required = false) Boolean savedOnly
