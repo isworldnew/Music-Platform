@@ -8,15 +8,12 @@ import org.springframework.stereotype.Repository;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;
-import ru.smirnov.musicplatform.entity.relation.CoArtists;
 import ru.smirnov.musicplatform.entity.relation.SavedTracks;
-import ru.smirnov.musicplatform.projection.TrackShortcutProjection;
-import ru.smirnov.musicplatform.projection.TrackShortcutProjectionImplementation;
+import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
+import ru.smirnov.musicplatform.projection.implementation.TrackShortcutProjectionImplementation;
 import ru.smirnov.musicplatform.repository.domain.finder.TrackFinderRepository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class TrackFinderRepositoryImplementation implements TrackFinderRepository {

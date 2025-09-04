@@ -1,8 +1,7 @@
 package ru.smirnov.musicplatform.finder.abstraction;
 
 
-import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutResponse;
-import ru.smirnov.musicplatform.projection.TrackShortcutProjection;
+import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 
 import java.util.List;
 

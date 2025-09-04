@@ -2,18 +2,14 @@ package ru.smirnov.musicplatform.finder.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.smirnov.musicplatform.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionShortcutResponse;
-import ru.smirnov.musicplatform.entity.audience.User;
-import ru.smirnov.musicplatform.entity.domain.Album;
-import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.finder.abstraction.AlbumFinderService;
 import ru.smirnov.musicplatform.mapper.abstraction.AlbumMapper;
+import ru.smirnov.musicplatform.projection.abstraction.MusicCollectionShortcutProjection;
+import ru.smirnov.musicplatform.projection.implementation.MusicCollectionShortcutProjectionImplementation;
 import ru.smirnov.musicplatform.repository.audience.UserRepository;
 import ru.smirnov.musicplatform.repository.domain.finder.AlbumFinderRepository;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AlbumFinderServiceImplementation implements AlbumFinderService {
@@ -34,15 +30,17 @@ public class AlbumFinderServiceImplementation implements AlbumFinderService {
     // + глянь комментарии в интерфейсе этого сервиса
 
     @Override
-    public List<MusicCollectionShortcutResponse> searchAlbums(String searchRequest, Long userId, boolean savedOnly) {
+    public List<MusicCollectionShortcutProjection> searchAlbums(String searchRequest, Long userId, boolean savedOnly) {
 
-        Map<Album, Boolean> albums = this.albumFinderRepository.searchAlbums(searchRequest, userId, savedOnly);
+        List<MusicCollectionShortcutProjection> albums = this.albumFinderRepository.searchAlbums(searchRequest, userId, savedOnly);
 
-        List<MusicCollectionShortcutResponse> albumShortcuts = albums.keySet().stream()
-                .map(album -> this.albumMapper.albumEntityToMusicCollectionShortcutResponse(album, albums.get(album)))
-                .toList();
+        for (MusicCollectionShortcutProjection album : albums) {
+            if (!album.getAccessLevel().isAvailable()) {
+                ((MusicCollectionShortcutProjectionImplementation) album).setImageReference(null);
+            }
+        }
 
-        return albumShortcuts;
+        return albums;
     }
 
 

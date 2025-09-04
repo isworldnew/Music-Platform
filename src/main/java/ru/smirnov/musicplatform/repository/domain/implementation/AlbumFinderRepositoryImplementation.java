@@ -2,18 +2,17 @@ package ru.smirnov.musicplatform.repository.domain.implementation;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
-import ru.smirnov.musicplatform.entity.audience.User;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.MusicCollectionAccessLevel;
 import ru.smirnov.musicplatform.entity.domain.Album;
 import ru.smirnov.musicplatform.entity.domain.Artist;
-import ru.smirnov.musicplatform.entity.relation.SavedAlbums;
+import ru.smirnov.musicplatform.projection.abstraction.MusicCollectionShortcutProjection;
+import ru.smirnov.musicplatform.projection.implementation.MusicCollectionShortcutProjectionImplementation;
 import ru.smirnov.musicplatform.repository.domain.finder.AlbumFinderRepository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class AlbumFinderRepositoryImplementation implements AlbumFinderRepository {
@@ -22,7 +21,7 @@ public class AlbumFinderRepositoryImplementation implements AlbumFinderRepositor
     private EntityManager entityManager;
 
     @Override
-    public Map<Album, Boolean> searchAlbums(String searchRequest, Long userId, boolean savedOnly) {
+    public List<MusicCollectionShortcutProjection> searchAlbums(String searchRequest, Long userId, boolean savedOnly) {
         if (userId == null && savedOnly)
             throw new IllegalStateException("'savedOnly' flag can only be used with not-null userId");
 
@@ -31,13 +30,53 @@ public class AlbumFinderRepositoryImplementation implements AlbumFinderRepositor
 
         // глобальный поиск среди альбомов для пользователя (получим все PUBLIC-альбомы + альбомы любого уровня доступа, но сохранённые)
         // userId != null && !savedOnly
-        else if (!savedOnly) return this.searchAlbumsGloballyUser(searchRequest, userId);
+        // else if (!savedOnly) return this.searchAlbumsGloballyUser(searchRequest, userId);
 
         // поиск среди сохранённых альбомов пользователя (в результате могут быть альбомы любого уровня доступа)
         // userId != null && savedOnly
-        else return this.searchSavedAlbums(searchRequest, userId);
+        // else return this.searchSavedAlbums(searchRequest, userId);
+
+        return null;
     }
 
+    private List<MusicCollectionShortcutProjection> searchAlbumsGloballyGuest(String searchRequest) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
+
+        Root<Album> album = query.from(Album.class);
+        Join<Album, Artist> artistJoin = album.join("artist", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                MusicCollectionShortcutProjectionImplementation.class,
+                album.get("id"),
+                album.get("name"),
+                album.get("imageReference"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                album.get("accessLevel"),
+                criteriaBuilder.nullLiteral(Boolean.class)
+        ));
+
+        Predicate accessLevelPredicate = criteriaBuilder.equal(
+                album.get("accessLevel"),
+                MusicCollectionAccessLevel.PUBLIC
+        );
+
+        Predicate nameCondition = criteriaBuilder.or(
+                criteriaBuilder.like(criteriaBuilder.lower(album.get("name")), "%" + searchRequest.toLowerCase() + "%"),
+                criteriaBuilder.like(criteriaBuilder.lower(artistJoin.get("name")), "%" + searchRequest.toLowerCase() + "%")
+        );
+
+        Predicate finalPredicate = criteriaBuilder.and(accessLevelPredicate, nameCondition);
+
+        query.where(finalPredicate);
+
+        TypedQuery<MusicCollectionShortcutProjection> albums = entityManager.createQuery(query);
+        return albums.getResultList();
+    }
+
+    /*
     private Map<Album, Boolean> searchAlbumsGloballyGuest(String searchRequest) {
 
         // тут гарантированно все - SAVED = NULL
@@ -174,5 +213,5 @@ public class AlbumFinderRepositoryImplementation implements AlbumFinderRepositor
 
         return albumsWithSavedInfo;
     }
-
+    */
 }

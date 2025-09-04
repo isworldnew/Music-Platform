@@ -1,4 +1,4 @@
-package ru.smirnov.musicplatform.projection;
+package ru.smirnov.musicplatform.projection.abstraction;
 
 import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 

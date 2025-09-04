@@ -1,10 +1,10 @@
 package ru.smirnov.musicplatform.repository.domain.finder;
 
-import ru.smirnov.musicplatform.entity.domain.Album;
+import ru.smirnov.musicplatform.projection.abstraction.MusicCollectionShortcutProjection;
 
-import java.util.Map;
+import java.util.List;
 
 public interface AlbumFinderRepository {
 
-    Map<Album, Boolean> searchAlbums(String searchRequest, Long userId, boolean savedOnly);
+    List<MusicCollectionShortcutProjection> searchAlbums(String searchRequest, Long userId, boolean savedOnly);
 }

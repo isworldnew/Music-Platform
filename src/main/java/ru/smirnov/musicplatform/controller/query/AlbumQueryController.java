@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionShortcutResponse;
 import ru.smirnov.musicplatform.finder.abstraction.AlbumFinderService;
+import ru.smirnov.musicplatform.projection.abstraction.MusicCollectionShortcutProjection;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class AlbumQueryController {
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('USER', 'ANONYMOUS')")
-    public List<MusicCollectionShortcutResponse> searchAlbums(
+    public List<MusicCollectionShortcutProjection> searchAlbums(
             @RequestParam(required = true) @NotBlank String searchRequest,
             @RequestParam(required = false) Boolean savedOnly
     ) {

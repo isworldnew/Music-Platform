@@ -2,16 +2,13 @@ package ru.smirnov.musicplatform.finder.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutResponse;
-import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.finder.abstraction.TrackFinderService;
 import ru.smirnov.musicplatform.mapper.abstraction.TrackMapper;
-import ru.smirnov.musicplatform.projection.TrackShortcutProjection;
-import ru.smirnov.musicplatform.projection.TrackShortcutProjectionImplementation;
+import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
+import ru.smirnov.musicplatform.projection.implementation.TrackShortcutProjectionImplementation;
 import ru.smirnov.musicplatform.repository.domain.finder.TrackFinderRepository;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class TrackFinderServiceImplementation implements TrackFinderService {
