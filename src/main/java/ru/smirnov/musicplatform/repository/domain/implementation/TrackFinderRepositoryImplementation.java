@@ -187,6 +187,7 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
         TypedQuery<TrackShortcutProjection> typedQuery = entityManager.createQuery(query);
         return typedQuery.getResultList();
     }
+
     /*
     private Map<Track, Boolean> searchTracksGloballyGuest(String searchRequest) {
 
