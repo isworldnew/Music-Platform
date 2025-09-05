@@ -9,6 +9,7 @@ import ru.smirnov.musicplatform.projection.implementation.TrackShortcutProjectio
 import ru.smirnov.musicplatform.repository.domain.finder.TrackFinderRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TrackFinderServiceImplementation implements TrackFinderService {
@@ -35,4 +36,18 @@ public class TrackFinderServiceImplementation implements TrackFinderService {
 
         return tracks;
     }
+
+    @Override
+    public List<TrackShortcutProjection> searchTracksByTagsCombination(Set<Long> tagsId) {
+        List<TrackShortcutProjection> tracks = this.trackFinderRepository.searchTracksByTagsCombination(tagsId);
+
+        for (TrackShortcutProjection track : tracks) {
+            if (!track.getStatus().isAvailable()) {
+                ((TrackShortcutProjectionImplementation) track).setImageReference(null);
+            }
+        }
+
+        return tracks;
+    }
+
 }

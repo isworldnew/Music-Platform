@@ -3,9 +3,11 @@ package ru.smirnov.musicplatform.repository.domain;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.smirnov.musicplatform.entity.domain.Track;
+import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 import ru.smirnov.musicplatform.repository.domain.finder.TrackFinderRepository;
 //import ru.smirnov.musicplatform.repository.domain.finder.TrackRepositoryFinder;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository

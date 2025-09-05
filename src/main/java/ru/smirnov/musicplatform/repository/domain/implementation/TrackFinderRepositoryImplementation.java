@@ -7,19 +7,25 @@ import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
+import ru.smirnov.musicplatform.entity.domain.Tag;
 import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.entity.relation.SavedTracks;
+import ru.smirnov.musicplatform.entity.relation.TaggedTracks;
 import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 import ru.smirnov.musicplatform.projection.implementation.TrackShortcutProjectionImplementation;
 import ru.smirnov.musicplatform.repository.domain.finder.TrackFinderRepository;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 public class TrackFinderRepositoryImplementation implements TrackFinderRepository {
     
     @PersistenceContext
     private EntityManager entityManager;
+
+
 
     @Override
     public List<TrackShortcutProjection> searchTracks(String searchRequest, Long userId, boolean savedOnly) {
@@ -38,7 +44,7 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
         else return this.searchSavedTracks(searchRequest, userId);
     }
 
-    public List<TrackShortcutProjection> searchTracksGloballyGuest(String searchRequest) {
+    private List<TrackShortcutProjection> searchTracksGloballyGuest(String searchRequest) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TrackShortcutProjection> query = criteriaBuilder.createQuery(TrackShortcutProjection.class);
@@ -84,7 +90,7 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
         return tracks.getResultList();
     }
 
-    public List<TrackShortcutProjection> searchTracksGloballyUser(String searchRequest, Long userId) {
+    private List<TrackShortcutProjection> searchTracksGloballyUser(String searchRequest, Long userId) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TrackShortcutProjection> query = criteriaBuilder.createQuery(TrackShortcutProjection.class);
@@ -140,7 +146,7 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
         return typedQuery.getResultList();
     }
 
-    public List<TrackShortcutProjection> searchSavedTracks(String searchRequest, Long userId) {
+    private List<TrackShortcutProjection> searchSavedTracks(String searchRequest, Long userId) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TrackShortcutProjection> query = criteriaBuilder.createQuery(TrackShortcutProjection.class);
@@ -188,168 +194,36 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
         return typedQuery.getResultList();
     }
 
-    /*
-    private Map<Track, Boolean> searchTracksGloballyGuest(String searchRequest) {
-
-        // тут гарантированно все - SAVED = NULL
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Track> query = criteriaBuilder.createQuery(Track.class);
-
-        Root<Track> trackRoot = query.from(Track.class);
-        Join<Track, Artist> artistJoin = trackRoot.join("artist", JoinType.INNER);
-        Join<Track, CoArtists> coArtistsJoin = trackRoot.join("coArtists", JoinType.LEFT);
-
-        Predicate trackStatus = criteriaBuilder.equal(
-                trackRoot.get("status"),
-                TrackStatus.PUBLISHED
-        );
-
-        Predicate trackNamePredicate = criteriaBuilder.like(
-                criteriaBuilder.lower(trackRoot.get("name")),
-                "%" + searchRequest.toLowerCase() + "%"
-        );
-
-        Predicate artistNamePredicate = criteriaBuilder.like(
-                criteriaBuilder.lower(artistJoin.get("name")),
-                "%" + searchRequest.toLowerCase() + "%"
-        );
-
-        Predicate coArtistNamePredicate = criteriaBuilder.like(
-                criteriaBuilder.lower(coArtistsJoin.get("artist").get("name")),
-                "%" + searchRequest.toLowerCase() + "%"
-        );
-
-        Predicate namePredicate = criteriaBuilder.or(
-                trackNamePredicate,
-                artistNamePredicate,
-                coArtistNamePredicate
-        );
-
-        Predicate finalPredicate = criteriaBuilder.and(trackStatus, namePredicate);
-
-        query.select(trackRoot).where(finalPredicate);
-
-        List<Track> tracks = this.entityManager.createQuery(query).getResultList();
-
-        System.out.println(tracks);
-
-        Map<Track, Boolean> tracksWithSavedInfo = new HashMap<>();
-
-        tracks.forEach(track -> tracksWithSavedInfo.put(track, null));
-
-        return tracksWithSavedInfo;
-    }
-
-    private Map<Track, Boolean> searchTracksGloballyUser(String searchRequest, Long userId) {
+    @Override
+    public List<TrackShortcutProjection> searchTracksByTagsCombination(Set<Long> tagsId) {
 
         CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<Track> query = criteriaBuilder.createQuery(Track.class);
+        CriteriaQuery<TaggedTracks> query = criteriaBuilder.createQuery(TaggedTracks.class);
 
-        Root<Track> trackRoot = query.from(Track.class);
-        Join<Track, Artist> artistJoin = trackRoot.join("artist", JoinType.INNER);
-        Join<Track, CoArtists> coArtistsJoin = trackRoot.join("coArtists", JoinType.LEFT);
-        Join<Track, SavedTracks> savedTracksJoin = trackRoot.join("savedBy", JoinType.LEFT);
+        Root<TaggedTracks> taggedTracks = query.from(TaggedTracks.class);
 
-        // трек сохранён или PUBLIC
-        Predicate trackIsPublic = criteriaBuilder.equal(
-                trackRoot.get("status"),
-                TrackStatus.PUBLISHED
-        );
+        Predicate recordsRelatedWithTagPredicate = taggedTracks.get("tag").get("id").in(tagsId);
 
-        Predicate trackNamePredicate = criteriaBuilder.like(
-                criteriaBuilder.lower(trackRoot.get("name")),
-                "%" + searchRequest.toLowerCase() + "%"
-        );
+        query.groupBy(taggedTracks.get("track").get("id"));
 
-        Predicate artistNamePredicate = criteriaBuilder.like(
-                criteriaBuilder.lower(artistJoin.get("name")),
-                "%" + searchRequest.toLowerCase() + "%"
-        );
-
-        Predicate coArtistNamePredicate = criteriaBuilder.like(
-                criteriaBuilder.lower(coArtistsJoin.get("artist").get("name")),
-                "%" + searchRequest.toLowerCase() + "%"
-        );
-
-        Predicate trackIsSaved = criteriaBuilder.equal(savedTracksJoin.get("user").get("id"), userId);
-
-        Predicate namePredicate = criteriaBuilder.or(
-                trackNamePredicate,
-                artistNamePredicate,
-                coArtistNamePredicate
-        );
-
-        Predicate finalPredicate = criteriaBuilder.and(
-                criteriaBuilder.or(trackIsSaved, trackIsPublic),
-                namePredicate
-        );
-
-        query.select(trackRoot).distinct(true).where(finalPredicate);
-
-        List<Track> tracks = this.entityManager.createQuery(query).getResultList();
-
-        Map<Track, Boolean> tracksWithSavedInfo = new HashMap<>();
-
-        tracks.forEach(
-                track -> tracksWithSavedInfo.put(
-                        track,
-                        track.getSavedBy().stream()
-                                .map(savedTrack -> savedTrack.getUser().getId())
-                                .toList()
-                                .contains(userId)
+        query.having(
+                criteriaBuilder.equal(
+                    criteriaBuilder.countDistinct(taggedTracks.get("tag").get("id")),
+                    tagsId.size()
                 )
         );
 
-        return tracksWithSavedInfo;
+        query.select(taggedTracks.get("track").get("id")).where(recordsRelatedWithTagPredicate);
+
+        Set<Long> tracksId = this.entityManager.createQuery(query).getResultList().stream()
+                .map(taggedTrack -> taggedTrack.getTrack().getId())
+                .collect(Collectors.toSet());
+
+        return this.findShortcutsById(tracksId);
     }
 
-    private Map<Track, Boolean> searchSavedTracks(String searchRequest, Long userId) {
+    private List<TrackShortcutProjection> findShortcutsById(Set<Long> tracksId) {
 
-        // тут гарантированно все - SAVED
-
-        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<Track> query = criteriaBuilder.createQuery(Track.class);
-
-        Root<Track> trackRoot = query.from(Track.class);
-        Join<Track, Artist> artistJoin = trackRoot.join("artist", JoinType.INNER);
-        Join<Track, CoArtists> coArtistsJoin = trackRoot.join("coArtists", JoinType.LEFT);
-        Join<Track, SavedTracks> savedTracksJoin = trackRoot.join("savedBy", JoinType.INNER);
-
-        Predicate trackNamePredicate = criteriaBuilder.like(
-                criteriaBuilder.lower(trackRoot.get("name")),
-                "%" + searchRequest.toLowerCase() + "%"
-        );
-
-        Predicate artistNamePredicate = criteriaBuilder.like(
-                criteriaBuilder.lower(artistJoin.get("name")),
-                "%" + searchRequest.toLowerCase() + "%"
-        );
-
-        Predicate coArtistNamePredicate = criteriaBuilder.like(
-                criteriaBuilder.lower(coArtistsJoin.get("artist").get("name")),
-                "%" + searchRequest.toLowerCase() + "%"
-        );
-
-        Predicate trackIsSaved = criteriaBuilder.equal(savedTracksJoin.get("user").get("id"), userId);
-
-        Predicate namePredicate = criteriaBuilder.or(
-                trackNamePredicate,
-                artistNamePredicate,
-                coArtistNamePredicate
-        );
-
-        Predicate finalPredicate = criteriaBuilder.and(trackIsSaved, namePredicate);
-
-        query.select(trackRoot).distinct(true).where(finalPredicate);
-
-        List<Track> tracks = this.entityManager.createQuery(query).getResultList();
-
-        Map<Track, Boolean> tracksWithSavedInfo = new HashMap<>();
-
-        tracks.forEach(track -> tracksWithSavedInfo.put(track, true));
-
-        return tracksWithSavedInfo;
     }
-    */
+    
 }
