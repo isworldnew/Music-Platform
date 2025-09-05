@@ -44,7 +44,6 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
         CriteriaQuery<TrackShortcutProjection> query = criteriaBuilder.createQuery(TrackShortcutProjection.class);
 
         Root<Track> track = query.from(Track.class);
-
         Join<Track, Artist> artistJoin = track.join("artist", JoinType.INNER);
 
         query.select(criteriaBuilder.construct(
