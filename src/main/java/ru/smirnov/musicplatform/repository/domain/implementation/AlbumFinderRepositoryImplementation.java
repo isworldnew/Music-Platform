@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.MusicCollectionAccessLevel;
 import ru.smirnov.musicplatform.entity.domain.Album;
 import ru.smirnov.musicplatform.entity.domain.Artist;
+import ru.smirnov.musicplatform.entity.relation.SavedAlbums;
 import ru.smirnov.musicplatform.projection.abstraction.MusicCollectionShortcutProjection;
 import ru.smirnov.musicplatform.projection.implementation.MusicCollectionShortcutProjectionImplementation;
 import ru.smirnov.musicplatform.repository.domain.finder.AlbumFinderRepository;
@@ -30,13 +31,11 @@ public class AlbumFinderRepositoryImplementation implements AlbumFinderRepositor
 
         // глобальный поиск среди альбомов для пользователя (получим все PUBLIC-альбомы + альбомы любого уровня доступа, но сохранённые)
         // userId != null && !savedOnly
-        // else if (!savedOnly) return this.searchAlbumsGloballyUser(searchRequest, userId);
+        else if (!savedOnly) return this.searchAlbumsGloballyUser(searchRequest, userId);
 
         // поиск среди сохранённых альбомов пользователя (в результате могут быть альбомы любого уровня доступа)
         // userId != null && savedOnly
-        // else return this.searchSavedAlbums(searchRequest, userId);
-
-        return null;
+        else return this.searchSavedAlbums(searchRequest, userId);
     }
 
     private List<MusicCollectionShortcutProjection> searchAlbumsGloballyGuest(String searchRequest) {
@@ -63,16 +62,113 @@ public class AlbumFinderRepositoryImplementation implements AlbumFinderRepositor
                 MusicCollectionAccessLevel.PUBLIC
         );
 
-        Predicate nameCondition = criteriaBuilder.or(
+        Predicate namePredicate = criteriaBuilder.or(
                 criteriaBuilder.like(criteriaBuilder.lower(album.get("name")), "%" + searchRequest.toLowerCase() + "%"),
                 criteriaBuilder.like(criteriaBuilder.lower(artistJoin.get("name")), "%" + searchRequest.toLowerCase() + "%")
         );
 
-        Predicate finalPredicate = criteriaBuilder.and(accessLevelPredicate, nameCondition);
+        Predicate finalPredicate = criteriaBuilder.and(accessLevelPredicate, namePredicate);
 
         query.where(finalPredicate);
 
         TypedQuery<MusicCollectionShortcutProjection> albums = entityManager.createQuery(query);
+        return albums.getResultList();
+    }
+
+    private List<MusicCollectionShortcutProjection> searchAlbumsGloballyUser(String searchRequest, Long userId) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
+
+        Root<Album> album = query.from(Album.class);
+        Join<Album, Artist> artistJoin = album.join("artist", JoinType.INNER);
+        Join<Album, SavedAlbums> savedAlbumsJoin = album.join("savedBy", JoinType.LEFT);
+
+        Expression<Object> savedExpression = criteriaBuilder.selectCase()
+                .when(criteriaBuilder.equal(savedAlbumsJoin.get("user").get("id"), userId), true)
+                .otherwise(false);
+
+        query.select(criteriaBuilder.construct(
+                MusicCollectionShortcutProjectionImplementation.class,
+                album.get("id"),
+                album.get("name"),
+                album.get("imageReference"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                album.get("accessLevel"),
+                savedExpression
+        ));
+
+        Predicate accessLevelPredicate = criteriaBuilder.equal(
+                album.get("accessLevel"),
+                MusicCollectionAccessLevel.PUBLIC
+        );
+
+        Predicate savedPredicate = criteriaBuilder.equal(
+                savedAlbumsJoin.get("user").get("id"),
+                userId
+        );
+
+        Predicate namePredicate = criteriaBuilder.or(
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(album.get("name")),
+                        "%" + searchRequest.toLowerCase() + "%"
+                ),
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(artistJoin.get("name")),
+                        "%" + searchRequest.toLowerCase() + "%"
+                )
+        );
+
+        Predicate finalPredicate = criteriaBuilder.and(
+                criteriaBuilder.or(accessLevelPredicate, savedPredicate),
+                namePredicate
+        );
+
+        query.where(finalPredicate);
+
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    private List<MusicCollectionShortcutProjection> searchSavedAlbums(String searchRequest, Long userId) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
+
+        Root<Album> album = query.from(Album.class);
+        Join<Album, Artist> artistJoin = album.join("artist", JoinType.INNER);
+        Join<Album, SavedAlbums> savedAlbumsJoin = album.join("savedBy", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                MusicCollectionShortcutProjectionImplementation.class,
+                album.get("id"),
+                album.get("name"),
+                album.get("imageReference"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                album.get("accessLevel"),
+                criteriaBuilder.literal(true)
+        ));
+
+        Predicate namePredicate = criteriaBuilder.or(
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(album.get("name")),
+                        "%" + searchRequest.toLowerCase() + "%"
+                ),
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(artistJoin.get("name")),
+                        "%" + searchRequest.toLowerCase() + "%"
+                )
+        );
+
+        Predicate savedPredicate = criteriaBuilder.equal(
+                savedAlbumsJoin.get("user").get("id"),
+                userId
+        );
+
+        query.where(criteriaBuilder.and(namePredicate, savedPredicate));
+
+        TypedQuery<MusicCollectionShortcutProjection> albums = this.entityManager.createQuery(query);
         return albums.getResultList();
     }
 
