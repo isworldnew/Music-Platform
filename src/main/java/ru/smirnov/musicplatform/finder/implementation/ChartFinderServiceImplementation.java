@@ -31,4 +31,10 @@ public class ChartFinderServiceImplementation implements ChartFinderService {
 
         return charts;
     }
+
+    @Override
+    public List<MusicCollectionShortcutProjection> searchChartsByAdmin(String searchRequest, Long adminId) {
+        List<MusicCollectionShortcutProjection> charts = this.chartFinderRepository.searchChartsByAdmin(searchRequest, adminId);
+        return charts;
+    }
 }

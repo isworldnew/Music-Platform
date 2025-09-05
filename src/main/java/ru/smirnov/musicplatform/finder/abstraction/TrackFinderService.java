@@ -11,4 +11,5 @@ public interface TrackFinderService {
     List<TrackShortcutProjection> searchTracks(String searchRequest, Long userId, boolean savedOnly);
 
     List<TrackShortcutProjection> searchTracksByTagsCombination(Set<Long> tagsId);
+
 }

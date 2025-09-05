@@ -25,8 +25,6 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
     @PersistenceContext
     private EntityManager entityManager;
 
-
-
     @Override
     public List<TrackShortcutProjection> searchTracks(String searchRequest, Long userId, boolean savedOnly) {
         if (userId == null && savedOnly)
@@ -164,7 +162,6 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
                 track.get("status"),
                 track.get("imageReference"),
                 criteriaBuilder.literal(true)
-
         ));
 
         Predicate savedPredicate = criteriaBuilder.equal(
@@ -224,6 +221,28 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
 
     private List<TrackShortcutProjection> findShortcutsById(Set<Long> tracksId) {
 
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<TrackShortcutProjection> query = criteriaBuilder.createQuery(TrackShortcutProjection.class);
+
+        Root<Track> track = query.from(Track.class);
+        Join<Track, Artist> artistJoin = track.join("artist", JoinType.INNER);
+
+        Predicate trackIdPredicate = track.get("id").in(tracksId);
+
+        query.where(trackIdPredicate);
+
+        query.select(criteriaBuilder.construct(
+                TrackShortcutProjectionImplementation.class,
+                track.get("id"),
+                track.get("name"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                track.get("status"),
+                track.get("imageReference"),
+                criteriaBuilder.literal(true)
+        ));
+
+        return this.entityManager.createQuery(query).getResultList();
     }
     
 }

@@ -3,7 +3,6 @@ package ru.smirnov.musicplatform.finder.implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistResponse;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutResponse;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.finder.abstraction.ArtistFinderService;
 import ru.smirnov.musicplatform.mapper.abstraction.ArtistMapper;
@@ -29,4 +28,9 @@ public class ArtistFinderServiceImplementation implements ArtistFinderService {
         return artists.stream().map(artist -> this.artistMapper.artistEntityToArtistResponse(artist)).toList();
     }
 
+    @Override
+    public List<ArtistResponse> searchArtists(String searchRequest, Long distributorId) {
+        List<Artist> artists = this.artistFinderRepository.searchArtists(searchRequest, distributorId);
+        return artists.stream().map(artist -> this.artistMapper.artistEntityToArtistResponse(artist)).toList();
+    }
 }

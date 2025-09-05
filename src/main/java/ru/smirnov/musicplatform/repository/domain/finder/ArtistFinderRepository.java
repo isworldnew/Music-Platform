@@ -8,4 +8,8 @@ public interface ArtistFinderRepository {
 
     List<Artist> searchArtists(String searchRequest);
 
+    List<Artist> searchArtists(String searchRequest, Long distributorId);
+
+    добавь новые методы в сервисы и контроллеры
+    и там в каком-то инетерфейсе были описаны нужные методы
 }

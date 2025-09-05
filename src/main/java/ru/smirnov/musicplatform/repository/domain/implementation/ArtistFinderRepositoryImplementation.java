@@ -2,13 +2,11 @@ package ru.smirnov.musicplatform.repository.domain.implementation;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutResponse;
+import ru.smirnov.musicplatform.entity.audience.Distributor;
 import ru.smirnov.musicplatform.entity.domain.Artist;
+import ru.smirnov.musicplatform.entity.relation.DistributorsByArtists;
 import ru.smirnov.musicplatform.repository.domain.finder.ArtistFinderRepository;
 
 import java.util.List;
@@ -32,6 +30,35 @@ public class ArtistFinderRepositoryImplementation implements ArtistFinderReposit
         );
 
         query.select(artistRoot).where(artistNamePredicate);
+
+        return this.entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public List<Artist> searchArtists(String searchRequest, Long distributorId) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<Artist> query = criteriaBuilder.createQuery(Artist.class);
+
+        Root<Artist> artist = query.from(Artist.class);
+        Join<Artist, DistributorsByArtists> distributorsByArtistsJoin = artist.join("relationWithDistributors", JoinType.INNER);
+
+        Predicate distributorByArtistPredicate = criteriaBuilder.equal(
+                distributorsByArtistsJoin.get("distributor").get("id"),
+                distributorId
+        );
+
+        Predicate artistNamePredicate = criteriaBuilder.like(
+                criteriaBuilder.lower(artist.get("name")),
+                "%" + searchRequest.toLowerCase() + "%"
+        );
+
+        query.select(artist).where(
+                criteriaBuilder.and(
+                        distributorByArtistPredicate,
+                        artistNamePredicate
+                )
+        );
 
         return this.entityManager.createQuery(query).getResultList();
     }

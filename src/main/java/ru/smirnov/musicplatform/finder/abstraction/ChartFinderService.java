@@ -8,4 +8,6 @@ public interface ChartFinderService {
 
     List<MusicCollectionShortcutProjection> searchCharts(String searchRequest, Long userId, boolean isSaved);
 
+    List<MusicCollectionShortcutProjection> searchChartsByAdmin(String searchRequest, Long adminId);
+
 }
