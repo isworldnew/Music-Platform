@@ -78,22 +78,22 @@ public class ArtistServiceImplementation implements ArtistService {
         artist.setDescription(dto.getDescription());
     }
 
-    @Override
-    public ArtistResponse getArtistDataById(Long artistId) {
-        Artist artist = this.artistPreconditionService.getByIdIfExists(artistId);
-        return this.artistMapper.artistEntityToArtistResponse(artist);
-    }
-
-    @Override
-    public ExtendedArtistResponse getExtendedArtistDataById(Long artistId) {
-        Artist artist = this.artistPreconditionService.getByIdIfExists(artistId);
-        return this.artistMapper.artistEntityToExtendedArtistResponse(artist);
-    }
-
-    // а получение всех своих исполнителей (с учётом статуса взаимодействия с ними)?
-    // а поиск по ним?
-    // тут тоже шорткаты понадобятся
-
-    // все треки/альбомы исполнителя
+//    @Override
+//    public ArtistResponse getArtistDataById(Long artistId) {
+//        Artist artist = this.artistPreconditionService.getByIdIfExists(artistId);
+//        return this.artistMapper.artistEntityToArtistResponse(artist);
+//    }
+//
+//    @Override
+//    public ExtendedArtistResponse getExtendedArtistDataById(Long artistId) {
+//        Artist artist = this.artistPreconditionService.getByIdIfExists(artistId);
+//        return this.artistMapper.artistEntityToExtendedArtistResponse(artist);
+//    }
+//
+//    // а получение всех своих исполнителей (с учётом статуса взаимодействия с ними)?
+//    // а поиск по ним?
+//    // тут тоже шорткаты понадобятся
+//
+//    // все треки/альбомы исполнителя
 
 }

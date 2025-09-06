@@ -11,7 +11,7 @@ public interface ArtistService {
 
     void updateArtist(Long artistId, ArtistRequest dto, DataForToken tokenData);
 
-    ArtistResponse getArtistDataById(Long artistId);
-
-    ExtendedArtistResponse getExtendedArtistDataById(Long artistId);
+//    ArtistResponse getArtistDataById(Long artistId);
+//
+//    ExtendedArtistResponse getExtendedArtistDataById(Long artistId);
 }

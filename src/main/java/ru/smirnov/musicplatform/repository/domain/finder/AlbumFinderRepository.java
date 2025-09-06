@@ -9,4 +9,6 @@ public interface AlbumFinderRepository {
     List<MusicCollectionShortcutProjection> searchAlbums(String searchRequest, Long userId, boolean savedOnly);
 
     List<MusicCollectionShortcutProjection> getSavedAlbums(Long userId);
+
+    List<MusicCollectionShortcutProjection> getAlbumsByArtist(Long artistId, boolean publicOnly);
 }

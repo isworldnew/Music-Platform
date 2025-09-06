@@ -10,8 +10,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistRequest;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistResponse;
-import ru.smirnov.musicplatform.dto.domain.artist.ExtendedArtistResponse;
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionRequest;
 import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
 import ru.smirnov.musicplatform.dto.relation.ArtistSocialNetworkRequest;
@@ -62,20 +60,6 @@ public class ArtistController {
     public void updateArtist(@NotNull @Positive @PathVariable("id") Long artistId, @RequestBody @Valid ArtistRequest dto) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         this.artistService.updateArtist(artistId, dto, tokenData);
-    }
-
-    @GetMapping("/{id}/extended")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('DISTRIBUTOR', 'ADMIN')")
-    public ExtendedArtistResponse getArtistWithDetails(@NotNull @Positive @PathVariable("id") Long artistId) {
-        return this.artistService.getExtendedArtistDataById(artistId);
-    }
-
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('USER', 'ANONYMOUS')")
-    public ArtistResponse getArtist(@NotNull @Positive @PathVariable("id") Long artistId) {
-        return this.artistService.getArtistDataById(artistId);
     }
 
     @PostMapping("/{id}/tracks")

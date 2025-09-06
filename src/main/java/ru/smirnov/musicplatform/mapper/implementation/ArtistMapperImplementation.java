@@ -8,6 +8,8 @@ import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.mapper.abstraction.ArtistMapper;
 import ru.smirnov.musicplatform.mapper.abstraction.ArtistSocialNetworkMapper;
 import ru.smirnov.musicplatform.mapper.abstraction.DistributorByArtistMapper;
+import ru.smirnov.musicplatform.projection.abstraction.MusicCollectionShortcutProjection;
+import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 
 import java.util.List;
 
@@ -35,43 +37,63 @@ public class ArtistMapperImplementation implements ArtistMapper {
     }
 
     @Override
-    public ArtistResponse artistEntityToArtistResponse(Artist artist) {
+    public ArtistResponse artistEntityToArtistResponse(
+            Artist artist,
+            List<MusicCollectionShortcutProjection> albums,
+            List<TrackShortcutProjection> tracks
+    ) {
         ArtistResponse dto = new ArtistResponse();
         dto.setId(artist.getId());
         dto.setName(artist.getName());
         dto.setDescription(artist.getDescription());
         dto.setCoverReference(artist.getImageReference());
+        dto.setAlbums(albums);
+        dto.setTracks(tracks);
 
-        List<ArtistSocialNetworkResponse> socialNetworks = artist.getSocialNetworks().stream()
+        if (artist.getSocialNetworks() != null && !artist.getSocialNetworks().isEmpty()) {
+            dto.setSocialNetworks(artist.getSocialNetworks().stream()
                 .map(socialNetwork -> this.artistSocialNetworkMapper.artistSocialNetworkEntityToArtistSocialNetworkResponse(socialNetwork))
-                .toList();
-
-        dto.setSocialNetworks(socialNetworks);
+                .toList()
+            );
+        }
 
         return dto;
     }
 
     @Override
-    public ExtendedArtistResponse artistEntityToExtendedArtistResponse(Artist artist) {
-        ExtendedArtistResponse dto = new ExtendedArtistResponse();
+    public ArtistExtendedResponse artistEntityToArtistExtendedResponse(
+            Artist artist,
+            List<MusicCollectionShortcutProjection> albums,
+            List<TrackShortcutProjection> tracks
+    ) {
+        ArtistExtendedResponse dto = new ArtistExtendedResponse();
         dto.setId(artist.getId());
         dto.setName(artist.getName());
         dto.setDescription(artist.getDescription());
         dto.setCoverReference(artist.getImageReference());
+        dto.setAlbums(albums);
+        dto.setTracks(tracks);
 
-        List<ArtistSocialNetworkResponse> socialNetworks = artist.getSocialNetworks().stream()
-                .map(socialNetwork -> this.artistSocialNetworkMapper.artistSocialNetworkEntityToArtistSocialNetworkResponse(socialNetwork))
-                .toList();
+        if (artist.getSocialNetworks() != null && !artist.getSocialNetworks().isEmpty()) {
+            dto.setSocialNetworks(artist.getSocialNetworks().stream()
+                    .map(
+                            socialNetwork -> this.artistSocialNetworkMapper.artistSocialNetworkEntityToArtistSocialNetworkResponse(socialNetwork)
+                    )
+                    .toList()
+            );
+        }
 
-        dto.setSocialNetworks(socialNetworks);
+        if (artist.getRelationWithDistributors() != null && !artist.getRelationWithDistributors().isEmpty()) {
+            dto.setDistributors(artist.getRelationWithDistributors().stream()
+                    .map(relation -> this.distributorByArtistMapper.distributorEntityToDistributorByArtistResponse(
+                            relation.getId(),
+                            relation.getStatus(),
+                            relation.getDistributor()
+                    ))
+                    .toList()
+            );
 
-        List<DistributorByArtistResponse> distributors = artist.getRelationWithDistributors().stream()
-                .map(relation-> this.distributorByArtistMapper.distributorEntityToDistributorByArtistResponse(
-                        relation.getId(), relation.getStatus(), relation.getDistributor())
-                )
-                .toList();
-
-        dto.setDistributors(distributors);
+        }
 
         return dto;
     }

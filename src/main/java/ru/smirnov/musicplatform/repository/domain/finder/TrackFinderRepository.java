@@ -12,4 +12,6 @@ public interface TrackFinderRepository {
     List<TrackShortcutProjection> searchTracksByTagsCombination(Set<Long> tagsId);
 
     List<TrackShortcutProjection> getSavedTracks(Long userId);
+
+    List<TrackShortcutProjection> getTracksByArtist(Long artistId, boolean publicOnly);
 }

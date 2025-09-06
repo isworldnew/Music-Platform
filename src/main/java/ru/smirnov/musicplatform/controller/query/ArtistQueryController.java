@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.musicplatform.dto.domain.artist.ArtistExtendedResponse;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistResponse;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutResponse;
 import ru.smirnov.musicplatform.finder.abstraction.ArtistFinderService;
@@ -58,5 +59,21 @@ public class ArtistQueryController {
     ) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.artistFinderService.getDistributedArtists(tokenData.getEntityId(), activelyDistributed);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER', 'ANONYMOUS')")
+    public ArtistResponse getArtistData(@NotNull @Positive @PathVariable("id") Long artistId) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.artistFinderService.getArtistData(artistId, tokenData);
+    }
+
+    @GetMapping("/{id}/extended")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN', 'ANONYMOUS')")
+    public ArtistExtendedResponse getArtistExtendedData(@NotNull @Positive @PathVariable("id") Long artistId) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.artistFinderService.getArtistExtendedData(artistId, tokenData);
     }
 }

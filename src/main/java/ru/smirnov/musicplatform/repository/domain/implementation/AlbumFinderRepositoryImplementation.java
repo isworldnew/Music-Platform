@@ -202,4 +202,41 @@ public class AlbumFinderRepositoryImplementation implements AlbumFinderRepositor
 
         return this.entityManager.createQuery(query).getResultList();
     }
+
+    @Override
+    public List<MusicCollectionShortcutProjection> getAlbumsByArtist(Long artistId, boolean publicOnly) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
+
+        Root<Album> album = query.from(Album.class);
+        Join<Album, Artist> artistJoin = album.join("artist", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                MusicCollectionShortcutProjectionImplementation.class,
+                album.get("id"),
+                album.get("name"),
+                album.get("imageReference"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                album.get("accessLevel"),
+                criteriaBuilder.nullLiteral(Boolean.class)
+        ));
+
+        Predicate albumByArtistPredicate = criteriaBuilder.equal(artistJoin.get("id"), artistId);
+
+        if (publicOnly) {
+            Predicate albumAccessLevelPredicate = criteriaBuilder.equal(
+                    album.get("accessLevel"),
+                    MusicCollectionAccessLevel.PUBLIC
+            );
+
+            query.where(criteriaBuilder.and(albumByArtistPredicate, albumAccessLevelPredicate));
+            return this.entityManager.createQuery(query).getResultList();
+        }
+
+        query.where(albumByArtistPredicate);
+        return this.entityManager.createQuery(query).getResultList();
+    }
+
 }

@@ -273,4 +273,40 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
 
         return this.entityManager.createQuery(query).getResultList();
     }
+
+    @Override
+    public List<TrackShortcutProjection> getTracksByArtist(Long artistId, boolean publicOnly) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<TrackShortcutProjection> query = criteriaBuilder.createQuery(TrackShortcutProjection.class);
+
+        Root<Track> track = query.from(Track.class);
+        Join<Track, Artist> artistJoin = track.join("artist", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                TrackShortcutProjectionImplementation.class,
+                track.get("id"),
+                track.get("name"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                track.get("status"),
+                track.get("imageReference"),
+                criteriaBuilder.nullLiteral(Boolean.class)
+        ));
+
+        Predicate trackByArtistPredicate = criteriaBuilder.equal(artistJoin.get("id"), artistId);
+
+        if (publicOnly) {
+            Predicate trackStatusPredicate = criteriaBuilder.equal(
+                    track.get("status"),
+                    TrackStatus.PUBLISHED
+            );
+
+            query.where(criteriaBuilder.and(trackByArtistPredicate, trackStatusPredicate));
+            return this.entityManager.createQuery(query).getResultList();
+        }
+
+        query.where(trackByArtistPredicate);
+        return this.entityManager.createQuery(query).getResultList();
+    }
 }
