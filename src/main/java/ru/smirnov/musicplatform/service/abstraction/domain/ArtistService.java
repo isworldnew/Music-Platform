@@ -2,8 +2,6 @@ package ru.smirnov.musicplatform.service.abstraction.domain;
 
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistRequest;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistResponse;
-import ru.smirnov.musicplatform.dto.domain.artist.ExtendedArtistResponse;
 
 public interface ArtistService {
 

@@ -11,4 +11,6 @@ public interface ChartFinderService {
     List<MusicCollectionShortcutProjection> searchChartsByAdmin(String searchRequest, Long adminId);
 
     List<MusicCollectionShortcutProjection> getSavedCharts(Long userId);
+
+    List<MusicCollectionShortcutProjection> searchChartsGloballyAdmin(String searchRequest);
 }

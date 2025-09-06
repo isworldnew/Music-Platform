@@ -89,4 +89,12 @@ public class TrackQueryController {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.trackFinderService.getTrackExtendedData(trackId, tokenData);
     }
+
+    @GetMapping("/search/global")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public List<TrackShortcutProjection> searchTracksGlobally(@RequestParam(required = true) @NotBlank String searchRequest) {
+        return this.trackFinderService.searchTracksGloballyAdmin(searchRequest);
+    }
+
 }

@@ -20,4 +20,6 @@ public interface TrackFinderService {
     TrackResponse getTrackData(Long trackId, DataForToken tokenData);
 
     TrackExtendedResponse getTrackExtendedData(Long trackId, DataForToken tokenData);
+
+    List<TrackShortcutProjection> searchTracksGloballyAdmin(String searchRequest);
 }

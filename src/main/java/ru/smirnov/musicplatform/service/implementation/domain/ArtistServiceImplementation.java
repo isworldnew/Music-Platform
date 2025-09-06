@@ -6,8 +6,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistRequest;
-import ru.smirnov.musicplatform.dto.domain.artist.ArtistResponse;
-import ru.smirnov.musicplatform.dto.domain.artist.ExtendedArtistResponse;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributionStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.precondition.abstraction.relation.DistributorByArtistPreconditionService;

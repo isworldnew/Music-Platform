@@ -17,7 +17,7 @@ public interface TrackMapper {
 
     TrackResponse trackEntityToTrackResponse(Track track);
 
-    TrackExtendedResponse trackEntityToTrackExtendedResponse(Track track, List<TagResponse> tags);
+    TrackExtendedResponse trackEntityToTrackExtendedResponse(Track track, List<TagResponse> tags, boolean isSaved);
 
     TrackShortcutResponse trackEntityToTrackShortcutResponse(Track track, Boolean isSaved);
 }

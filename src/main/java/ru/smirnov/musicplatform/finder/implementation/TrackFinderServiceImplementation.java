@@ -9,15 +9,18 @@ import ru.smirnov.musicplatform.dto.domain.track.TrackExtendedResponse;
 import ru.smirnov.musicplatform.dto.domain.track.TrackResponse;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.entity.domain.Track;
+import ru.smirnov.musicplatform.entity.relation.SavedTracks;
 import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.finder.abstraction.TrackFinderService;
 import ru.smirnov.musicplatform.mapper.abstraction.TrackMapper;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.TagPreconditionService;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.TrackPreconditionService;
 import ru.smirnov.musicplatform.precondition.abstraction.relation.DistributorByArtistPreconditionService;
+import ru.smirnov.musicplatform.precondition.abstraction.relation.SavedTrackPreconditionService;
 import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 import ru.smirnov.musicplatform.projection.implementation.TrackShortcutProjectionImplementation;
 import ru.smirnov.musicplatform.repository.domain.finder.TrackFinderRepository;
+import ru.smirnov.musicplatform.repository.relation.SavedTrackRepository;
 import ru.smirnov.musicplatform.service.abstraction.domain.TagService;
 
 import java.util.List;
@@ -32,6 +35,7 @@ public class TrackFinderServiceImplementation implements TrackFinderService {
     private final TagPreconditionService tagPreconditionService;
     private final DistributorByArtistPreconditionService distributorByArtistPreconditionService;
     private final TagService tagService;
+    private final SavedTrackRepository savedTrackRepository;
 
     @Autowired
     public TrackFinderServiceImplementation(
@@ -40,7 +44,8 @@ public class TrackFinderServiceImplementation implements TrackFinderService {
             TrackPreconditionService trackPreconditionService,
             TagPreconditionService tagPreconditionService,
             DistributorByArtistPreconditionService distributorByArtistPreconditionService,
-            TagService tagService
+            TagService tagService,
+            SavedTrackRepository savedTrackRepository
     ) {
         this.trackFinderRepository = trackFinderRepository;
         this.trackMapper = trackMapper;
@@ -48,6 +53,7 @@ public class TrackFinderServiceImplementation implements TrackFinderService {
         this.tagPreconditionService = tagPreconditionService;
         this.distributorByArtistPreconditionService = distributorByArtistPreconditionService;
         this.tagService = tagService;
+        this.savedTrackRepository = savedTrackRepository;
     }
 
     @Override
@@ -122,6 +128,14 @@ public class TrackFinderServiceImplementation implements TrackFinderService {
         Track track = this.trackPreconditionService.getByIdIfExists(trackId);
         List<TagResponse> tags = this.tagService.getAllUserTags(tokenData);
 
-        return this.trackMapper.trackEntityToTrackExtendedResponse(track, tags);
+        SavedTracks savedTrack = this.savedTrackRepository.findByTrackIdAndUserId(trackId, tokenData.getEntityId()).orElse(null);
+
+        return this.trackMapper.trackEntityToTrackExtendedResponse(track, tags, savedTrack != null);
     }
+
+    @Override
+    public List<TrackShortcutProjection> searchTracksGloballyAdmin(String searchRequest) {
+        return this.trackFinderRepository.searchTracksGloballyAdmin(searchRequest);
+    }
+
 }

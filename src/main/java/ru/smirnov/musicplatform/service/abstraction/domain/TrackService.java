@@ -1,10 +1,8 @@
 package ru.smirnov.musicplatform.service.abstraction.domain;
 
 import ru.smirnov.musicplatform.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.domain.track.ExtendedTrackResponse;
 import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelRequest;
 import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
-import ru.smirnov.musicplatform.dto.domain.track.TrackResponse;
 
 public interface TrackService {
 

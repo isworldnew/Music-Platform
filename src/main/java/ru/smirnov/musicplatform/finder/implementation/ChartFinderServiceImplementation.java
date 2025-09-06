@@ -51,4 +51,10 @@ public class ChartFinderServiceImplementation implements ChartFinderService {
 
         return charts;
     }
+
+    @Override
+    public List<MusicCollectionShortcutProjection> searchChartsGloballyAdmin(String searchRequest) {
+        return this.chartFinderRepository.searchChartsGloballyAdmin(searchRequest);
+    }
+
 }

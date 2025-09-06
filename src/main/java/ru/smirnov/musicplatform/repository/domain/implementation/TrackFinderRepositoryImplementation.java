@@ -309,4 +309,40 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
         query.where(trackByArtistPredicate);
         return this.entityManager.createQuery(query).getResultList();
     }
+
+    @Override
+    public List<TrackShortcutProjection> searchTracksGloballyAdmin(String searchRequest) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TrackShortcutProjection> query = criteriaBuilder.createQuery(TrackShortcutProjection.class);
+
+        Root<Track> track = query.from(Track.class);
+        Join<Track, Artist> artistJoin = track.join("artist", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                TrackShortcutProjectionImplementation.class,
+                track.get("id"),
+                track.get("name"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                track.get("status"),
+                track.get("imageReference"),
+                criteriaBuilder.nullLiteral(Boolean.class)
+        ));
+
+        Predicate nameCondition = criteriaBuilder.or(
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(track.get("name")),
+                        "%" + searchRequest.toLowerCase() + "%"
+                ),
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(artistJoin.get("name")),
+                        "%" + searchRequest.toLowerCase() + "%"
+                )
+        );
+
+        query.where(nameCondition);
+
+        TypedQuery<TrackShortcutProjection> tracks = entityManager.createQuery(query);
+        return tracks.getResultList();
+    }
 }

@@ -90,7 +90,7 @@ public class TrackMapperImplementation implements TrackMapper {
     }
 
     @Override
-    public TrackExtendedResponse trackEntityToTrackExtendedResponse(Track track, List<TagResponse> tags) {
+    public TrackExtendedResponse trackEntityToTrackExtendedResponse(Track track, List<TagResponse> tags, boolean isSaved) {
 
         TrackExtendedResponse trackResponse = new TrackExtendedResponse();
 
@@ -106,6 +106,7 @@ public class TrackMapperImplementation implements TrackMapper {
         trackResponse.setStatus(track.getStatus().name());
         trackResponse.setArtist(artist);
         trackResponse.setTags(tags);
+        trackResponse.setSaved(isSaved);
 
         if (track.getCoArtists() != null && !track.getCoArtists().isEmpty()) {
             List<ArtistShortcutResponse> coArtists = track.getCoArtists().stream()

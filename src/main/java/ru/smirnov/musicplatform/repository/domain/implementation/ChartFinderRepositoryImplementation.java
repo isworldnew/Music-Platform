@@ -243,4 +243,41 @@ public class ChartFinderRepositoryImplementation implements ChartFinderRepositor
 
         return this.entityManager.createQuery(query).getResultList();
     }
+
+    @Override
+    public List<MusicCollectionShortcutProjection> searchChartsGloballyAdmin(String searchRequest) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
+
+        Root<Chart> chart = query.from(Chart.class);
+        Join<Chart, Artist> artistJoin = chart.join("artist", JoinType.INNER);
+        Join<Chart, Admin> adminJoin = chart.join("admin", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                MusicCollectionShortcutProjectionImplementation.class,
+                chart.get("id"),
+                chart.get("name"),
+                chart.get("imageReference"),
+                adminJoin.get("id"),
+                adminJoin.get("account").get("username"),
+                chart.get("accessLevel"),
+                criteriaBuilder.nullLiteral(Boolean.class)
+        ));
+
+        Predicate namePredicate = criteriaBuilder.or(
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(chart.get("name")),
+                        "%" + searchRequest + "%"
+                ),
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(artistJoin.get("name")),
+                        "%" + searchRequest + "%"
+                )
+        );
+
+        query.where(namePredicate);
+
+        return this.entityManager.createQuery(query).getResultList();
+    }
 }
