@@ -3,6 +3,8 @@ package ru.smirnov.musicplatform.mapper.implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutResponse;
+import ru.smirnov.musicplatform.dto.domain.tag.TagResponse;
+import ru.smirnov.musicplatform.dto.domain.track.TrackExtendedResponse;
 import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
 import ru.smirnov.musicplatform.dto.domain.track.TrackResponse;
 import ru.smirnov.musicplatform.dto.domain.track.TrackShortcutResponse;
@@ -35,13 +37,10 @@ public class TrackMapperImplementation implements TrackMapper {
     @Override
     public TrackResponse trackEntityToTrackResponse(Track track) {
 
-        ArtistShortcutResponse artist = this.artistMapper.artistEntityToArtistShortcutResponse(track.getArtist());
-        List<ArtistShortcutResponse> coArtists = track.getCoArtists().stream()
-                .map(ca -> ca.getArtist())
-                .map(a -> this.artistMapper.artistEntityToArtistShortcutResponse(a))
-                .toList();
-
         TrackResponse trackResponse = new TrackResponse();
+
+        ArtistShortcutResponse artist = this.artistMapper.artistEntityToArtistShortcutResponse(track.getArtist());
+
         trackResponse.setId(track.getId());
         trackResponse.setName(track.getName());
         trackResponse.setCoverReference(track.getImageReference());
@@ -51,7 +50,16 @@ public class TrackMapperImplementation implements TrackMapper {
         trackResponse.setUploadDateTime(track.getUploadDateTime());
         trackResponse.setStatus(track.getStatus().name());
         trackResponse.setArtist(artist);
-        trackResponse.setCoArtists(coArtists);
+
+        if (track.getCoArtists() != null && !track.getCoArtists().isEmpty()) {
+            List<ArtistShortcutResponse> coArtists = track.getCoArtists().stream()
+                    .map(ca -> ca.getArtist())
+                    .map(a -> this.artistMapper.artistEntityToArtistShortcutResponse(a))
+                    .toList();
+
+            trackResponse.setCoArtists(coArtists);
+        }
+
         return trackResponse;
     }
 
@@ -79,5 +87,35 @@ public class TrackMapperImplementation implements TrackMapper {
         }
 
         return dto;
+    }
+
+    @Override
+    public TrackExtendedResponse trackEntityToTrackExtendedResponse(Track track, List<TagResponse> tags) {
+
+        TrackExtendedResponse trackResponse = new TrackExtendedResponse();
+
+        ArtistShortcutResponse artist = this.artistMapper.artistEntityToArtistShortcutResponse(track.getArtist());
+
+        trackResponse.setId(track.getId());
+        trackResponse.setName(track.getName());
+        trackResponse.setCoverReference(track.getImageReference());
+        trackResponse.setAudioReference(track.getAudiofileReference());
+        trackResponse.setGenre(track.getGenre());
+        trackResponse.setNumberOfPlays(track.getNumberOfPlays());
+        trackResponse.setUploadDateTime(track.getUploadDateTime());
+        trackResponse.setStatus(track.getStatus().name());
+        trackResponse.setArtist(artist);
+        trackResponse.setTags(tags);
+
+        if (track.getCoArtists() != null && !track.getCoArtists().isEmpty()) {
+            List<ArtistShortcutResponse> coArtists = track.getCoArtists().stream()
+                    .map(ca -> ca.getArtist())
+                    .map(a -> this.artistMapper.artistEntityToArtistShortcutResponse(a))
+                    .toList();
+
+            trackResponse.setCoArtists(coArtists);
+        }
+
+        return trackResponse;
     }
 }

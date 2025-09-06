@@ -1,6 +1,9 @@
 package ru.smirnov.musicplatform.finder.abstraction;
 
 
+import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.musicplatform.dto.domain.track.TrackExtendedResponse;
+import ru.smirnov.musicplatform.dto.domain.track.TrackResponse;
 import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 
 import java.util.List;
@@ -13,4 +16,8 @@ public interface TrackFinderService {
     List<TrackShortcutProjection> searchTracksByTagsCombination(Long userId, Set<Long> tagsId);
 
     List<TrackShortcutProjection> getSavedTracks(Long userId);
+
+    TrackResponse getTrackData(Long trackId, DataForToken tokenData);
+
+    TrackExtendedResponse getTrackExtendedData(Long trackId, DataForToken tokenData);
 }

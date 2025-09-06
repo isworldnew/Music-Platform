@@ -3,12 +3,15 @@ package ru.smirnov.musicplatform.controller.query;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.musicplatform.dto.domain.track.TrackExtendedResponse;
+import ru.smirnov.musicplatform.dto.domain.track.TrackResponse;
 import ru.smirnov.musicplatform.finder.abstraction.TrackFinderService;
 import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
@@ -71,4 +74,19 @@ public class TrackQueryController {
         return this.trackFinderService.getSavedTracks(tokenData.getEntityId());
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ANONYMOUS', 'ADMIN', 'DISTRIBUTOR')")
+    public TrackResponse getTrackData(@NotNull @Positive @PathVariable("id") Long trackId) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.trackFinderService.getTrackData(trackId, tokenData);
+    }
+
+    @GetMapping("/{id}/extended")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('USER')")
+    public TrackExtendedResponse getTrackExtendedData(@NotNull @Positive @PathVariable("id") Long trackId) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.trackFinderService.getTrackExtendedData(trackId, tokenData);
+    }
 }
