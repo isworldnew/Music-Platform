@@ -14,13 +14,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tags")
-public class TagFinderController {
+public class TagQueryController {
 
     private final SecurityContextService securityContextService;
     private final TagFinderService tagFinderService;
 
     @Autowired
-    public TagFinderController(SecurityContextService securityContextService, TagFinderService tagFinderService) {
+    public TagQueryController(SecurityContextService securityContextService, TagFinderService tagFinderService) {
         this.securityContextService = securityContextService;
         this.tagFinderService = tagFinderService;
     }
