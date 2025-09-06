@@ -35,4 +35,5 @@ public class DistributorFinderRepositoryImplementation implements DistributorFin
 
         return this.entityManager.createQuery(query).getResultList();
     }
+
 }

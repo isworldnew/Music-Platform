@@ -1,10 +1,16 @@
 package ru.smirnov.musicplatform.mapper.implementation;
 
 import org.springframework.stereotype.Component;
+import ru.smirnov.musicplatform.dto.audience.distributor.DistributedArtistShortcutResponse;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorResponse;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorShortcutResponse;
+import ru.smirnov.musicplatform.dto.audience.distributor.ExtendedDistributorResponse;
 import ru.smirnov.musicplatform.entity.audience.Distributor;
+import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.mapper.abstraction.DistributorMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class DistributorMapperImplementation implements DistributorMapper {
@@ -28,6 +34,33 @@ public class DistributorMapperImplementation implements DistributorMapper {
         dto.setId(distributor.getId());
         dto.setName(distributor.getName());
         dto.setDistributorType(distributor.getDistributorType().name());
+        return dto;
+    }
+
+    @Override
+    public ExtendedDistributorResponse distributorEntityToExtendedDistributorResponse(Distributor distributor) {
+        ExtendedDistributorResponse dto = new ExtendedDistributorResponse();
+        dto.setId(distributor.getId());
+        dto.setName(distributor.getName());
+        dto.setDescription(distributor.getDescription());
+        dto.setDistributorType(distributor.getDistributorType().name());
+        dto.setRegistrationDate(distributor.getRegistrationDate());
+
+        if (distributor.getArtists() != null && !distributor.getArtists().isEmpty()) {
+            List<DistributedArtistShortcutResponse> distributedArtists = new ArrayList<>();
+
+            distributor.getArtists().forEach(relation -> distributedArtists.add(
+                    new DistributedArtistShortcutResponse(
+                            relation.getId(),
+                            relation.getArtist().getId(),
+                            relation.getArtist().getName(),
+                            relation.getStatus().name()
+                    )
+            ));
+
+            dto.setDistributedArtists(distributedArtists);
+        }
+
         return dto;
     }
 }

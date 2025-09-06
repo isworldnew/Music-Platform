@@ -9,4 +9,6 @@ public interface ArtistFinderRepository {
     List<Artist> searchArtists(String searchRequest);
 
     List<Artist> searchArtists(String searchRequest, Long distributorId);
+
+    List<Artist> getDistributedArtists(Long distributorId, boolean activelyDistributed);
 }

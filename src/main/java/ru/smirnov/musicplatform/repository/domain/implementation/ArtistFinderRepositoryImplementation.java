@@ -5,6 +5,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
 import ru.smirnov.musicplatform.entity.audience.Distributor;
+import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributionStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.relation.DistributorsByArtists;
 import ru.smirnov.musicplatform.repository.domain.finder.ArtistFinderRepository;
@@ -63,4 +64,35 @@ public class ArtistFinderRepositoryImplementation implements ArtistFinderReposit
         return this.entityManager.createQuery(query).getResultList();
     }
 
+    @Override
+    public List<Artist> getDistributedArtists(Long distributorId, boolean activelyDistributed) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<Artist> query = criteriaBuilder.createQuery(Artist.class);
+
+        Root<Artist> artist = query.from(Artist.class);
+        Join<Artist, DistributorsByArtists> distributorByArtistJoin = artist.join("relationWithDistributors", JoinType.INNER);
+
+        Predicate distributedByPredicate = criteriaBuilder.equal(
+                distributorByArtistJoin.get("distributor").get("id"),
+                distributorId
+        );
+
+        Predicate distributionStatusPredicate;
+
+        if (activelyDistributed)
+            distributionStatusPredicate = criteriaBuilder.equal(
+                    distributorByArtistJoin.get("status"),
+                    DistributionStatus.ACTIVE
+            );
+        else
+            distributionStatusPredicate = criteriaBuilder.notEqual(
+                    distributorByArtistJoin.get("status"),
+                    DistributionStatus.ACTIVE
+            );
+
+        query.where(criteriaBuilder.and(distributedByPredicate, distributionStatusPredicate));
+
+        return this.entityManager.createQuery(query).getResultList();
+    }
 }

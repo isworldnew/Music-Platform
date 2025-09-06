@@ -23,34 +23,40 @@ public class ArtistQueryController {
 
     private final SecurityContextService securityContextService;
     private final ArtistFinderService artistFinderService;
-    private final DistributorPreconditionService distributorPreconditionService;
 
     @Autowired
     public ArtistQueryController(
             @Qualifier("anonymousSecurityContextServiceImplementation") SecurityContextService securityContextService,
-            ArtistFinderService artistFinderService,
-            DistributorPreconditionService distributorPreconditionService
+            ArtistFinderService artistFinderService
     ) {
         this.securityContextService = securityContextService;
         this.artistFinderService = artistFinderService;
-        this.distributorPreconditionService = distributorPreconditionService;
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ArtistResponse> searchArtists(@RequestParam(required = true) @NotBlank String searchRequest) {
+    public List<ArtistShortcutResponse> searchArtists(@RequestParam(required = true) @NotBlank String searchRequest) {
         return this.artistFinderService.searchArtists(searchRequest);
     }
 
-    @GetMapping("/search/distributors/{id}")
+    @GetMapping("/search/distributed")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<ArtistResponse> searchArtistsByDistributor(
-            @NotNull @Positive @PathVariable("id") Long distributorId,
+    @PreAuthorize("hasRole('DISTRIBUTOR')")
+    public List<ArtistShortcutResponse> searchArtistsByDistributor(
             @RequestParam(required = true) @NotBlank String searchRequest
 
     ) {
-        this.distributorPreconditionService.getByIdIfExists(distributorId);
-        return this.artistFinderService.searchArtists(searchRequest, distributorId);
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.artistFinderService.searchArtists(searchRequest, tokenData.getEntityId());
+    }
+
+    @GetMapping("/distributed")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('DISTRIBUTOR')")
+    public List<ArtistShortcutResponse> getDistributedArtists(
+            @RequestParam(required = true) @NotNull Boolean activelyDistributed
+    ) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.artistFinderService.getDistributedArtists(tokenData.getEntityId(), activelyDistributed);
     }
 }
