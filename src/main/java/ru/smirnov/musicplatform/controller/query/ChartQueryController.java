@@ -54,10 +54,17 @@ public class ChartQueryController {
 
     @GetMapping("/search/admin")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<MusicCollectionShortcutProjection> searchChartsByAdmin(@RequestParam(required = true) @NotBlank String searchRequest) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.chartFinderService.searchChartsByAdmin(searchRequest, tokenData.getEntityId());
     }
 
+    @GetMapping("/saved")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
+    public List<MusicCollectionShortcutProjection> getSavedCharts() {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.chartFinderService.getSavedCharts(tokenData.getEntityId());
+    }
 }

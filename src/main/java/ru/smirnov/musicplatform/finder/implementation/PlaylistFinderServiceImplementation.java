@@ -31,4 +31,22 @@ public class PlaylistFinderServiceImplementation implements PlaylistFinderServic
 
         return playlists;
     }
+
+    @Override
+    public List<MusicCollectionShortcutProjection> getOwnedPlaylists(Long userId) {
+        return this.playlistFinderRepository.getOwnedPlaylists(userId);
+    }
+
+    @Override
+    public List<MusicCollectionShortcutProjection> getSavedPlaylists(Long userId) {
+        List<MusicCollectionShortcutProjection> playlists = this.playlistFinderRepository.getSavedPlaylists(userId);
+
+        for (MusicCollectionShortcutProjection playlist : playlists) {
+            if (!playlist.getAccessLevel().isAvailable()) {
+                ((MusicCollectionShortcutProjectionImplementation) playlist).setImageReference(null);
+            }
+        }
+
+        return playlists;
+    }
 }

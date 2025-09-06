@@ -37,4 +37,18 @@ public class ChartFinderServiceImplementation implements ChartFinderService {
         List<MusicCollectionShortcutProjection> charts = this.chartFinderRepository.searchChartsByAdmin(searchRequest, adminId);
         return charts;
     }
+
+    @Override
+    public List<MusicCollectionShortcutProjection> getSavedCharts(Long userId) {
+
+        List<MusicCollectionShortcutProjection> charts = this.chartFinderRepository.getSavedCharts(userId);
+
+        for (MusicCollectionShortcutProjection chart : charts) {
+            if (!chart.getAccessLevel().isAvailable()) {
+                ((MusicCollectionShortcutProjectionImplementation) chart).setImageReference(null);
+            }
+        }
+
+        return charts;
+    }
 }

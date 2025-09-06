@@ -51,4 +51,12 @@ public class AlbumQueryController {
 
         return this.albumFinderService.searchAlbums(searchRequest, tokenData.getEntityId(), savedOnly);
     }
+
+    @GetMapping("/saved")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
+    public List<MusicCollectionShortcutProjection> getSavedAlbums() {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.albumFinderService.getSavedAlbums(tokenData.getEntityId());
+    }
 }

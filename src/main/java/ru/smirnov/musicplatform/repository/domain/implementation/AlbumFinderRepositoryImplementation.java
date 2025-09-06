@@ -172,4 +172,34 @@ public class AlbumFinderRepositoryImplementation implements AlbumFinderRepositor
         return albums.getResultList();
     }
 
+    @Override
+    public List<MusicCollectionShortcutProjection> getSavedAlbums(Long userId) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
+
+        Root<Album> album = query.from(Album.class);
+        Join<Album, Artist> artistJoin = album.join("artist", JoinType.INNER);
+        Join<Album, SavedAlbums> savedAlbumsJoin = album.join("savedBy", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                MusicCollectionShortcutProjectionImplementation.class,
+                album.get("id"),
+                album.get("name"),
+                album.get("imageReference"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                album.get("accessLevel"),
+                criteriaBuilder.literal(true)
+        ));
+
+        Predicate savedByUserPredicate = criteriaBuilder.equal(
+                savedAlbumsJoin.get("user").get("id"),
+                userId
+        );
+
+        query.where(savedByUserPredicate);
+
+        return this.entityManager.createQuery(query).getResultList();
+    }
 }

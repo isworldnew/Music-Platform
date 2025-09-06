@@ -8,4 +8,7 @@ public interface PlaylistFinderRepository {
 
     List<MusicCollectionShortcutProjection> searchPlaylists(String searchRequest, Long userId, boolean savedOnly);
 
+    List<MusicCollectionShortcutProjection> getOwnedPlaylists(Long userId);
+
+    List<MusicCollectionShortcutProjection> getSavedPlaylists(Long userId);
 }

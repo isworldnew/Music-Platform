@@ -8,6 +8,8 @@ public interface AlbumFinderService {
 
     List<MusicCollectionShortcutProjection> searchAlbums(String searchRequest, Long userId, boolean savedOnly);
 
+    List<MusicCollectionShortcutProjection> getSavedAlbums(Long userId);
+
     // метод чтения альбома для гостя и пользователя
 
     // метод чтения альбома для дистрибьютора (с историей дистрибьюции)

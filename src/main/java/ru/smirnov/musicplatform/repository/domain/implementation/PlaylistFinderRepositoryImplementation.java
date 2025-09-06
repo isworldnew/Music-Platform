@@ -11,7 +11,6 @@ import ru.smirnov.musicplatform.entity.domain.Playlist;
 import ru.smirnov.musicplatform.entity.relation.SavedPlaylists;
 import ru.smirnov.musicplatform.projection.abstraction.MusicCollectionShortcutProjection;
 import ru.smirnov.musicplatform.projection.implementation.MusicCollectionShortcutProjectionImplementation;
-import ru.smirnov.musicplatform.projection.implementation.TrackShortcutProjectionImplementation;
 import ru.smirnov.musicplatform.repository.domain.finder.PlaylistFinderRepository;
 
 import java.util.List;
@@ -179,5 +178,64 @@ public class PlaylistFinderRepositoryImplementation implements PlaylistFinderRep
 
         return this.entityManager.createQuery(query).getResultList();
     }
-    
+
+    @Override
+    public List<MusicCollectionShortcutProjection> getOwnedPlaylists(Long userId) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
+
+        Root<Playlist> playlist = query.from(Playlist.class);
+        Join<Playlist, User> userJoin = playlist.join("user", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                MusicCollectionShortcutProjectionImplementation.class,
+                playlist.get("id"),
+                playlist.get("name"),
+                playlist.get("imageReference"),
+                userJoin.get("id"),
+                userJoin.get("account").get("username"),
+                playlist.get("accessLevel"),
+                criteriaBuilder.nullLiteral(Boolean.class)
+        ));
+
+        Predicate belongsToUserPredicate = criteriaBuilder.equal(
+                userJoin.get("id"), userId
+        );
+
+        query.where(belongsToUserPredicate);
+
+        return this.entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public List<MusicCollectionShortcutProjection> getSavedPlaylists(Long userId) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
+
+        Root<Playlist> playlist = query.from(Playlist.class);
+        Join<Playlist, User> userJoin = playlist.join("user", JoinType.INNER);
+        Join<Playlist, SavedPlaylists> savedPlaylistsJoin = playlist.join("savedBy", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                MusicCollectionShortcutProjectionImplementation.class,
+                playlist.get("id"),
+                playlist.get("name"),
+                playlist.get("imageReference"),
+                userJoin.get("id"),
+                userJoin.get("account").get("username"),
+                playlist.get("accessLevel"),
+                criteriaBuilder.literal(true)
+        ));
+
+        Predicate savedByUserPredicate = criteriaBuilder.equal(
+                savedPlaylistsJoin.get("user").get("id"),
+                userId
+        );
+
+        query.where(savedByUserPredicate);
+
+        return this.entityManager.createQuery(query).getResultList();
+    }
 }

@@ -7,7 +7,6 @@ import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
-import ru.smirnov.musicplatform.entity.domain.Tag;
 import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.entity.relation.SavedTracks;
 import ru.smirnov.musicplatform.entity.relation.TaggedTracks;
@@ -244,5 +243,34 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
 
         return this.entityManager.createQuery(query).getResultList();
     }
-    
+
+    @Override
+    public List<TrackShortcutProjection> getSavedTracks(Long userId) {
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TrackShortcutProjection> query = criteriaBuilder.createQuery(TrackShortcutProjection.class);
+
+        Root<Track> track = query.from(Track.class);
+        Join<Track, Artist> artistJoin = track.join("artist", JoinType.INNER);
+        Join<Track, SavedTracks> savedTracksJoin = track.join("savedBy", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                TrackShortcutProjectionImplementation.class,
+                track.get("id"),
+                track.get("name"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                track.get("status"),
+                track.get("imageReference"),
+                criteriaBuilder.literal(true)
+        ));
+
+        Predicate savedByUserPredicate = criteriaBuilder.equal(
+                savedTracksJoin.get("user").get("id"), userId
+        );
+
+        query.where(savedByUserPredicate);
+
+        return this.entityManager.createQuery(query).getResultList();
+    }
 }

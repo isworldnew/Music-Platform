@@ -6,8 +6,8 @@ import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
 import ru.smirnov.musicplatform.entity.audience.Admin;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.MusicCollectionAccessLevel;
-import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Chart;
+import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.relation.SavedCharts;
 import ru.smirnov.musicplatform.projection.abstraction.MusicCollectionShortcutProjection;
 import ru.smirnov.musicplatform.projection.implementation.MusicCollectionShortcutProjectionImplementation;
@@ -213,4 +213,34 @@ public class ChartFinderRepositoryImplementation implements ChartFinderRepositor
         return this.entityManager.createQuery(query).getResultList();
     }
 
+    @Override
+    public List<MusicCollectionShortcutProjection> getSavedCharts(Long userId) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
+
+        Root<Chart> chart = query.from(Chart.class);
+        Join<Chart, Admin> adminJoin = chart.join("admin", JoinType.INNER);
+        Join<Chart, SavedCharts> savedChartsJoin = chart.join("savedBy", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                MusicCollectionShortcutProjectionImplementation.class,
+                chart.get("id"),
+                chart.get("name"),
+                chart.get("imageReference"),
+                adminJoin.get("id"),
+                adminJoin.get("account").get("username"),
+                chart.get("accessLevel"),
+                criteriaBuilder.literal(true)
+        ));
+
+        Predicate savedByUserPredicate = criteriaBuilder.equal(
+                savedChartsJoin.get("user").get("id"),
+                userId
+        );
+
+        query.where(savedByUserPredicate);
+
+        return this.entityManager.createQuery(query).getResultList();
+    }
 }

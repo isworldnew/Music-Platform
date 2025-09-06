@@ -1,6 +1,8 @@
 package ru.smirnov.musicplatform.controller.query;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/tracks")
@@ -50,6 +53,22 @@ public class TrackQueryController {
             return this.trackFinderService.searchTracks(searchRequest, tokenData.getEntityId(), false);
 
         return this.trackFinderService.searchTracks(searchRequest, tokenData.getEntityId(), savedOnly);
+    }
+
+    @GetMapping("/search/tagged-with")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
+    public List<TrackShortcutProjection> searchTracksByTagsCombination(@NotNull @NotEmpty @RequestParam("tags") Set<Long> tagsId) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.trackFinderService.searchTracksByTagsCombination(tokenData.getEntityId(), tagsId);
+    }
+
+    @GetMapping("/saved")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
+    public List<TrackShortcutProjection> getSavedTracks() {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.trackFinderService.getSavedTracks(tokenData.getEntityId());
     }
 
 }

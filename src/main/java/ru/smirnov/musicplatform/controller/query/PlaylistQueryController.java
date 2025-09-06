@@ -52,4 +52,19 @@ public class PlaylistQueryController {
         return this.playlistFinderService.searchPlaylists(searchRequest, tokenData.getEntityId(), savedOnly);
     }
 
+    @GetMapping("/owned")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
+    public List<MusicCollectionShortcutProjection> getOwnedPlaylists() {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.playlistFinderService.getOwnedPlaylists(tokenData.getEntityId());
+    }
+
+    @GetMapping("/saved")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
+    public List<MusicCollectionShortcutProjection> getSavedPlaylists() {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.playlistFinderService.getSavedPlaylists(tokenData.getEntityId());
+    }
 }

@@ -10,4 +10,6 @@ public interface TrackFinderRepository {
     List<TrackShortcutProjection> searchTracks(String searchRequest, Long userId, boolean savedOnly);
 
     List<TrackShortcutProjection> searchTracksByTagsCombination(Set<Long> tagsId);
+
+    List<TrackShortcutProjection> getSavedTracks(Long userId);
 }
