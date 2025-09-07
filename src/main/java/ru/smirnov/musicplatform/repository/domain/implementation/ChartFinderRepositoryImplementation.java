@@ -280,4 +280,5 @@ public class ChartFinderRepositoryImplementation implements ChartFinderRepositor
 
         return this.entityManager.createQuery(query).getResultList();
     }
+
 }

@@ -3,10 +3,12 @@ package ru.smirnov.musicplatform.mapper.implementation;
 import org.springframework.stereotype.Component;
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionOwnerResponse;
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionRequest;
+import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionResponse;
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionShortcutResponse;
 import ru.smirnov.musicplatform.entity.audience.User;
 import ru.smirnov.musicplatform.entity.domain.Album;
 import ru.smirnov.musicplatform.mapper.abstraction.AlbumMapper;
+import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 
 import java.util.List;
 import java.util.Map;
@@ -42,47 +44,19 @@ public class AlbumMapperImplementation implements AlbumMapper {
         return dto;
     }
 
-/*
     @Override
-    public MusicCollectionShortcutResponse albumEntityToMusicCollectionShortcutResponse(Album album, boolean albumIsSaved) {
-
-        MusicCollectionShortcutResponse dto = new MusicCollectionShortcutResponse();
-
-        boolean albumIsAvailable = album.getAccessLevel().isAvailable();
-
-        MusicCollectionOwnerResponse owner = new MusicCollectionOwnerResponse(album.getArtist().getId(), album.getArtist().getName());
-
+    public MusicCollectionResponse albumEntityToMusicCollectionResponse(Album album, List<TrackShortcutProjection> tracks) {
+        MusicCollectionResponse dto = new MusicCollectionResponse();
         dto.setId(album.getId());
         dto.setName(album.getName());
-        dto.setCoverReference(album.getImageReference());
+        dto.setDescription(album.getDescription());
+        dto.setNumberOfPlays(album.getNumberOfPlays());
+        dto.setImageReference(album.getImageReference());
+        dto.setUploadDateTime(album.getUploadDateTime());
         dto.setAccessLevel(album.getAccessLevel().name());
-        dto.setIsSaved(albumIsSaved);
-        dto.setOwner(owner);
-
-        if (!albumIsAvailable) {
-            dto.setAccessLevel(album.getAccessLevel().name());
-            dto.setCoverReference(null);
-        }
-
-        return dto;
-    }
-
-    @Override
-    public MusicCollectionShortcutResponse albumEntityToMusicCollectionShortcutResponse(Album album) {
-        // сюда должны попадать только доступные (PUBLIC) альбомы
-        if (!album.getAccessLevel().isAvailable())
-            throw new IllegalStateException("albumEntityToMusicCollectionShortcutResponse(Album album) can be used only with PUBLIC albums: pre-check album's access level before this method call");
-
-        MusicCollectionOwnerResponse owner = new MusicCollectionOwnerResponse(album.getArtist().getId(), album.getArtist().getName());
-
-        MusicCollectionShortcutResponse dto = new MusicCollectionShortcutResponse();
-        dto.setId(album.getId());
-        dto.setName(album.getName());
-        dto.setCoverReference(album.getImageReference());
-        dto.setAccessLevel(album.getAccessLevel().name());
+        dto.setOwner(new MusicCollectionOwnerResponse(album.getArtist().getId(), album.getArtist().getName()));
         dto.setIsSaved(null);
-        dto.setOwner(owner);
+        dto.setTracks(tracks);
         return dto;
     }
-    */
 }

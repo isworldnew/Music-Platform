@@ -1,12 +1,15 @@
 package ru.smirnov.musicplatform.controller.query;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionResponse;
 import ru.smirnov.musicplatform.finder.abstraction.ChartFinderService;
 import ru.smirnov.musicplatform.projection.abstraction.MusicCollectionShortcutProjection;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
@@ -75,4 +78,11 @@ public class ChartQueryController {
         return this.chartFinderService.searchChartsGloballyAdmin(searchRequest);
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN', 'USER', 'ANONYMOUS')")
+    public MusicCollectionResponse getChartById(@NotNull @Positive @PathVariable("id") Long chartId) {
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        return this.chartFinderService.getChartById(chartId, tokenData);
+    }
 }

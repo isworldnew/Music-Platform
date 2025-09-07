@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;
-import ru.smirnov.musicplatform.entity.relation.SavedTracks;
-import ru.smirnov.musicplatform.entity.relation.TaggedTracks;
+import ru.smirnov.musicplatform.entity.relation.*;
 import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 import ru.smirnov.musicplatform.projection.implementation.TrackShortcutProjectionImplementation;
 import ru.smirnov.musicplatform.repository.domain.finder.TrackFinderRepository;
@@ -344,5 +343,117 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
 
         TypedQuery<TrackShortcutProjection> tracks = entityManager.createQuery(query);
         return tracks.getResultList();
+    }
+
+    @Override
+    public List<TrackShortcutProjection> getTracksByChart(Long chartId, boolean publicOnly) {
+
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<TrackShortcutProjection> query = criteriaBuilder.createQuery(TrackShortcutProjection.class);
+
+        Root<Track> track = query.from(Track.class);
+        Join<Track, Artist> artistJoin = track.join("artist", JoinType.INNER);
+        Join<Track, TracksByCharts> trackByChartJoin = track.join("charts", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                TrackShortcutProjectionImplementation.class,
+                track.get("id"),
+                track.get("name"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                track.get("status"),
+                track.get("imageReference"),
+                criteriaBuilder.nullLiteral(Boolean.class)
+        ));
+
+        Predicate trackByChartPredicate = criteriaBuilder.equal(
+                trackByChartJoin.get("chart").get("id"), chartId
+        );
+
+        if (publicOnly) {
+            Predicate statusPredicate = criteriaBuilder.equal(
+                    track.get("status"),
+                    TrackStatus.PUBLISHED
+            );
+
+            query.where(criteriaBuilder.and(trackByChartPredicate, statusPredicate));
+            return this.entityManager.createQuery(query).getResultList();
+        }
+
+        return this.entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public List<TrackShortcutProjection> getTracksByAlbum(Long albumId, boolean publicOnly) {
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<TrackShortcutProjection> query = criteriaBuilder.createQuery(TrackShortcutProjection.class);
+
+        Root<Track> track = query.from(Track.class);
+        Join<Track, Artist> artistJoin = track.join("artist", JoinType.INNER);
+        Join<Track, TracksByAlbums> trackByAlbumJoin = track.join("albums", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                TrackShortcutProjectionImplementation.class,
+                track.get("id"),
+                track.get("name"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                track.get("status"),
+                track.get("imageReference"),
+                criteriaBuilder.nullLiteral(Boolean.class)
+        ));
+
+        Predicate trackByAlbumPredicate = criteriaBuilder.equal(
+                trackByAlbumJoin.get("album").get("id"), albumId
+        );
+
+        if (publicOnly) {
+            Predicate statusPredicate = criteriaBuilder.equal(
+                    track.get("status"),
+                    TrackStatus.PUBLISHED
+            );
+
+            query.where(criteriaBuilder.and(trackByAlbumPredicate, statusPredicate));
+            return this.entityManager.createQuery(query).getResultList();
+        }
+
+        return this.entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public List<TrackShortcutProjection> getTracksByPlaylist(Long playlistId, boolean publicOnly) {
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<TrackShortcutProjection> query = criteriaBuilder.createQuery(TrackShortcutProjection.class);
+
+        Root<Track> track = query.from(Track.class);
+        Join<Track, Artist> artistJoin = track.join("artist", JoinType.INNER);
+        Join<Track, TracksByPlaylists> trackByPlaylistJoin = track.join("playlists", JoinType.INNER);
+
+        query.select(criteriaBuilder.construct(
+                TrackShortcutProjectionImplementation.class,
+                track.get("id"),
+                track.get("name"),
+                artistJoin.get("id"),
+                artistJoin.get("name"),
+                track.get("status"),
+                track.get("imageReference"),
+                criteriaBuilder.nullLiteral(Boolean.class)
+        ));
+
+        Predicate trackByPlaylistPredicate = criteriaBuilder.equal(
+                trackByPlaylistJoin.get("playlist").get("id"), playlistId
+        );
+
+        if (publicOnly) {
+            Predicate statusPredicate = criteriaBuilder.equal(
+                    track.get("status"),
+                    TrackStatus.PUBLISHED
+            );
+
+            query.where(criteriaBuilder.and(trackByPlaylistPredicate, statusPredicate));
+            return this.entityManager.createQuery(query).getResultList();
+        }
+
+        return this.entityManager.createQuery(query).getResultList();
     }
 }

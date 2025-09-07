@@ -16,4 +16,10 @@ public interface TrackFinderRepository {
     List<TrackShortcutProjection> getTracksByArtist(Long artistId, boolean publicOnly);
 
     List<TrackShortcutProjection> searchTracksGloballyAdmin(String searchRequest);
+
+    List<TrackShortcutProjection> getTracksByChart(Long chartId, boolean publicOnly);
+
+    List<TrackShortcutProjection> getTracksByAlbum(Long albumId, boolean publicOnly);
+
+    List<TrackShortcutProjection> getTracksByPlaylist(Long playlistId, boolean publicOnly);
 }
