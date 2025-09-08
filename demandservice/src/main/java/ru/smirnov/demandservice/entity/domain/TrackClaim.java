@@ -1,10 +1,10 @@
-package ru.smirnov.demandservice.entities;
+package ru.smirnov.demandservice.entity.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-import ru.smirnov.demandservice.entities.auxiliary.DemandStatus;
-import ru.smirnov.demandservice.entities.auxiliary.TTL;
+import ru.smirnov.demandservice.entity.auxiliary.DemandStatus;
+import ru.smirnov.demandservice.entity.auxiliary.TTL;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;

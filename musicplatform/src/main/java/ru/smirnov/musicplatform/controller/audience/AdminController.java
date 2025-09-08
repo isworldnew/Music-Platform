@@ -13,6 +13,8 @@ import ru.smirnov.musicplatform.service.abstraction.audience.AdminService;
 import ru.smirnov.musicplatform.service.abstraction.audience.DistributorService;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admins")
 public class AdminController {
@@ -40,6 +42,12 @@ public class AdminController {
     public AdminResponse getAdminData() {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.adminService.getAdminData(tokenData);
+    }
+
+    @GetMapping("/enabled")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Long> getAllEnabledAdmins() {
+        return this.adminService.getAllEnabledAdmins();
     }
 
 }

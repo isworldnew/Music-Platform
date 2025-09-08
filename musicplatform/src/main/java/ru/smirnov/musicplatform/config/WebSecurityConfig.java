@@ -54,10 +54,13 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/authentication/login", "/error").permitAll()
                         .requestMatchers("/users/registration").permitAll()
-                        .requestMatchers("/authentication/validate").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name())
 
                         .requestMatchers(HttpMethod.GET, "/artists/{id}").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/tracks/{id}/listen").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")
+
+                        .requestMatchers(HttpMethod.GET, "/admins/enabled").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/tracks/{id}/existence").permitAll()
+
 
                         .requestMatchers("/tracks/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS") //.anonymous()
                         .requestMatchers("/albums/search").hasAnyAuthority(JwtToken.ACCESS_TOKEN.name(), "ROLE_ANONYMOUS")

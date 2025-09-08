@@ -11,6 +11,8 @@ import ru.smirnov.musicplatform.precondition.abstraction.audience.AdminPrecondit
 import ru.smirnov.musicplatform.repository.audience.AdminRepository;
 import ru.smirnov.musicplatform.service.abstraction.audience.AdminService;
 
+import java.util.List;
+
 @Service
 public class AdminServiceImplementation implements AdminService {
 
@@ -42,5 +44,10 @@ public class AdminServiceImplementation implements AdminService {
 //        admin.set();
 
         this.adminRepository.save(admin);
+    }
+
+    @Override
+    public List<Long> getAllEnabledAdmins() {
+        return this.adminRepository.findAllEnabledAdmins();
     }
 }

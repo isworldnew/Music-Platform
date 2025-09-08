@@ -37,7 +37,7 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- для SimpleGrantedAuthorities в DataForToken -->
+		<!-- для DataForToken -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -61,7 +61,13 @@
 				</configuration>
 			</plugin>
 
-<!--			вот тут была зависим-->
+		<!--
+		вот тут была зависимость от plugin-а, который, как я понял,
+		делал библиотеку спринговым приложением, а не просто библиотечкой
+		и из-за этого я не мог нормально импортировать классы в другие проекты
+
+		убрал её - работает
+		-->
 
 		</plugins>
 	</build>

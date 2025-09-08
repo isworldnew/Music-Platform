@@ -4,6 +4,8 @@ import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.audience.admin.AdminRequest;
 import ru.smirnov.musicplatform.dto.audience.admin.AdminResponse;
 
+import java.util.List;
+
 public interface AdminService {
 
     // просмотр бизнес-данных об аккаунте
@@ -11,4 +13,6 @@ public interface AdminService {
 
     // обновление данных об аккаунте
     void updateAdminData(AdminRequest dto, DataForToken tokenData);
+
+    List<Long> getAllEnabledAdmins();
 }

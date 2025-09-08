@@ -1,4 +1,4 @@
-package ru.smirnov.demandservice.entities.auxiliary;
+package ru.smirnov.demandservice.entity.auxiliary;
 
 public enum DemandStatus {
 

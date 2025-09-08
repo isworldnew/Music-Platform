@@ -1,19 +1,19 @@
-package ru.smirnov.demandservice.entities;
+package ru.smirnov.demandservice.entity.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-import ru.smirnov.demandservice.entities.auxiliary.DemandStatus;
-import ru.smirnov.demandservice.entities.auxiliary.DistributorData;
-import ru.smirnov.demandservice.entities.auxiliary.TTL;
+import ru.smirnov.demandservice.entity.auxiliary.DemandStatus;
+import ru.smirnov.demandservice.entity.auxiliary.DistributorData;
+import ru.smirnov.demandservice.entity.auxiliary.TTL;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Entity
-@Table(name = "distributor_registration_requests")
+@Table(name = "distributor_registration_claims")
 @Data
-public class DistributorRegistrationRequest {
+public class DistributorRegistrationClaim {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
