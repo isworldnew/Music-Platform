@@ -23,8 +23,8 @@ public class DistributorRegistrationClaimController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long addDistributorRegistrationClaim(/*@RequestBody @Valid DistributorRegistrationClaimRequest dto*/) {
-        return 111L;
+    public Long addDistributorRegistrationClaim(@RequestBody @Valid DistributorRegistrationClaimRequest dto) {
+        return this.distributorRegistrationClaimService.addDistributorRegistrationClaim(dto);
     }
 
 }

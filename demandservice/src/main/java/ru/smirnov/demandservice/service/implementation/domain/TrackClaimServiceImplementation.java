@@ -50,6 +50,6 @@ public class TrackClaimServiceImplementation implements TrackClaimService {
 
         System.out.println(trackClaim);
 
-        return -11111L;
+        return this.trackClaimRepository.save(trackClaim).getId();
     }
 }
