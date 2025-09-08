@@ -2,8 +2,8 @@ package ru.smirnov.demandservice.service.implementation.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.smirnov.demandservice.client.AdminClient;
-import ru.smirnov.demandservice.client.TrackClient;
+import ru.smirnov.demandservice.client.abstraction.AdminClient;
+import ru.smirnov.demandservice.client.abstraction.TrackClient;
 import ru.smirnov.demandservice.entity.domain.TrackClaim;
 import ru.smirnov.demandservice.mapper.abstraction.TrackClaimMapper;
 import ru.smirnov.demandservice.repository.TrackClaimRepository;

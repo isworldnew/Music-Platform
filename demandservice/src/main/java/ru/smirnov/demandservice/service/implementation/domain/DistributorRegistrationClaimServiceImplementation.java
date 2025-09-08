@@ -2,7 +2,7 @@ package ru.smirnov.demandservice.service.implementation.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.smirnov.demandservice.client.AdminClient;
+import ru.smirnov.demandservice.client.abstraction.AdminClient;
 import ru.smirnov.demandservice.dto.DistributorRegistrationClaimRequest;
 import ru.smirnov.demandservice.entity.domain.DistributorRegistrationClaim;
 import ru.smirnov.demandservice.mapper.abstraction.DistributorRegistrationClaimMapper;

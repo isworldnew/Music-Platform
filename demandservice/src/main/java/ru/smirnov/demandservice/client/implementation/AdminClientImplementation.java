@@ -1,4 +1,4 @@
-package ru.smirnov.demandservice.client;
+package ru.smirnov.demandservice.client.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import ru.smirnov.demandservice.client.abstraction.AdminClient;
 import ru.smirnov.demandservice.config.MusicPlatformServiceConfig;
 import ru.smirnov.dtoregistry.exception.ExternalServiceException;
 import ru.smirnov.dtoregistry.exception.NotFoundException;
@@ -14,17 +15,18 @@ import ru.smirnov.dtoregistry.exception.NotFoundException;
 import java.util.List;
 
 @Service
-public class AdminClient {
+public class AdminClientImplementation implements AdminClient {
 
     private final RestTemplate restTemplate;
     private final String musicPlatformServiceUrl;
 
     @Autowired
-    public AdminClient(RestTemplate restTemplate, MusicPlatformServiceConfig musicPlatformServiceConfig) {
+    public AdminClientImplementation(RestTemplate restTemplate, MusicPlatformServiceConfig musicPlatformServiceConfig) {
         this.restTemplate = restTemplate;
         this.musicPlatformServiceUrl = musicPlatformServiceConfig.getMusicPlatformServiceUrl();
     }
 
+    @Override
     public List<Long> getAllEnabledAdmins() {
         String url = this.musicPlatformServiceUrl + "/admins/enabled";
 
