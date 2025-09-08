@@ -103,5 +103,4 @@ public class GlobalExceptionHandlerController {
         return ResponseEntity.badRequest().body("Validation failed: " + ex.getMessage());
     }
 
-
 }
