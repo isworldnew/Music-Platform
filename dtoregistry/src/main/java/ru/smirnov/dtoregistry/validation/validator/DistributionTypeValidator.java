@@ -2,7 +2,7 @@ package ru.smirnov.dtoregistry.validation.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import ru.smirnov.dtoregistry.DistributorType;
+import ru.smirnov.dtoregistry.entity.auxiliary.DistributorType;
 import ru.smirnov.dtoregistry.validation.annotation.DistributionType;
 
 import java.util.Arrays;

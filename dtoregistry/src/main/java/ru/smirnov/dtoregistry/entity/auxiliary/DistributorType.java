@@ -1,4 +1,4 @@
-package ru.smirnov.dtoregistry;
+package ru.smirnov.dtoregistry.entity.auxiliary;
 
 
 public enum DistributorType {
