@@ -1,11 +1,12 @@
 package ru.smirnov.demandservice.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import ru.smirnov.demandservice.config.MusicPlatformServiceConfig;
+import ru.smirnov.dtoregistry.exception.NotFoundException;
 
 @Service
 public class TrackClient {
@@ -19,10 +20,15 @@ public class TrackClient {
         this.musicPlatformServiceUrl = musicPlatformServiceConfig.getMusicPlatformServiceUrl();
     }
 
-    public ResponseEntity<?> trackExistsById(Long trackId) {
-        String url = this.musicPlatformServiceUrl + "";
+    public void trackExistsById(Long trackId) {
+        String url = this.musicPlatformServiceUrl + "/tracks/" + trackId + "/existence";
 
-        return this.restTemplate.getForEntity()
+        try {
+            ResponseEntity<Void> response = this.restTemplate.getForEntity(url, Void.class);
+        }
+        catch (HttpClientErrorException.NotFound ex) {
+            throw new NotFoundException("Track with id=" + trackId + " was not found");
+        }
     }
 
 }

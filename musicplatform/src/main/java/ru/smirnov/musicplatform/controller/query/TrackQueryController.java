@@ -13,6 +13,7 @@ import ru.smirnov.musicplatform.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.track.TrackExtendedResponse;
 import ru.smirnov.musicplatform.dto.domain.track.TrackResponse;
 import ru.smirnov.musicplatform.finder.abstraction.TrackFinderService;
+import ru.smirnov.musicplatform.precondition.abstraction.domain.TrackPreconditionService;
 import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 
@@ -25,14 +26,17 @@ public class TrackQueryController {
     
     private final SecurityContextService securityContextService;
     private final TrackFinderService trackFinderService;
+    private final TrackPreconditionService trackPreconditionService;
 
     @Autowired
     public TrackQueryController(
             @Qualifier("anonymousSecurityContextServiceImplementation") SecurityContextService securityContextService,
-            TrackFinderService trackFinderService
+            TrackFinderService trackFinderService,
+            TrackPreconditionService trackPreconditionService
     ) {
         this.securityContextService = securityContextService;
         this.trackFinderService = trackFinderService;
+        this.trackPreconditionService = trackPreconditionService;
     }
 
     @GetMapping("/search")
@@ -97,4 +101,9 @@ public class TrackQueryController {
         return this.trackFinderService.searchTracksGloballyAdmin(searchRequest);
     }
 
+    @GetMapping("{id}/existence")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void trackExistenceById(@NotNull @Positive @PathVariable("id") Long trackId) {
+        this.trackPreconditionService.getByIdIfExists(trackId);
+    }
 }
