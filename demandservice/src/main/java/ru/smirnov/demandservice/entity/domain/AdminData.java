@@ -2,6 +2,7 @@ package ru.smirnov.demandservice.entity.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import ru.smirnov.dtoregistry.entity.auxiliary.AccountStatus;
 
 @Entity
 @Table(name = "admins_data")
@@ -14,5 +15,7 @@ public class AdminData {
     @Column(name = "admin_id", nullable = false)
     private Long adminId;
 
-    // нужен его статус? если да, то boolean или enum?
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AccountStatus status;
 }
