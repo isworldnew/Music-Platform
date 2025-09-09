@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.smirnov.musicplatform.validation.annotation.TrackAccessLevel;
 
-@Data
+@Data @AllArgsConstructor
 public class TrackAccessLevelRequest {
 
     @NotBlank @TrackAccessLevel

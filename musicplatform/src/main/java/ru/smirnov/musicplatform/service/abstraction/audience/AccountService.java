@@ -3,8 +3,7 @@ package ru.smirnov.musicplatform.service.abstraction.audience;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
 import ru.smirnov.musicplatform.entity.audience.Account;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
+import ru.smirnov.dtoregistry.entity.auxiliary.AccountStatus;import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 
 public interface AccountService {
 

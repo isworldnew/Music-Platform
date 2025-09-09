@@ -5,13 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
+import ru.smirnov.dtoregistry.message.AdminDataMessage;
 import ru.smirnov.musicplatform.dto.audience.admin.AdminRegistrationRequest;
 import ru.smirnov.musicplatform.dto.audience.admin.AdminRequest;
 import ru.smirnov.musicplatform.dto.audience.admin.AdminResponse;
 import ru.smirnov.musicplatform.entity.audience.Account;
 import ru.smirnov.musicplatform.entity.audience.Admin;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
+import ru.smirnov.dtoregistry.entity.auxiliary.AccountStatus;import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
+import ru.smirnov.musicplatform.kafka.producer.abstraction.KafkaAdminProducer;
 import ru.smirnov.musicplatform.mapper.abstraction.AdminMapper;
 import ru.smirnov.musicplatform.precondition.abstraction.audience.AdminPreconditionService;
 import ru.smirnov.musicplatform.repository.audience.AdminRepository;
@@ -27,18 +28,20 @@ public class AdminServiceImplementation implements AdminService {
     private final AdminPreconditionService adminPreconditionService;
     private final AdminMapper adminMapper;
     private final AccountService accountService;
+    private final KafkaAdminProducer kafkaAdminProducer;
 
     @Autowired
     public AdminServiceImplementation(
             AdminRepository adminRepository,
             AdminPreconditionService adminPreconditionService,
             AdminMapper adminMapper,
-            AccountService accountService
+            AccountService accountService, KafkaAdminProducer kafkaAdminProducer
     ) {
         this.adminRepository = adminRepository;
         this.adminPreconditionService = adminPreconditionService;
         this.adminMapper = adminMapper;
         this.accountService = accountService;
+        this.kafkaAdminProducer = kafkaAdminProducer;
     }
 
     @Override
@@ -49,9 +52,12 @@ public class AdminServiceImplementation implements AdminService {
         Account account = this.accountService.createAccount(dto.getAccountData(), Role.ADMIN, AccountStatus.ENABLED);
         Admin admin = this.adminMapper.adminRegistrationRequestToAdminEntity(dto, account);
 
-        // и вот тут нужно будет вызвать продюсер, чтобы отправить в него сообщение
+        this.adminRepository.save(admin);
 
-        return this.adminRepository.save(admin).getId();
+        // и вот тут нужно будет вызвать продюсер, чтобы отправить в него сообщение
+        this.kafkaAdminProducer.sendMessage(new AdminDataMessage(admin.getId(), admin.getAccount().getStatus()));
+
+        return admin.getId();
     }
 
     @Override

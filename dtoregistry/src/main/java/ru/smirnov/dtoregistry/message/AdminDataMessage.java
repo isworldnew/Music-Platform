@@ -1,9 +1,10 @@
 package ru.smirnov.dtoregistry.message;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.smirnov.dtoregistry.entity.auxiliary.AccountStatus;
 
-@Data
+@Data @AllArgsConstructor
 public class AdminDataMessage {
 
     private Long id;

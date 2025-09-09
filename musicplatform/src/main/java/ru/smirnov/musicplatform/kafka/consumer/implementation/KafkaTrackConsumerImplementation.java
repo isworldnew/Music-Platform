@@ -26,7 +26,11 @@ public class KafkaTrackConsumerImplementation implements KafkaTrackConsumer {
     public void consume(String jsonMessage) {
         try {
             TrackStatusMessage message = this.objectMapper.readValue(jsonMessage, TrackStatusMessage.class);
-            this.trackService.updateTrackAccessLevel(message);
+            this.trackService.updateTrackAccessLevel(
+                    message.getTrackId(),
+                    new TrackAccessLevelRequest(message.getStatus().name()),
+                    message.getTokenData()
+            );
         }
         catch (JsonProcessingException e) {
             System.err.println("Deserialization error for message: " + jsonMessage);

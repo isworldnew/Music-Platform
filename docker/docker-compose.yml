@@ -67,6 +67,8 @@ services:
       - zookeeper.env
     networks:
       - musicplatform_network
+    ports:
+      - "2181:2181"
 
   kafka:
     image: confluentinc/cp-kafka:7.4.4
@@ -76,6 +78,9 @@ services:
       - kafka.env
     networks:
       - musicplatform_network
+    ports:
+      - "9092:9092"
+      - "29092:29092"
 
 networks:
   musicplatform_network:

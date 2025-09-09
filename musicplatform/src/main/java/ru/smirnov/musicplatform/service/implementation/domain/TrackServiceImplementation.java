@@ -120,13 +120,4 @@ public class TrackServiceImplementation implements TrackService {
         this.trackRepository.save(track);
     }
 
-
-    @Override
-    @Transactional // метод исключительно для Kafka
-    public void updateTrackAccessLevel(TrackStatusMessage message) {
-        Track track = this.trackPreconditionService.getByIdIfExists(message.getTrackId());
-        track.setStatus(message.getStatus());
-        this.trackRepository.save(track);
-    }
-
 }

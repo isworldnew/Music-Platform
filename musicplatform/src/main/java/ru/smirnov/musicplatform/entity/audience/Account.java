@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
+import ru.smirnov.dtoregistry.entity.auxiliary.AccountStatus;import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 
 @Entity
 @Table(name = "accounts")
