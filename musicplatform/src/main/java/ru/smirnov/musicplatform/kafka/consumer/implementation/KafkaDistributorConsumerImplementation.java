@@ -21,6 +21,6 @@ public class KafkaDistributorConsumerImplementation implements KafkaDistributorC
     @Override
     @KafkaListener(topics = "${spring.kafka.topic.distributors.name}", groupId = "${distributors-consumer-group}")
     public void consume(String jsonMessage) {
-
+        // создать аккаунт дистрибьютору и записать бизнес-данные дистрибьютора
     }
 }

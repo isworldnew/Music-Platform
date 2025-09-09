@@ -21,6 +21,6 @@ public class KafkaTrackConsumerImplementation implements KafkaTrackConsumer {
     @Override
     @KafkaListener(topics = "${spring.kafka.topic.tracks.name}", groupId = "${spring.kafka.consumer.tracks.group-id}")
     public void consume(String jsonMessage) {
-
+        // обновить статус какому-то треку
     }
 }
