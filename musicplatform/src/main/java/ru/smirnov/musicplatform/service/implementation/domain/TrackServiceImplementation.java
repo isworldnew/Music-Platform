@@ -7,8 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.dtoregistry.entity.auxiliary.TrackStatus;
 import ru.smirnov.dtoregistry.message.TrackStatusMessage;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelRequest;
-import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
+import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.entity.domain.Track;
@@ -120,4 +119,11 @@ public class TrackServiceImplementation implements TrackService {
         this.trackRepository.save(track);
     }
 
+    @Override
+    @Transactional
+    public void updateTrackAccessLevel(TrackStatusMessage message) {
+        Track track = this.trackPreconditionService.getByIdIfExists(message.getTrackId());
+        track.setStatus(message.getStatus());
+        this.trackRepository.save(track);
+    }
 }

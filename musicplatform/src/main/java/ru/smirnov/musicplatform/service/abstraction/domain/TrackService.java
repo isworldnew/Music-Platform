@@ -1,7 +1,8 @@
 package ru.smirnov.musicplatform.service.abstraction.domain;
 
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelRequest;
+import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;
+import ru.smirnov.dtoregistry.message.TrackStatusMessage;
 import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
 
 public interface TrackService {
@@ -11,6 +12,8 @@ public interface TrackService {
     void updateTrack(Long trackId, TrackRequest dto, DataForToken tokenData);
 
     void updateTrackAccessLevel(Long trackId, TrackAccessLevelRequest dto, DataForToken tokenData);
+
+    void updateTrackAccessLevel(TrackStatusMessage message);
 
     void listenToTrack(Long trackId);
 

@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.smirnov.dtoregistry.message.TrackStatusMessage;
-import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelRequest;
-import ru.smirnov.musicplatform.kafka.consumer.abstraction.KafkaTrackConsumer;
+import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;import ru.smirnov.musicplatform.kafka.consumer.abstraction.KafkaTrackConsumer;
 import ru.smirnov.musicplatform.service.abstraction.domain.TrackService;
 
 @Service
@@ -26,11 +25,7 @@ public class KafkaTrackConsumerImplementation implements KafkaTrackConsumer {
     public void consume(String jsonMessage) {
         try {
             TrackStatusMessage message = this.objectMapper.readValue(jsonMessage, TrackStatusMessage.class);
-            this.trackService.updateTrackAccessLevel(
-                    message.getTrackId(),
-                    new TrackAccessLevelRequest(message.getStatus().name()),
-                    message.getTokenData()
-            );
+            this.trackService.updateTrackAccessLevel(message);
         }
         catch (JsonProcessingException e) {
             System.err.println("Deserialization error for message: " + jsonMessage);

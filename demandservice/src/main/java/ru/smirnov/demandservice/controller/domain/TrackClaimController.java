@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.smirnov.demandservice.service.abstraction.domain.TrackClaimService;
 import ru.smirnov.demandservice.service.abstraction.security.SecurityContextService;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;
 
 @RestController
 @RequestMapping("/tracks/claims")
@@ -32,5 +33,15 @@ public class TrackClaimController {
     public Long addTrackClaim(@NotNull @Positive @PathVariable("id") Long trackId) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.trackClaimService.addTrackClaim(trackId, tokenData);
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
+    public void processTrackClaim(
+            @NotNull @Positive @PathVariable("id") Long claimId,
+            @RequestBody @Valid TrackAccessLevelRequest dto
+    ) {
+        this.trackClaimService.processTrackClaim(claimId, dto);
     }
 }

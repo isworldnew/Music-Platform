@@ -3,13 +3,16 @@ package ru.smirnov.musicplatform.service.implementation.audience;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
+import ru.smirnov.dtoregistry.message.DistributorRegistrationMessage;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorRequest;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorResponse;
+import ru.smirnov.musicplatform.entity.audience.Account;
 import ru.smirnov.musicplatform.entity.audience.Distributor;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributorType;
 import ru.smirnov.musicplatform.mapper.abstraction.DistributorMapper;
 import ru.smirnov.musicplatform.precondition.abstraction.audience.DistributorPreconditionService;
 import ru.smirnov.musicplatform.repository.audience.DistributorRepository;
+import ru.smirnov.musicplatform.service.abstraction.audience.AccountService;
 import ru.smirnov.musicplatform.service.abstraction.audience.DistributorService;
 
 @Service
@@ -18,16 +21,18 @@ public class DistributorServiceImplementation implements DistributorService {
     private final DistributorRepository distributorRepository;
     private final DistributorPreconditionService distributorPreconditionService;
     private final DistributorMapper distributorMapper;
+    private final AccountService accountService;
 
     @Autowired
     public DistributorServiceImplementation(
             DistributorRepository distributorRepository,
             DistributorPreconditionService distributorPreconditionService,
-            DistributorMapper distributorMapper
+            DistributorMapper distributorMapper, AccountService accountService
     ) {
         this.distributorRepository = distributorRepository;
         this.distributorPreconditionService = distributorPreconditionService;
         this.distributorMapper = distributorMapper;
+        this.accountService = accountService;
     }
 
     @Override
@@ -48,5 +53,10 @@ public class DistributorServiceImplementation implements DistributorService {
         Distributor distributor = this.distributorPreconditionService.getByIdIfExists(tokenData.getEntityId());
         return this.distributorMapper.distributorEntityToDistributorResponse(distributor);
     }
+
+//    @Override
+//    public Long distributorRegistration(DistributorRegistrationMessage dto) {
+//        Account account = this.accountService.createAccount();
+//    }
 
 }
