@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.entity.domain.Chart;
 import ru.smirnov.musicplatform.exception.ConflictException;
 import ru.smirnov.musicplatform.exception.ForbiddenException;

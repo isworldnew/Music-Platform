@@ -2,8 +2,8 @@ package ru.smirnov.musicplatform.validation.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import ru.smirnov.dtoregistry.entity.auxiliary.TrackStatus;
 import ru.smirnov.musicplatform.validation.annotation.TrackAccessLevel;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 
 import java.util.Arrays;
 import java.util.Set;

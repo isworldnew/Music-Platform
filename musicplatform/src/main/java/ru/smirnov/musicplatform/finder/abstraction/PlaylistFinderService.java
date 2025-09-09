@@ -1,6 +1,6 @@
 package ru.smirnov.musicplatform.finder.abstraction;
 
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionResponse;
 import ru.smirnov.musicplatform.projection.abstraction.MusicCollectionShortcutProjection;
 

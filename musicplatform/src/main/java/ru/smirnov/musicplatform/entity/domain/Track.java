@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
+import ru.smirnov.dtoregistry.entity.auxiliary.TrackStatus;
 import ru.smirnov.musicplatform.entity.relation.*;
 
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;

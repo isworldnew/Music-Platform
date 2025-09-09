@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.track.TrackAccessLevelRequest;
 import ru.smirnov.musicplatform.dto.domain.track.TrackRequest;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;

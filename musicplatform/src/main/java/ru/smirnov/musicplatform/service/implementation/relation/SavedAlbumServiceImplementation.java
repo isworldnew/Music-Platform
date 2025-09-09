@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.entity.domain.Album;
 import ru.smirnov.musicplatform.exception.ConflictException;
 import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.AlbumPreconditionService;
 import ru.smirnov.musicplatform.repository.relation.SavedAlbumRepository;
 import ru.smirnov.musicplatform.service.abstraction.relation.SavedAlbumService;
+
 // [v] checked
 @Service
 public class SavedAlbumServiceImplementation implements SavedAlbumService {

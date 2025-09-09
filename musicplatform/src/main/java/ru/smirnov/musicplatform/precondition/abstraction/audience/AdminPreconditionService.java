@@ -6,4 +6,5 @@ public interface AdminPreconditionService {
 
     Admin getByIdIfExists(Long adminId);
 
+    void checkExistenceByPhonenumberOrEmail(String phonenumber, String email);
 }

@@ -1,6 +1,6 @@
 package ru.smirnov.musicplatform.service.abstraction.security;
 
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 
 public interface SecurityContextService {
 

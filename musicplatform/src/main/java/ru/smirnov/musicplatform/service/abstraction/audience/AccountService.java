@@ -1,6 +1,6 @@
 package ru.smirnov.musicplatform.service.abstraction.audience;
 
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
 import ru.smirnov.musicplatform.entity.audience.Account;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.AccountStatus;

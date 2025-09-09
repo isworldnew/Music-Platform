@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionResponse;
 import ru.smirnov.musicplatform.finder.abstraction.PlaylistFinderService;
 import ru.smirnov.musicplatform.projection.abstraction.MusicCollectionShortcutProjection;

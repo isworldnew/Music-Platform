@@ -10,10 +10,11 @@ import lombok.Data;
 @Data @AllArgsConstructor
 public class LoginRequest {
 
-    @NotNull @NotBlank @NotEmpty
+    @NotBlank
+    @Size(min = 4, message = "Username's size should be >= 4")
     private String username;
 
-    @NotNull @NotBlank @NotEmpty
+    @NotBlank
     @Size(min = 10, message = "Password's size should be >= 10")
     private String password;
 

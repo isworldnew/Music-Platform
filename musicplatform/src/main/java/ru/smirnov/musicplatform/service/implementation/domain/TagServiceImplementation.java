@@ -3,7 +3,7 @@ package ru.smirnov.musicplatform.service.implementation.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.tag.TagRequest;
 import ru.smirnov.musicplatform.dto.domain.tag.TagResponse;
 import ru.smirnov.musicplatform.entity.audience.User;

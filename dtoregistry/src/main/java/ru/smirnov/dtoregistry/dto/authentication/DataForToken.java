@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
+// из:
+// package ru.smirnov.musicplatform.authentication;
+
 @Data @Builder @Setter
 public class DataForToken implements UserDetails {
 

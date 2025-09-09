@@ -1,6 +1,6 @@
 package ru.smirnov.musicplatform.service.abstraction.audience;
 
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.audience.user.UserDataUpdateRequest;
 import ru.smirnov.musicplatform.dto.audience.user.UserRegistrationRequest;
 import ru.smirnov.musicplatform.dto.audience.user.UserResponse;

@@ -1,6 +1,7 @@
 package ru.smirnov.musicplatform.service.abstraction.relation;
 
-import ru.smirnov.musicplatform.authentication.DataForToken;
+
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 
 public interface TaggedTrackService {
 

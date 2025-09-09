@@ -1,6 +1,6 @@
 package ru.smirnov.musicplatform.service.abstraction.domain;
 
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.tag.TagRequest;
 import ru.smirnov.musicplatform.dto.domain.tag.TagResponse;
 

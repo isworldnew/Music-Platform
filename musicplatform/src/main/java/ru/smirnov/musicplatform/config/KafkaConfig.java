@@ -1,16 +1,30 @@
 package ru.smirnov.musicplatform.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.config.TopicBuilder;
 
-@Configuration
+@Configuration @Getter
 public class KafkaConfig {
-    /*
-    может, если аккаунт админа перестаёт быть enabled - об этом тоже уведомлять?
-    то есть: event-driven архитектура не только на случай регистрации нового админа, но и
-    на случай изменения статуса его аккаунта...
 
-    возможно понадобится ещё и реализация идемпотентности
+    @Value("${spring.kafka.topic.admins.name}")
+    private String adminPostTopic;
 
-    и глянь скриншоты в телеге
-    */
+    @Bean
+    public NewTopic createAdminPostTopic() {
+        return TopicBuilder.name(this.adminPostTopic)
+                .partitions(2)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+
 }

@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
+import ru.smirnov.musicplatform.dto.audience.admin.AdminRegistrationRequest;
 import ru.smirnov.musicplatform.dto.audience.admin.AdminRequest;
 import ru.smirnov.musicplatform.dto.audience.admin.AdminResponse;
 import ru.smirnov.musicplatform.service.abstraction.audience.AdminService;
@@ -26,6 +27,13 @@ public class AdminController {
     public AdminController(SecurityContextService securityContextService, AdminService adminService) {
         this.securityContextService = securityContextService;
         this.adminService = adminService;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('SUPERADMIN')")
+    public Long adminRegistration(@RequestBody @Valid AdminRegistrationRequest dto) {
+        return this.adminService.adminRegistration(dto);
     }
 
     @PatchMapping

@@ -3,7 +3,6 @@ package ru.smirnov.musicplatform.validation.validator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributorType;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
 import ru.smirnov.musicplatform.validation.annotation.DistributionType;
 
 import java.util.Arrays;

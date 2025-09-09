@@ -16,12 +16,12 @@ public class DistributorRegistrationClaimRequest {
     @DistributionType
     private String distributorType;
 
-    @NotBlank(message = "Username cannot be blank")
-    @Size(min = 8, message = "Username must be at least 8 characters long")
+    @NotBlank
+    @Size(min = 4, message = "Username's size should be >= 4")
     private String username;
 
-    @NotBlank(message = "Password cannot be blank")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @NotBlank
+    @Size(min = 10, message = "Password's size should be >= 10")
     private String password;
 
 }

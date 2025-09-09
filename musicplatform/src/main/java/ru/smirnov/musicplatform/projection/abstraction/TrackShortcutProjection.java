@@ -1,6 +1,6 @@
 package ru.smirnov.musicplatform.projection.abstraction;
 
-import ru.smirnov.musicplatform.entity.auxiliary.enums.TrackStatus;
+import ru.smirnov.dtoregistry.entity.auxiliary.TrackStatus;
 
 public interface TrackShortcutProjection {
 

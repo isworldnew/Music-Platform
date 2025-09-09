@@ -8,12 +8,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistExtendedResponse;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistResponse;
 import ru.smirnov.musicplatform.dto.domain.artist.ArtistShortcutResponse;
 import ru.smirnov.musicplatform.finder.abstraction.ArtistFinderService;
-import ru.smirnov.musicplatform.precondition.abstraction.audience.DistributorPreconditionService;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 
 import java.util.List;

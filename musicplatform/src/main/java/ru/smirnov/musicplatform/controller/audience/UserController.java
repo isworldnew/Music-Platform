@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.authentication.TokenGenerator;
 import ru.smirnov.musicplatform.dto.audience.user.UserDataUpdateRequest;
 import ru.smirnov.musicplatform.dto.audience.user.UserRegistrationRequest;

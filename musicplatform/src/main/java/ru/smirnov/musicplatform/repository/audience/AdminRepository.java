@@ -6,6 +6,7 @@ import ru.smirnov.musicplatform.entity.audience.Admin;
 import ru.smirnov.musicplatform.repository.auxiliary.EntityRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository("AdminRepository")
@@ -25,4 +26,9 @@ public interface AdminRepository extends EntityRepository<Admin, Long> {
     )
     List<Long> findAllEnabledAdmins();
 
+    @Query("SELECT admin FROM Admin admin WHERE admin.data.phonenumber = :phonenumber")
+    Optional<Admin> findByPhonenumber(String phonenumber);
+
+    @Query("SELECT admin FROM Admin admin WHERE admin.data.email = :email")
+    Optional<Admin> findByEmail(String email);
 }

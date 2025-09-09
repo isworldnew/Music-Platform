@@ -3,7 +3,7 @@ package ru.smirnov.musicplatform.finder.implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import ru.smirnov.musicplatform.authentication.DataForToken;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.musicplatform.dto.domain.tag.TagResponse;
 import ru.smirnov.musicplatform.dto.domain.track.TrackExtendedResponse;
 import ru.smirnov.musicplatform.dto.domain.track.TrackResponse;
