@@ -114,14 +114,17 @@ public class AccountServiceImplementation implements UserDetailsService, Account
     // поэтому уровень изоляции оставляю по умолчанию
     @Override
     @Transactional
-    public Account createAccount(LoginRequest dto, Role role, AccountStatus accountStatus) {
+    public Account createAccount(LoginRequest dto, Role role, AccountStatus accountStatus, boolean passwordAlreadyHashed) {
 
         if (this.accountRepository.findByUsername(dto.getUsername()).isPresent())
             throw new UsernameOccupiedException("Such username is already in use by other account");
 
         Account newAccount = new Account();
         newAccount.setUsername(dto.getUsername());
-        newAccount.setPassword(this.bCryptPasswordEncoder.encode(dto.getPassword()));
+        if (passwordAlreadyHashed)
+            newAccount.setPassword(dto.getPassword());
+        else
+            newAccount.setPassword(this.bCryptPasswordEncoder.encode(dto.getPassword()));
         newAccount.setRole(role);
         newAccount.setStatus(accountStatus);
 

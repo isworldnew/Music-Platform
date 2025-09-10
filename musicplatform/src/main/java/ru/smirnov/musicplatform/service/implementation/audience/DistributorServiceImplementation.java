@@ -61,7 +61,7 @@ public class DistributorServiceImplementation implements DistributorService {
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public Long distributorRegistration(DistributorRegistrationMessage message) {
-        Account account = this.accountService.createAccount(message.getAccountData(), Role.DISTRIBUTOR, AccountStatus.ENABLED);
+        Account account = this.accountService.createAccount(message.getAccountData(), Role.DISTRIBUTOR, AccountStatus.ENABLED, true);
 
         Distributor distributor = this.distributorMapper.createDistributorEntity(account, message);
 

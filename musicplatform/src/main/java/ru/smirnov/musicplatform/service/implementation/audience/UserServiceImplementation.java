@@ -61,7 +61,7 @@ public class UserServiceImplementation implements UserService {
         // проверить, что пользователю есть, например, 14 лет
 
 
-        Account newAccount = this.accountService.createAccount(dto.getAccountData(), Role.USER, AccountStatus.ENABLED);
+        Account newAccount = this.accountService.createAccount(dto.getAccountData(), Role.USER, AccountStatus.ENABLED, false);
 
         // вот это бы в какой-нибудь маппер вынести, хоть это и не совсем маппинг...
         CommonPersonData commonPersonData = new CommonPersonData();

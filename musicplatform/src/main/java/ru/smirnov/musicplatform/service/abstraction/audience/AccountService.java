@@ -7,7 +7,7 @@ import ru.smirnov.dtoregistry.entity.auxiliary.AccountStatus;import ru.smirnov.m
 public interface AccountService {
 
     // создание аккаунта
-    Account createAccount(LoginRequest dto, Role role, AccountStatus accountStatus);
+    Account createAccount(LoginRequest dto, Role role, AccountStatus accountStatus, boolean passwordAlreadyHashed);
 
     // обновление данных аккаунта (username + password)
     void updateAccount(LoginRequest dto, DataForToken tokenData);

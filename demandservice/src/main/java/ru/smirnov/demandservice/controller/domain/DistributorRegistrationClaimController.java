@@ -27,6 +27,7 @@ public class DistributorRegistrationClaimController {
         this.distributorRegistrationClaimService = distributorRegistrationClaimService;
     }
 
+    // [v]
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Long addDistributorRegistrationClaim(@RequestBody @Valid DistributorRegistrationClaimRequest dto) {
@@ -40,7 +41,7 @@ public class DistributorRegistrationClaimController {
             @NotNull @Positive @PathVariable("id") Long claimId,
             @RequestBody @Valid DemandStatusRequest dto
     ) {
-
+        this.distributorRegistrationClaimService.processDistributorClaim(claimId, dto);
     }
 
 }

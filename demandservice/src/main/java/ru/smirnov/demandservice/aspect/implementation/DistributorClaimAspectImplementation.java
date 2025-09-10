@@ -5,10 +5,12 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.smirnov.demandservice.aspect.abstraction.DistributorClaimAspect;
+import ru.smirnov.demandservice.entity.domain.DistributorRegistrationClaim;
 import ru.smirnov.demandservice.repository.DistributorRegistrationClaimRepository;
 import ru.smirnov.dtoregistry.dto.domain.DemandStatusRequest;
 import ru.smirnov.dtoregistry.entity.auxiliary.DemandStatus;
 import ru.smirnov.dtoregistry.exception.BadRequestException;
+import ru.smirnov.dtoregistry.exception.ConflictException;
 import ru.smirnov.dtoregistry.exception.NotFoundException;
 
 import java.util.Arrays;
@@ -26,12 +28,16 @@ public class DistributorClaimAspectImplementation implements DistributorClaimAsp
     }
 
     @Override
-    @Before("execution(* ru.smirnov.demandservice.service.implementation.domain.DistributorRegistrationClaimServiceImplementation.processDistributorClaim) && args(claimId, dto)")
+    @Before("execution(* ru.smirnov.demandservice.service.implementation.domain.DistributorRegistrationClaimServiceImplementation.processDistributorClaim(..)) && args(claimId, dto)")
     // а тут указывать именно путь до имплементации или достаточно до интерфейса?
     public void processDistributorClaim(Long claimId, DemandStatusRequest dto) {
-        this.distributorRegistrationClaimRepository.findById(claimId).orElseThrow(
-                () -> new NotFoundException("Distributor Registration Claim with id=" + claimId + " was not found")
-        );
+        DistributorRegistrationClaim claim = this.distributorRegistrationClaimRepository.findById(claimId).orElse(null);
+
+        if (claim == null)
+            throw new NotFoundException("Distributor Registration Claim with id=" + claimId + " was not found");
+
+        if (claim.getStatus().equals(DemandStatus.COMPLETED))
+            throw new ConflictException("Claim (id=" + claimId + ") is COMPLETED");
 
         List<String> modifyingStatuses = Arrays.stream(DemandStatus.values())
                 .filter(demandStatus -> demandStatus.isModifying())

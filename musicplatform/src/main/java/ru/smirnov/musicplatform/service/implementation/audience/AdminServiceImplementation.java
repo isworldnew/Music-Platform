@@ -49,7 +49,7 @@ public class AdminServiceImplementation implements AdminService {
     public Long adminRegistration(AdminRegistrationRequest dto) {
         this.adminPreconditionService.checkExistenceByPhonenumberOrEmail(dto.getPhonenumber(), dto.getEmail());
 
-        Account account = this.accountService.createAccount(dto.getAccountData(), Role.ADMIN, AccountStatus.ENABLED);
+        Account account = this.accountService.createAccount(dto.getAccountData(), Role.ADMIN, AccountStatus.ENABLED, false);
         Admin admin = this.adminMapper.adminRegistrationRequestToAdminEntity(dto, account);
 
         this.adminRepository.save(admin);
