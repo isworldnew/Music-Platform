@@ -1,6 +1,7 @@
 package ru.smirnov.musicplatform.service.abstraction.audience;
 
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
+import ru.smirnov.dtoregistry.message.DistributorRegistrationMessage;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorRequest;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorResponse;
 
@@ -11,4 +12,6 @@ public interface DistributorService {
 
     // обновление данных об аккаунте
     void updateDistributorData(DistributorRequest dto, DataForToken tokenData);
+
+    Long distributorRegistration(DistributorRegistrationMessage dto);
 }

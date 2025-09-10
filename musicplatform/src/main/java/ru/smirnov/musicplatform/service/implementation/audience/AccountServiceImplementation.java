@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
+import ru.smirnov.dtoregistry.dto.authentication.LoginRequest;
 import ru.smirnov.musicplatform.entity.audience.Account;
 import ru.smirnov.dtoregistry.entity.auxiliary.AccountStatus;import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.exception.NonUniqueAccountPerEntity;

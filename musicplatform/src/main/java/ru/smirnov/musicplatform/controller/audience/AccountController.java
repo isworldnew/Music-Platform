@@ -8,8 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
-import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
-import ru.smirnov.musicplatform.service.abstraction.audience.AccountService;
+import ru.smirnov.dtoregistry.dto.authentication.LoginRequest;import ru.smirnov.musicplatform.service.abstraction.audience.AccountService;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 
 @RestController("/accounts")

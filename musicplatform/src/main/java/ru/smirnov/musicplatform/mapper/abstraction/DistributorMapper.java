@@ -1,8 +1,10 @@
 package ru.smirnov.musicplatform.mapper.abstraction;
 
+import ru.smirnov.dtoregistry.message.DistributorRegistrationMessage;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorResponse;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorShortcutResponse;
 import ru.smirnov.musicplatform.dto.audience.distributor.ExtendedDistributorResponse;
+import ru.smirnov.musicplatform.entity.audience.Account;
 import ru.smirnov.musicplatform.entity.audience.Distributor;
 
 public interface DistributorMapper {
@@ -12,4 +14,6 @@ public interface DistributorMapper {
     DistributorShortcutResponse distributorEntityToDistributorShortcutResponse(Distributor distributor);
 
     ExtendedDistributorResponse distributorEntityToExtendedDistributorResponse(Distributor distributor);
+
+    Distributor createDistributorEntity(Account account, DistributorRegistrationMessage message);
 }

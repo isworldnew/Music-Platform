@@ -2,13 +2,17 @@ package ru.smirnov.musicplatform.service.implementation.audience;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
+import ru.smirnov.dtoregistry.entity.auxiliary.AccountStatus;
+import ru.smirnov.dtoregistry.entity.auxiliary.DistributorType;
 import ru.smirnov.dtoregistry.message.DistributorRegistrationMessage;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorRequest;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorResponse;
 import ru.smirnov.musicplatform.entity.audience.Account;
 import ru.smirnov.musicplatform.entity.audience.Distributor;
-import ru.smirnov.musicplatform.entity.auxiliary.enums.DistributorType;
+import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.mapper.abstraction.DistributorMapper;
 import ru.smirnov.musicplatform.precondition.abstraction.audience.DistributorPreconditionService;
 import ru.smirnov.musicplatform.repository.audience.DistributorRepository;
@@ -54,9 +58,14 @@ public class DistributorServiceImplementation implements DistributorService {
         return this.distributorMapper.distributorEntityToDistributorResponse(distributor);
     }
 
-//    @Override
-//    public Long distributorRegistration(DistributorRegistrationMessage dto) {
-//        Account account = this.accountService.createAccount();
-//    }
+    @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public Long distributorRegistration(DistributorRegistrationMessage message) {
+        Account account = this.accountService.createAccount(message.getAccountData(), Role.DISTRIBUTOR, AccountStatus.ENABLED);
+
+        Distributor distributor = this.distributorMapper.createDistributorEntity(account, message);
+
+        return this.distributorRepository.save(distributor).getId();
+    }
 
 }

@@ -9,8 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.smirnov.musicplatform.authentication.TokenGenerator;
-import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
-import ru.smirnov.musicplatform.dto.authentication.JwtResponse;
+import ru.smirnov.dtoregistry.dto.authentication.LoginRequest;import ru.smirnov.musicplatform.dto.authentication.JwtResponse;
 
 import java.util.HashMap;
 import java.util.Map;

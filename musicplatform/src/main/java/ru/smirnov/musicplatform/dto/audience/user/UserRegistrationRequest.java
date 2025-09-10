@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import ru.smirnov.musicplatform.dto.authentication.LoginRequest;
-
+import ru.smirnov.dtoregistry.dto.authentication.LoginRequest;
 import java.sql.Date;
 
 @Data

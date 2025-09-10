@@ -1,10 +1,12 @@
 package ru.smirnov.musicplatform.mapper.implementation;
 
 import org.springframework.stereotype.Component;
+import ru.smirnov.dtoregistry.message.DistributorRegistrationMessage;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributedArtistShortcutResponse;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorResponse;
 import ru.smirnov.musicplatform.dto.audience.distributor.DistributorShortcutResponse;
 import ru.smirnov.musicplatform.dto.audience.distributor.ExtendedDistributorResponse;
+import ru.smirnov.musicplatform.entity.audience.Account;
 import ru.smirnov.musicplatform.entity.audience.Distributor;
 import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.mapper.abstraction.DistributorMapper;
@@ -62,5 +64,15 @@ public class DistributorMapperImplementation implements DistributorMapper {
         }
 
         return dto;
+    }
+
+    @Override
+    public Distributor createDistributorEntity(Account account, DistributorRegistrationMessage message) {
+        Distributor distributor = new Distributor();
+        distributor.setName(message.getName());
+        distributor.setDescription(message.getDescription());
+        distributor.setDistributorType(message.getDistributorType());
+        distributor.setAccount(account);
+        return distributor;
     }
 }
