@@ -5,4 +5,6 @@ import ru.smirnov.dtoregistry.dto.domain.DemandStatusRequest;
 
 public interface DistributorClaimAspect {
     void processDistributorClaim(Long claimId, DemandStatusRequest dto, DataForToken tokenData);
+
+    void getDistributorRegistrationClaimById(Long claimId, DataForToken tokenData);
 }

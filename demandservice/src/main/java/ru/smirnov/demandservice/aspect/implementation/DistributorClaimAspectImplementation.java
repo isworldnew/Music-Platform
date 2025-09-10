@@ -5,6 +5,7 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.smirnov.demandservice.aspect.abstraction.DistributorClaimAspect;
+import ru.smirnov.demandservice.dto.DistributorRegistrationClaimResponse;
 import ru.smirnov.demandservice.entity.domain.DistributorRegistrationClaim;
 import ru.smirnov.demandservice.repository.DistributorRegistrationClaimRepository;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
@@ -54,6 +55,19 @@ public class DistributorClaimAspectImplementation implements DistributorClaimAsp
             throw new BadRequestException(
                     "Distributor's claim processing accepts only modifying demand status: " + modifyingStatuses
             );
+    }
+
+    @Override
+    @Before("execution (* ru.smirnov.demandservice.service.implementation.domain.DistributorRegistrationClaimServiceImplementation.getDistributorRegistrationClaimById(..)) && args(claimId, tokenData)")
+    public void getDistributorRegistrationClaimById(Long claimId, DataForToken tokenData) {
+        DistributorRegistrationClaim claim = this.distributorRegistrationClaimRepository.findById(claimId).orElse(null);
+
+        if (claim == null)
+            throw new NotFoundException("Distributor Registration Claim with id=" + claimId + " was not found");
+
+        if (!claim.getAdminId().equals(tokenData.getEntityId()))
+            throw new ForbiddenException("Claim (id=" + claimId + ") doesn't assigned to admin (id=" + tokenData.getEntityId() + ")");
+
     }
 
 }

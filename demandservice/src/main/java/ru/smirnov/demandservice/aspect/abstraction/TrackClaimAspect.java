@@ -7,4 +7,6 @@ import ru.smirnov.dtoregistry.dto.domain.TrackClaimRequest;
 public interface TrackClaimAspect {
 
     void checkClaimExistence(Long claimId, TrackClaimRequest dto, DataForToken tokenData);
+
+    void getTrackClaimById(Long trackId, DataForToken tokenData);
 }

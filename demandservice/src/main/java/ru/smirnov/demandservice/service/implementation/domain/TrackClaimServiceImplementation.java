@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.demandservice.client.abstraction.TrackClient;
+import ru.smirnov.demandservice.dto.TrackClaimResponse;
 import ru.smirnov.demandservice.entity.domain.TrackClaim;
 import ru.smirnov.demandservice.kafka.producer.abstraction.KafkaTrackProducer;
 import ru.smirnov.demandservice.mapper.abstraction.TrackClaimMapper;
@@ -11,11 +12,12 @@ import ru.smirnov.demandservice.repository.TrackClaimRepository;
 import ru.smirnov.demandservice.service.abstraction.auxiliary.ClaimAssignService;
 import ru.smirnov.demandservice.service.abstraction.domain.TrackClaimService;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
-import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;
 import ru.smirnov.dtoregistry.dto.domain.TrackClaimRequest;
 import ru.smirnov.dtoregistry.entity.auxiliary.DemandStatus;
 import ru.smirnov.dtoregistry.entity.auxiliary.TrackStatus;
 import ru.smirnov.dtoregistry.message.TrackStatusMessage;
+
+import java.util.List;
 
 @Service
 public class TrackClaimServiceImplementation implements TrackClaimService {
@@ -67,6 +69,31 @@ public class TrackClaimServiceImplementation implements TrackClaimService {
                 trackClaim.getTrackId(),
                 TrackStatus.valueOf(dto.getAccessLevel())
         ));
+    }
+
+    @Override
+    public List<TrackClaimResponse> getTrackClaims(Boolean relevantOnly, DataForToken tokenData) {
+        List<TrackClaim> claims;
+
+        if (relevantOnly) claims = this.trackClaimRepository.findAllRelevantByAdminId(tokenData.getEntityId());
+        else claims = this.trackClaimRepository.findAllRelevantByAdminId(tokenData.getEntityId());
+
+        return claims.stream()
+                .map(claim -> this.trackClaimMapper.toResponse(claim))
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public TrackClaimResponse getTrackClaimById(Long claimId, DataForToken tokenData) {
+        TrackClaim claim = this.trackClaimRepository.findById(claimId).get();
+
+        if (claim.getStatus().equals(DemandStatus.RECEIVED)) {
+            claim.setStatus(DemandStatus.IN_PROGRESS);
+            this.trackClaimRepository.save(claim);
+        }
+
+        return this.trackClaimMapper.toResponse(claim);
     }
 
 }

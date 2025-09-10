@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.smirnov.demandservice.dto.DistributorRegistrationClaimRequest;
+import ru.smirnov.demandservice.dto.DistributorRegistrationClaimResponse;
+import ru.smirnov.demandservice.dto.DistributorRegistrationClaimShortcutResponse;
 import ru.smirnov.demandservice.entity.auxiliary.DistributorData;
 import ru.smirnov.demandservice.entity.domain.DistributorRegistrationClaim;
 import ru.smirnov.demandservice.mapper.abstraction.DistributorRegistrationClaimMapper;
@@ -50,5 +52,30 @@ public class DistributorRegistrationClaimMapperImplementation implements Distrib
         message.setDistributorType(DistributorType.valueOf(claim.getDistributorData().getDistributorType()));
 
         return message;
+    }
+
+    @Override
+    public DistributorRegistrationClaimShortcutResponse toShortcut(DistributorRegistrationClaim claim) {
+        DistributorRegistrationClaimShortcutResponse shortcut = new DistributorRegistrationClaimShortcutResponse();
+        shortcut.setId(claim.getId());
+        shortcut.setStatus(claim.getStatus());
+        shortcut.setCreationDateTime(claim.getCreationDateTime());
+        shortcut.setExpirationDateTime(claim.getExpirationDateTime());
+        return shortcut;
+    }
+
+    @Override
+    public DistributorRegistrationClaimResponse toResponse(DistributorRegistrationClaim claim) {
+        DistributorRegistrationClaimResponse dto = new DistributorRegistrationClaimResponse();
+        dto.setId(claim.getId());
+        dto.setAdminId(claim.getAdminId());
+        dto.setCreationDateTime(claim.getCreationDateTime());
+        dto.setExpirationDateTime(claim.getExpirationDateTime());
+        dto.setStatus(claim.getStatus());
+        dto.setName(claim.getDistributorData().getName());
+        dto.setDescription(claim.getDistributorData().getDescription());
+        dto.setDistributorType(claim.getDistributorData().getDistributorType());
+        dto.setUsername(claim.getDistributorData().getUsername());
+        return dto;
     }
 }

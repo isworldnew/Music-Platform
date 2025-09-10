@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.demandservice.dto.DistributorRegistrationClaimRequest;
+import ru.smirnov.demandservice.dto.DistributorRegistrationClaimResponse;
+import ru.smirnov.demandservice.dto.DistributorRegistrationClaimShortcutResponse;
 import ru.smirnov.demandservice.entity.domain.DistributorRegistrationClaim;
 import ru.smirnov.demandservice.kafka.producer.abstraction.KafkaDistributorProducer;
 import ru.smirnov.demandservice.mapper.abstraction.DistributorRegistrationClaimMapper;
@@ -11,10 +13,10 @@ import ru.smirnov.demandservice.repository.DistributorRegistrationClaimRepositor
 import ru.smirnov.demandservice.service.abstraction.auxiliary.ClaimAssignService;
 import ru.smirnov.demandservice.service.abstraction.domain.DistributorRegistrationClaimService;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
-import ru.smirnov.dtoregistry.dto.authentication.LoginRequest;
 import ru.smirnov.dtoregistry.dto.domain.DemandStatusRequest;
 import ru.smirnov.dtoregistry.entity.auxiliary.DemandStatus;
-import ru.smirnov.dtoregistry.message.DistributorRegistrationMessage;
+
+import java.util.List;
 
 @Service
 public class DistributorRegistrationClaimServiceImplementation implements DistributorRegistrationClaimService {
@@ -61,5 +63,30 @@ public class DistributorRegistrationClaimServiceImplementation implements Distri
                     this.distributorRegistrationClaimMapper.distributorRegistrationClaimToDistributorRegistrationMessage(claim)
             );
         }
+    }
+
+    @Override
+    public List<DistributorRegistrationClaimShortcutResponse> getDistributorRegistrationClaims(Boolean relevantOnly, DataForToken tokenData) {
+        List<DistributorRegistrationClaim> claims;
+
+        if (relevantOnly) claims = this.distributorRegistrationClaimRepository.findAllRelevantByAdminId(tokenData.getEntityId());
+        else claims = this.distributorRegistrationClaimRepository.findAllIrrelevantByAdminId(tokenData.getEntityId());
+
+        return claims.stream()
+                .map(claim -> this.distributorRegistrationClaimMapper.toShortcut(claim))
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public DistributorRegistrationClaimResponse getDistributorRegistrationClaimById(Long claimId, DataForToken tokenData) {
+        DistributorRegistrationClaim claim = this.distributorRegistrationClaimRepository.findById(claimId).get();
+
+        if (claim.getStatus().equals(DemandStatus.RECEIVED)) {
+            claim.setStatus(DemandStatus.IN_PROGRESS);
+            this.distributorRegistrationClaimRepository.save(claim);
+        }
+
+        return this.distributorRegistrationClaimMapper.toResponse(claim);
     }
 }

@@ -41,4 +41,15 @@ public class TrackClaimAspectImplementation implements TrackClaimAspect {
             throw new ConflictException("Track claim (id=" + claim.getId() + ") is COMPLETED");
 
     }
+
+    @Override
+    @Before("execution (* ru.smirnov.demandservice.service.implementation.domain.TrackClaimServiceImplementation.getTrackClaimById(..)) && args(claimId, tokenData)")
+    public void getTrackClaimById(Long claimId, DataForToken tokenData) {
+        TrackClaim claim = this.trackClaimRepository.findById(claimId).orElse(null);
+        if (claim == null)
+            throw new NotFoundException("Track Claim (id=" + claimId + ") was not found");
+
+        if (!claim.getAdminId().equals(tokenData.getEntityId()))
+            throw new ForbiddenException("Claim (id=" + claimId + ") doesn't assigned to admin (id=" + tokenData.getEntityId() + ")");
+    }
 }
