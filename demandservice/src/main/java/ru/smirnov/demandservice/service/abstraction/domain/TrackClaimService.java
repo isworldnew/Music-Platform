@@ -8,5 +8,5 @@ public interface TrackClaimService {
 
     Long addTrackClaim(Long trackId, DataForToken tokenData);
 
-    void processTrackClaim(Long claimId, TrackClaimRequest dto);
+    void processTrackClaim(Long claimId, TrackClaimRequest dto, DataForToken tokenData);
 }

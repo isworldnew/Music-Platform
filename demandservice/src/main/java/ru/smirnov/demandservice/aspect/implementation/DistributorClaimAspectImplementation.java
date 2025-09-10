@@ -7,10 +7,12 @@ import org.springframework.stereotype.Component;
 import ru.smirnov.demandservice.aspect.abstraction.DistributorClaimAspect;
 import ru.smirnov.demandservice.entity.domain.DistributorRegistrationClaim;
 import ru.smirnov.demandservice.repository.DistributorRegistrationClaimRepository;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.dtoregistry.dto.domain.DemandStatusRequest;
 import ru.smirnov.dtoregistry.entity.auxiliary.DemandStatus;
 import ru.smirnov.dtoregistry.exception.BadRequestException;
 import ru.smirnov.dtoregistry.exception.ConflictException;
+import ru.smirnov.dtoregistry.exception.ForbiddenException;
 import ru.smirnov.dtoregistry.exception.NotFoundException;
 
 import java.util.Arrays;
@@ -28,13 +30,17 @@ public class DistributorClaimAspectImplementation implements DistributorClaimAsp
     }
 
     @Override
-    @Before("execution(* ru.smirnov.demandservice.service.implementation.domain.DistributorRegistrationClaimServiceImplementation.processDistributorClaim(..)) && args(claimId, dto)")
+    @Before("execution(* ru.smirnov.demandservice.service.implementation.domain.DistributorRegistrationClaimServiceImplementation.processDistributorClaim(..)) && args(claimId, dto, tokenData)")
     // а тут указывать именно путь до имплементации или достаточно до интерфейса?
-    public void processDistributorClaim(Long claimId, DemandStatusRequest dto) {
+    public void processDistributorClaim(Long claimId, DemandStatusRequest dto, DataForToken tokenData) {
+
         DistributorRegistrationClaim claim = this.distributorRegistrationClaimRepository.findById(claimId).orElse(null);
 
         if (claim == null)
             throw new NotFoundException("Distributor Registration Claim with id=" + claimId + " was not found");
+
+        if (!claim.getAdminId().equals(tokenData.getEntityId()))
+            throw new ForbiddenException("Claim (id=" + claimId + ") doesn't assigned to admin (id=" + tokenData.getEntityId() + ")");
 
         if (claim.getStatus().equals(DemandStatus.COMPLETED))
             throw new ConflictException("Claim (id=" + claimId + ") is COMPLETED");

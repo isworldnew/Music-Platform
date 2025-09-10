@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.smirnov.demandservice.dto.DistributorRegistrationClaimRequest;
 import ru.smirnov.demandservice.service.abstraction.domain.DistributorRegistrationClaimService;
 import ru.smirnov.demandservice.service.abstraction.security.SecurityContextService;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.dtoregistry.dto.domain.DemandStatusRequest;
 
 @RestController
@@ -41,7 +42,8 @@ public class DistributorRegistrationClaimController {
             @NotNull @Positive @PathVariable("id") Long claimId,
             @RequestBody @Valid DemandStatusRequest dto
     ) {
-        this.distributorRegistrationClaimService.processDistributorClaim(claimId, dto);
+        DataForToken tokenData = this.service.safelyExtractTokenDataFromSecurityContext();
+        this.distributorRegistrationClaimService.processDistributorClaim(claimId, dto, tokenData);
     }
 
 }

@@ -10,6 +10,7 @@ import ru.smirnov.demandservice.mapper.abstraction.DistributorRegistrationClaimM
 import ru.smirnov.demandservice.repository.DistributorRegistrationClaimRepository;
 import ru.smirnov.demandservice.service.abstraction.auxiliary.ClaimAssignService;
 import ru.smirnov.demandservice.service.abstraction.domain.DistributorRegistrationClaimService;
+import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.dtoregistry.dto.authentication.LoginRequest;
 import ru.smirnov.dtoregistry.dto.domain.DemandStatusRequest;
 import ru.smirnov.dtoregistry.entity.auxiliary.DemandStatus;
@@ -49,7 +50,7 @@ public class DistributorRegistrationClaimServiceImplementation implements Distri
 
     @Override
     @Transactional
-    public void processDistributorClaim(Long claimId, DemandStatusRequest dto) {
+    public void processDistributorClaim(Long claimId, DemandStatusRequest dto, DataForToken tokenData) {
         DistributorRegistrationClaim claim = this.distributorRegistrationClaimRepository.findById(claimId).get();
 
         claim.setStatus(DemandStatus.valueOf(dto.getDemandStatus()));

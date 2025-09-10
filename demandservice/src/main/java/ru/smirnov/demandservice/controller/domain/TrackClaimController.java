@@ -43,6 +43,7 @@ public class TrackClaimController {
             @NotNull @Positive @PathVariable("id") Long claimId,
             @RequestBody @Valid TrackClaimRequest dto
     ) {
-        this.trackClaimService.processTrackClaim(claimId, dto);
+        DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
+        this.trackClaimService.processTrackClaim(claimId, dto, tokenData);
     }
 }

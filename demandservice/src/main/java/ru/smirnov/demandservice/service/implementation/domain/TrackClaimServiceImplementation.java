@@ -60,7 +60,7 @@ public class TrackClaimServiceImplementation implements TrackClaimService {
 
     @Override
     @Transactional
-    public void processTrackClaim(Long claimId, TrackClaimRequest dto) {
+    public void processTrackClaim(Long claimId, TrackClaimRequest dto, DataForToken tokenData) {
         TrackClaim trackClaim = this.trackClaimRepository.findById(claimId).get();
         trackClaim.setStatus(DemandStatus.valueOf(dto.getDemandStatus()));
         this.kafkaTrackProducer.sendMessage(new TrackStatusMessage(

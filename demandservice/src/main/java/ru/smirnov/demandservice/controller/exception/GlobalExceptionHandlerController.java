@@ -30,6 +30,15 @@ public class GlobalExceptionHandlerController {
     }
 
     @ExceptionHandler({
+            ForbiddenException.class
+    })
+    public ResponseEntity<ExceptionResponse> handleForbiddenExceptions(Exception ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ExceptionResponse(ex.getMessage())
+        );
+    }
+
+    @ExceptionHandler({
             ExternalServiceException.class
     })
     public ResponseEntity<ExceptionResponse> handleServerUnavailableExceptions(Exception ex) {
