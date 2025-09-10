@@ -12,6 +12,7 @@ import ru.smirnov.demandservice.service.abstraction.domain.TrackClaimService;
 import ru.smirnov.demandservice.service.abstraction.security.SecurityContextService;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;
+import ru.smirnov.dtoregistry.dto.domain.TrackClaimRequest;
 
 @RestController
 @RequestMapping("/tracks/claims")
@@ -40,9 +41,7 @@ public class TrackClaimController {
     @PreAuthorize("hasRole('ADMIN')")
     public void processTrackClaim(
             @NotNull @Positive @PathVariable("id") Long claimId,
-            @RequestBody @Valid TrackAccessLevelRequest dto
-            добавь ещё статус жалобы
-            исправь аспект, если изменишь параметры
+            @RequestBody @Valid TrackClaimRequest dto
     ) {
         this.trackClaimService.processTrackClaim(claimId, dto);
     }

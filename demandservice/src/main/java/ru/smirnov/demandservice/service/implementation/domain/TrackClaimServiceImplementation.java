@@ -12,6 +12,7 @@ import ru.smirnov.demandservice.service.abstraction.auxiliary.ClaimAssignService
 import ru.smirnov.demandservice.service.abstraction.domain.TrackClaimService;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;
+import ru.smirnov.dtoregistry.dto.domain.TrackClaimRequest;
 import ru.smirnov.dtoregistry.entity.auxiliary.DemandStatus;
 import ru.smirnov.dtoregistry.entity.auxiliary.TrackStatus;
 import ru.smirnov.dtoregistry.message.TrackStatusMessage;
@@ -59,13 +60,13 @@ public class TrackClaimServiceImplementation implements TrackClaimService {
 
     @Override
     @Transactional
-    public void processTrackClaim(Long claimId, TrackAccessLevelRequest dto) {
-         TrackClaim trackClaim = this.trackClaimRepository.findById(claimId).get();
-         trackClaim.setStatus(DemandStatus.COMPLETED);
-         this.kafkaTrackProducer.sendMessage(new TrackStatusMessage(
-                 trackClaim.getTrackId(),
-                 TrackStatus.valueOf(dto.getAccessLevel())
-         ));
+    public void processTrackClaim(Long claimId, TrackClaimRequest dto) {
+        TrackClaim trackClaim = this.trackClaimRepository.findById(claimId).get();
+        trackClaim.setStatus(DemandStatus.valueOf(dto.getDemandStatus()));
+        this.kafkaTrackProducer.sendMessage(new TrackStatusMessage(
+                trackClaim.getTrackId(),
+                TrackStatus.valueOf(dto.getAccessLevel())
+        ));
     }
 
 }
