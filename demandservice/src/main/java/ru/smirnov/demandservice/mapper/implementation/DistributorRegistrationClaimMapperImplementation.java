@@ -7,6 +7,9 @@ import ru.smirnov.demandservice.dto.DistributorRegistrationClaimRequest;
 import ru.smirnov.demandservice.entity.auxiliary.DistributorData;
 import ru.smirnov.demandservice.entity.domain.DistributorRegistrationClaim;
 import ru.smirnov.demandservice.mapper.abstraction.DistributorRegistrationClaimMapper;
+import ru.smirnov.dtoregistry.dto.authentication.LoginRequest;
+import ru.smirnov.dtoregistry.entity.auxiliary.DistributorType;
+import ru.smirnov.dtoregistry.message.DistributorRegistrationMessage;
 
 @Component
 public class DistributorRegistrationClaimMapperImplementation implements DistributorRegistrationClaimMapper {
@@ -33,4 +36,19 @@ public class DistributorRegistrationClaimMapperImplementation implements Distrib
         return claim;
     }
 
+    @Override
+    public DistributorRegistrationMessage distributorRegistrationClaimToDistributorRegistrationMessage(DistributorRegistrationClaim claim) {
+
+        LoginRequest accountData = new LoginRequest();
+        accountData.setUsername(claim.getDistributorData().getUsername());
+        accountData.setPassword(claim.getDistributorData().getPassword());
+
+        DistributorRegistrationMessage message = new DistributorRegistrationMessage();
+        message.setAccountData(accountData);
+        message.setName(claim.getDistributorData().getName());
+        message.setDescription(claim.getDistributorData().getDescription());
+        message.setDistributorType(DistributorType.valueOf(claim.getDistributorData().getDistributorType()));
+
+        return message;
+    }
 }

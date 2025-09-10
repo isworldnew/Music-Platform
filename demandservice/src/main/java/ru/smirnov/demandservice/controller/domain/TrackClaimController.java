@@ -41,6 +41,8 @@ public class TrackClaimController {
     public void processTrackClaim(
             @NotNull @Positive @PathVariable("id") Long claimId,
             @RequestBody @Valid TrackAccessLevelRequest dto
+            добавь ещё статус жалобы
+            исправь аспект, если изменишь параметры
     ) {
         this.trackClaimService.processTrackClaim(claimId, dto);
     }

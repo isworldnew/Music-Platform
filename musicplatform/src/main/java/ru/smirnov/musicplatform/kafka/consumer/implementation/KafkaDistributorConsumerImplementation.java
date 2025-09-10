@@ -26,7 +26,7 @@ public class KafkaDistributorConsumerImplementation implements KafkaDistributorC
     public void consume(String jsonMessage) {
         try {
             DistributorRegistrationMessage message = this.objectMapper.readValue(jsonMessage, DistributorRegistrationMessage.class);
-            // создать аккаунт дистрибьютору и записать бизнес-данные дистрибьютора
+            this.distributorService.distributorRegistration(message);
         }
         catch (JsonProcessingException e) {
             System.err.println("Deserialization error for message: " + jsonMessage);

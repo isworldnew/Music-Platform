@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.smirnov.demandservice.client.abstraction.TrackClient;
-import ru.smirnov.demandservice.entity.auxiliary.DemandStatus;
 import ru.smirnov.demandservice.entity.domain.TrackClaim;
 import ru.smirnov.demandservice.kafka.producer.abstraction.KafkaTrackProducer;
 import ru.smirnov.demandservice.mapper.abstraction.TrackClaimMapper;
@@ -13,6 +12,7 @@ import ru.smirnov.demandservice.service.abstraction.auxiliary.ClaimAssignService
 import ru.smirnov.demandservice.service.abstraction.domain.TrackClaimService;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;
+import ru.smirnov.dtoregistry.entity.auxiliary.DemandStatus;
 import ru.smirnov.dtoregistry.entity.auxiliary.TrackStatus;
 import ru.smirnov.dtoregistry.message.TrackStatusMessage;
 

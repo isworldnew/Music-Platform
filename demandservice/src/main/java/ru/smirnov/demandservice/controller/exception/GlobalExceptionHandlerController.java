@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.smirnov.dtoregistry.dto.authentication.ExceptionResponse;
+import ru.smirnov.dtoregistry.exception.BadRequestException;
 import ru.smirnov.dtoregistry.exception.ExternalServiceException;
 import ru.smirnov.dtoregistry.exception.NotFoundException;
 import ru.smirnov.dtoregistry.exception.SecurityContextException;
@@ -45,6 +46,15 @@ public class GlobalExceptionHandlerController {
     })
     public ResponseEntity<ExceptionResponse> handleNotFoundExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ExceptionResponse(ex.getMessage())
+        );
+    }
+
+    @ExceptionHandler({
+            BadRequestException.class
+    })
+    public ResponseEntity<ExceptionResponse> handleBadRequestExceptions(Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new ExceptionResponse(ex.getMessage())
         );
     }
