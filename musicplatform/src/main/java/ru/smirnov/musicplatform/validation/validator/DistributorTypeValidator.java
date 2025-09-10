@@ -2,24 +2,24 @@ package ru.smirnov.musicplatform.validation.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import ru.smirnov.dtoregistry.entity.auxiliary.DistributorType;import ru.smirnov.musicplatform.validation.annotation.DistributionType;
+import ru.smirnov.musicplatform.validation.annotation.DistributorType;
 
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DistributionTypeValidator implements ConstraintValidator<DistributionType, String> {
+public class DistributorTypeValidator implements ConstraintValidator<DistributorType, String> {
 
     @Override
     public boolean isValid(String distributionType, ConstraintValidatorContext constraintValidatorContext) {
-        Set<String> distributionTypes = Arrays.stream(DistributorType.values())
+        Set<String> distributorTypes = Arrays.stream(ru.smirnov.dtoregistry.entity.auxiliary.DistributorType.values())
                 .map(distributorType -> distributorType.name())
                 .collect(Collectors.toSet());
 
-        if (!distributionTypes.contains(distributionType)) {
+        if (!distributorTypes.contains(distributionType)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate(
-                    "Distribution type valid values are: " + Arrays.toString(DistributorType.values())
+                    "Distributor type valid values are: " + Arrays.toString(ru.smirnov.dtoregistry.entity.auxiliary.DistributorType.values())
             ).addConstraintViolation();
             return false;
         }

@@ -2,17 +2,17 @@ package ru.smirnov.musicplatform.validation.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import ru.smirnov.musicplatform.validation.validator.DistributionTypeValidator;
+import ru.smirnov.musicplatform.validation.validator.DistributorTypeValidator;
 
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
-@Constraint(validatedBy = DistributionTypeValidator.class)
+@Constraint(validatedBy = DistributorTypeValidator.class)
 @Documented
-public @interface DistributionType {
+public @interface DistributorType {
 
-    String message() default "Invalid distribution type";
+    String message() default "Invalid distributor type";
 
     Class<?>[] groups() default {};
 

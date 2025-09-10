@@ -2,7 +2,7 @@ package ru.smirnov.musicplatform.dto.audience.distributor;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import ru.smirnov.musicplatform.validation.annotation.DistributionType;
+import ru.smirnov.musicplatform.validation.annotation.DistributorType;
 
 @Data
 public class DistributorRequest {
@@ -12,6 +12,6 @@ public class DistributorRequest {
 
     private String description;
 
-    @NotBlank @DistributionType
+    @NotBlank @DistributorType
     private String distributorType;
 }
