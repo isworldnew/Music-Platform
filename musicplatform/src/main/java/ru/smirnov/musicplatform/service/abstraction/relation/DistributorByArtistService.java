@@ -8,5 +8,5 @@ public interface DistributorByArtistService {
 
     Long save(Long distributorId, Long artistId, DistributionStatus status);
 
-    void updateRelationBetweenDistributorAndArtist(Long distributorId, Long artistId, DistributorByArtistRelationRequest dto, DataForToken tokenData);
+    void updateRelationBetweenDistributorAndArtist(Long artistId, DistributorByArtistRelationRequest dto, DataForToken tokenData);
 }

@@ -27,15 +27,14 @@ public class DistributorByArtistController {
         this.distributorByArtistService = distributorByArtistService;
     }
 
-    @PatchMapping("/{distributorId}/{artistId}")
+    @PatchMapping("/{artistId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAnyRole('DISTRIBUTOR', 'ADMIN')")
     public void updateRelationBetweenDistributorAndArtist(
-            @NotNull @Positive @PathVariable Long distributorId,
             @NotNull @Positive @PathVariable Long artistId,
             @RequestBody @Valid DistributorByArtistRelationRequest dto
     ) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
-        this.distributorByArtistService.updateRelationBetweenDistributorAndArtist(distributorId, artistId, dto, tokenData);
+        this.distributorByArtistService.updateRelationBetweenDistributorAndArtist(artistId, dto, tokenData);
     }
 }

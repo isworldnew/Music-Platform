@@ -7,6 +7,8 @@ import ru.smirnov.musicplatform.validation.annotation.DistributionStatus;
 @Data
 public class DistributorByArtistRelationRequest {
 
+    private Long distributorId;
+
     @NotBlank @DistributionStatus
     private String distributionStatus;
 }

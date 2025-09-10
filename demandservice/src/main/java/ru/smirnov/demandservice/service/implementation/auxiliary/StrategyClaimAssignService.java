@@ -33,8 +33,6 @@ public class StrategyClaimAssignService implements ClaimAssignService {
     // глянуть статистику по всем админам среди разных видов заявок... глянуть, сколько всего админов...
     // ну и как-то выбрать
 
-    не забудь реализовать распределение
-
     @Override
     public Long assignTo() {
         return 0L;

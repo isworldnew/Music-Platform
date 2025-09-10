@@ -15,7 +15,8 @@ import ru.smirnov.musicplatform.dto.audience.user.UserDataUpdateRequest;
 import ru.smirnov.musicplatform.dto.audience.user.UserRegistrationRequest;
 import ru.smirnov.musicplatform.dto.audience.user.UserResponse;
 import ru.smirnov.musicplatform.dto.authentication.JwtResponse;
-import ru.smirnov.dtoregistry.dto.authentication.LoginRequest;import ru.smirnov.musicplatform.entity.audience.User;
+import ru.smirnov.dtoregistry.dto.authentication.LoginRequest;
+import ru.smirnov.musicplatform.entity.audience.User;
 import ru.smirnov.musicplatform.service.abstraction.audience.UserService;
 import ru.smirnov.musicplatform.service.abstraction.security.SecurityContextService;
 
