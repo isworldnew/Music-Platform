@@ -31,7 +31,7 @@ public class ChartMapperImplementation implements ChartMapper {
         dto.setDescription(chart.getDescription());
         dto.setNumberOfPlays(chart.getNumberOfPlays());
         dto.setImageReference(chart.getImageReference());
-        dto.setUploadDateTime(chart.getUploadDateTime());
+        dto.setUploadDateTime(chart.getUploadDateTime().toString());
         dto.setAccessLevel(chart.getAccessLevel().name());
         dto.setOwner(new MusicCollectionOwnerResponse(chart.getAdmin().getId(), chart.getAdmin().getAccount().getUsername() + " [PLATFORM]"));
         dto.setIsSaved(null);

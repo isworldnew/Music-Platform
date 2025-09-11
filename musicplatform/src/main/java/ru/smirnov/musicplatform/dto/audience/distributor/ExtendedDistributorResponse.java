@@ -16,7 +16,7 @@ public class ExtendedDistributorResponse {
 
     private String distributorType;
 
-    private OffsetDateTime registrationDate;
+    private String registrationDate;
 
     private List<DistributedArtistShortcutResponse> distributedArtists; // id исполнителя, имя и статус дистрибьюции
 }

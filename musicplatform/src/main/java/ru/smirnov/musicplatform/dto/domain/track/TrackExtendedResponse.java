@@ -22,7 +22,7 @@ public class TrackExtendedResponse {
 
     private Long numberOfPlays;
 
-    private OffsetDateTime uploadDateTime;
+    private String uploadDateTime;
 
     private boolean isSaved; // для пользователя
 

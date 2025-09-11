@@ -19,5 +19,5 @@ public class DistributorResponse {
 
      private String distributorType;
 
-     private OffsetDateTime registrationDate;
+     private String registrationDate;
 }

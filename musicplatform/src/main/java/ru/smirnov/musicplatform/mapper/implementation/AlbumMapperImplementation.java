@@ -52,7 +52,7 @@ public class AlbumMapperImplementation implements AlbumMapper {
         dto.setDescription(album.getDescription());
         dto.setNumberOfPlays(album.getNumberOfPlays());
         dto.setImageReference(album.getImageReference());
-        dto.setUploadDateTime(album.getUploadDateTime());
+        dto.setUploadDateTime(album.getUploadDateTime().toString());
         dto.setAccessLevel(album.getAccessLevel().name());
         dto.setOwner(new MusicCollectionOwnerResponse(album.getArtist().getId(), album.getArtist().getName()));
         dto.setIsSaved(null);

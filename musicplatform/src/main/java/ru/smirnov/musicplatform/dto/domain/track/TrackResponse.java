@@ -21,7 +21,7 @@ public class TrackResponse {
 
     private Long numberOfPlays;
 
-    private OffsetDateTime uploadDateTime;
+    private String uploadDateTime;
 
     private String status;
 

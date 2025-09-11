@@ -1,7 +1,6 @@
 package ru.smirnov.demandservice.mapper.abstraction;
 
 import ru.smirnov.demandservice.dto.TrackClaimResponse;
-import ru.smirnov.demandservice.dto.TrackClaimShortcutResponse;
 import ru.smirnov.demandservice.entity.domain.TrackClaim;
 
 public interface TrackClaimMapper {

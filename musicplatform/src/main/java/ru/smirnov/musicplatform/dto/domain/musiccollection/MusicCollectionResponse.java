@@ -19,7 +19,7 @@ public class MusicCollectionResponse {
 
     private String imageReference;
 
-    private OffsetDateTime uploadDateTime;
+    private String uploadDateTime;
 
     private String accessLevel;
 

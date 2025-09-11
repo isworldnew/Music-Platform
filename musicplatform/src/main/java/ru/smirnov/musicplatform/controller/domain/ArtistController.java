@@ -88,4 +88,5 @@ public class ArtistController {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.artistSocialNetworkService.addSocialNetwork(artistId, dto, tokenData);
     }
+
 }

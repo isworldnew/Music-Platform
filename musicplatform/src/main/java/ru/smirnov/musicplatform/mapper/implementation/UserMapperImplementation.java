@@ -19,7 +19,7 @@ public class UserMapperImplementation implements UserMapper {
         dto.setDateOfBirth(user.getDateOfBirth());
         dto.setPhonenumber(user.getData().getPhonenumber());
         dto.setEmail(user.getData().getEmail());
-        dto.setRegistrationDate(user.getRegistrationDate());
+        dto.setRegistrationDate(user.getRegistrationDate().toString());
         return dto;
     }
 }

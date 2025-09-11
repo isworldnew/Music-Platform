@@ -30,7 +30,7 @@ public class PlaylistMapperImplementation implements PlaylistMapper {
         dto.setDescription(playlist.getDescription());
         dto.setNumberOfPlays(playlist.getNumberOfPlays());
         dto.setImageReference(playlist.getImageReference());
-        dto.setUploadDateTime(playlist.getUploadDateTime());
+        dto.setUploadDateTime(playlist.getUploadDateTime().toString());
         dto.setAccessLevel(playlist.getAccessLevel().name());
         dto.setOwner(
                 new MusicCollectionOwnerResponse(

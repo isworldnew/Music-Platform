@@ -12,9 +12,9 @@ public class DistributorRegistrationClaimResponse {
 
     private Long adminId;
 
-    private OffsetDateTime creationDateTime ;
+    private String creationDateTime ;
 
-    private OffsetDateTime expirationDateTime;
+    private String expirationDateTime;
 
     private DemandStatus status;
 

@@ -1,10 +1,7 @@
 package ru.smirnov.demandservice.service.abstraction.domain;
 
-import ru.smirnov.demandservice.dto.DistributorRegistrationClaimResponse;
 import ru.smirnov.demandservice.dto.TrackClaimResponse;
-import ru.smirnov.demandservice.dto.TrackClaimShortcutResponse;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
-import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;
 import ru.smirnov.dtoregistry.dto.domain.TrackClaimRequest;
 
 import java.util.List;

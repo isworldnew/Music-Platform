@@ -18,7 +18,7 @@ public class TrackClaimResponse {
 
     private DemandStatus status;
 
-    private OffsetDateTime creationDateTime;
+    private String creationDateTime;
 
-    private OffsetDateTime expirationDateTime;
+    private String expirationDateTime;
 }

@@ -59,8 +59,8 @@ public class DistributorRegistrationClaimMapperImplementation implements Distrib
         DistributorRegistrationClaimShortcutResponse shortcut = new DistributorRegistrationClaimShortcutResponse();
         shortcut.setId(claim.getId());
         shortcut.setStatus(claim.getStatus());
-        shortcut.setCreationDateTime(claim.getCreationDateTime());
-        shortcut.setExpirationDateTime(claim.getExpirationDateTime());
+        shortcut.setCreationDateTime(claim.getCreationDateTime().toString());
+        shortcut.setExpirationDateTime(claim.getExpirationDateTime().toString());
         return shortcut;
     }
 
@@ -69,8 +69,8 @@ public class DistributorRegistrationClaimMapperImplementation implements Distrib
         DistributorRegistrationClaimResponse dto = new DistributorRegistrationClaimResponse();
         dto.setId(claim.getId());
         dto.setAdminId(claim.getAdminId());
-        dto.setCreationDateTime(claim.getCreationDateTime());
-        dto.setExpirationDateTime(claim.getExpirationDateTime());
+        dto.setCreationDateTime(claim.getCreationDateTime().toString());
+        dto.setExpirationDateTime(claim.getExpirationDateTime().toString());
         dto.setStatus(claim.getStatus());
         dto.setName(claim.getDistributorData().getName());
         dto.setDescription(claim.getDistributorData().getDescription());

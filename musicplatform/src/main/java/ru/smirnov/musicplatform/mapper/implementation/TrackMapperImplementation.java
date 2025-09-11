@@ -47,7 +47,7 @@ public class TrackMapperImplementation implements TrackMapper {
         trackResponse.setAudioReference(track.getAudiofileReference());
         trackResponse.setGenre(track.getGenre());
         trackResponse.setNumberOfPlays(track.getNumberOfPlays());
-        trackResponse.setUploadDateTime(track.getUploadDateTime());
+        trackResponse.setUploadDateTime(track.getUploadDateTime().toString());
         trackResponse.setStatus(track.getStatus().name());
         trackResponse.setArtist(artist);
 
@@ -102,7 +102,7 @@ public class TrackMapperImplementation implements TrackMapper {
         trackResponse.setAudioReference(track.getAudiofileReference());
         trackResponse.setGenre(track.getGenre());
         trackResponse.setNumberOfPlays(track.getNumberOfPlays());
-        trackResponse.setUploadDateTime(track.getUploadDateTime());
+        trackResponse.setUploadDateTime(track.getUploadDateTime().toString());
         trackResponse.setStatus(track.getStatus().name());
         trackResponse.setArtist(artist);
         trackResponse.setTags(tags);

@@ -8,14 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.smirnov.demandservice.dto.DistributorRegistrationClaimResponse;
-import ru.smirnov.demandservice.dto.DistributorRegistrationClaimShortcutResponse;
 import ru.smirnov.demandservice.dto.TrackClaimResponse;
-import ru.smirnov.demandservice.dto.TrackClaimShortcutResponse;
 import ru.smirnov.demandservice.service.abstraction.domain.TrackClaimService;
 import ru.smirnov.demandservice.service.abstraction.security.SecurityContextService;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
-import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;
 import ru.smirnov.dtoregistry.dto.domain.TrackClaimRequest;
 
 import java.util.List;

@@ -24,5 +24,5 @@ public class UserResponse {
 
     private String email;
 
-    private OffsetDateTime registrationDate;
+    private String registrationDate;
 }

@@ -33,7 +33,7 @@ public class DistributorRegistrationClaimController {
         this.distributorRegistrationClaimService = distributorRegistrationClaimService;
     }
 
-    // [v]
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Long addDistributorRegistrationClaim(@RequestBody @Valid DistributorRegistrationClaimRequest dto) {

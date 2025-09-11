@@ -26,7 +26,7 @@ public class DistributorMapperImplementation implements DistributorMapper {
         dto.setName(distributor.getName());
         dto.setDescription(distributor.getDescription());
         dto.setDistributorType(distributor.getDistributorType().name());
-        dto.setRegistrationDate(distributor.getRegistrationDate());
+        dto.setRegistrationDate(distributor.getRegistrationDate().toString());
         return dto;
     }
 
@@ -46,7 +46,7 @@ public class DistributorMapperImplementation implements DistributorMapper {
         dto.setName(distributor.getName());
         dto.setDescription(distributor.getDescription());
         dto.setDistributorType(distributor.getDistributorType().name());
-        dto.setRegistrationDate(distributor.getRegistrationDate());
+        dto.setRegistrationDate(distributor.getRegistrationDate().toString());
 
         if (distributor.getArtists() != null && !distributor.getArtists().isEmpty()) {
             List<DistributedArtistShortcutResponse> distributedArtists = new ArrayList<>();
