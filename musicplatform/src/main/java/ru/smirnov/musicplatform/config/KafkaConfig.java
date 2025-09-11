@@ -18,7 +18,7 @@ public class KafkaConfig {
     public NewTopic createAdminPostTopic() {
         return TopicBuilder.name(this.adminPostTopic)
                 .partitions(2)
-                .replicas(1)
+                .replicas(3)
                 .build();
     }
 

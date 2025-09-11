@@ -21,7 +21,7 @@ public class KafkaConfig {
     public NewTopic createTrackPatchTopic() {
         return TopicBuilder.name(this.trackPatchTopic)
                 .partitions(2)
-                .replicas(1)
+                .replicas(3)
                 .build();
     }
 
@@ -29,7 +29,7 @@ public class KafkaConfig {
     public NewTopic createDistributorPostTopic() {
         return TopicBuilder.name(this.distributorPostTopic)
                 .partitions(2)
-                .replicas(1)
+                .replicas(3)
                 .build();
     }
 
