@@ -10,9 +10,13 @@ import ru.smirnov.demandservice.repository.TrackClaimRepository;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.dtoregistry.dto.domain.TrackClaimRequest;
 import ru.smirnov.dtoregistry.entity.auxiliary.DemandStatus;
+import ru.smirnov.dtoregistry.exception.BadRequestException;
 import ru.smirnov.dtoregistry.exception.ConflictException;
 import ru.smirnov.dtoregistry.exception.ForbiddenException;
 import ru.smirnov.dtoregistry.exception.NotFoundException;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Aspect
 @Component
@@ -39,6 +43,16 @@ public class TrackClaimAspectImplementation implements TrackClaimAspect {
 
         if (claim.getStatus().equals(DemandStatus.COMPLETED))
             throw new ConflictException("Track claim (id=" + claim.getId() + ") is COMPLETED");
+
+        List<String> modifyingStatuses = Arrays.stream(DemandStatus.values())
+                .filter(demandStatus -> demandStatus.isModifying())
+                .map(demandStatus -> demandStatus.name())
+                .toList();
+
+        if (!DemandStatus.valueOf(dto.getDemandStatus()).isModifying())
+            throw new BadRequestException(
+                    "Track's claim processing accepts only modifying demand status: " + modifyingStatuses
+            );
 
     }
 
