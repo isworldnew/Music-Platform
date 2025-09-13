@@ -9,6 +9,7 @@ import ru.smirnov.demandservice.dto.DistributorRegistrationClaimShortcutResponse
 import ru.smirnov.demandservice.entity.domain.DistributorRegistrationClaim;
 import ru.smirnov.demandservice.kafka.producer.abstraction.KafkaDistributorProducer;
 import ru.smirnov.demandservice.mapper.abstraction.DistributorRegistrationClaimMapper;
+import ru.smirnov.demandservice.precondition.abstraction.DistributorClaimPreconditionService;
 import ru.smirnov.demandservice.repository.DistributorRegistrationClaimRepository;
 import ru.smirnov.demandservice.service.abstraction.auxiliary.ClaimAssignService;
 import ru.smirnov.demandservice.service.abstraction.domain.DistributorRegistrationClaimService;
@@ -22,6 +23,7 @@ import java.util.List;
 public class DistributorRegistrationClaimServiceImplementation implements DistributorRegistrationClaimService {
 
     private final DistributorRegistrationClaimRepository distributorRegistrationClaimRepository;
+    private final DistributorClaimPreconditionService distributorClaimPreconditionService;
     private final DistributorRegistrationClaimMapper distributorRegistrationClaimMapper;
     private final ClaimAssignService claimAssignService;
     private final KafkaDistributorProducer kafkaDistributorProducer;
@@ -29,11 +31,13 @@ public class DistributorRegistrationClaimServiceImplementation implements Distri
     @Autowired
     public DistributorRegistrationClaimServiceImplementation(
             DistributorRegistrationClaimRepository distributorRegistrationClaimRepository,
+            DistributorClaimPreconditionService distributorClaimPreconditionService,
             DistributorRegistrationClaimMapper distributorRegistrationClaimMapper,
             ClaimAssignService claimAssignService,
             KafkaDistributorProducer kafkaDistributorProducer
     ) {
         this.distributorRegistrationClaimRepository = distributorRegistrationClaimRepository;
+        this.distributorClaimPreconditionService = distributorClaimPreconditionService;
         this.distributorRegistrationClaimMapper = distributorRegistrationClaimMapper;
         this.claimAssignService = claimAssignService;
         this.kafkaDistributorProducer = kafkaDistributorProducer;
@@ -53,7 +57,7 @@ public class DistributorRegistrationClaimServiceImplementation implements Distri
     @Override
     @Transactional
     public void processDistributorClaim(Long claimId, DemandStatusRequest dto, DataForToken tokenData) {
-        DistributorRegistrationClaim claim = this.distributorRegistrationClaimRepository.findById(claimId).get();
+        DistributorRegistrationClaim claim = this.distributorClaimPreconditionService.processClaim(claimId, tokenData.getEntityId(), dto);
 
         claim.setStatus(DemandStatus.valueOf(dto.getDemandStatus()));
         this.distributorRegistrationClaimRepository.save(claim);
@@ -80,7 +84,7 @@ public class DistributorRegistrationClaimServiceImplementation implements Distri
     @Override
     @Transactional
     public DistributorRegistrationClaimResponse getDistributorRegistrationClaimById(Long claimId, DataForToken tokenData) {
-        DistributorRegistrationClaim claim = this.distributorRegistrationClaimRepository.findById(claimId).get();
+        DistributorRegistrationClaim claim = this.distributorClaimPreconditionService.getByidIfExistsAndBelongsToAdmin(claimId, tokenData.getEntityId());
 
         if (claim.getStatus().equals(DemandStatus.RECEIVED)) {
             claim.setStatus(DemandStatus.IN_PROGRESS);
@@ -89,4 +93,5 @@ public class DistributorRegistrationClaimServiceImplementation implements Distri
 
         return this.distributorRegistrationClaimMapper.toResponse(claim);
     }
+
 }

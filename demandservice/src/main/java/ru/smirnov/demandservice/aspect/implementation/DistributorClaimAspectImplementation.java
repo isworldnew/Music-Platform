@@ -19,8 +19,8 @@ import ru.smirnov.dtoregistry.exception.NotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
-@Aspect
-@Component
+// @Aspect
+// @Component
 public class DistributorClaimAspectImplementation implements DistributorClaimAspect {
 
     private final DistributorRegistrationClaimRepository distributorRegistrationClaimRepository;

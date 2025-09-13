@@ -8,6 +8,7 @@ import ru.smirnov.demandservice.dto.TrackClaimResponse;
 import ru.smirnov.demandservice.entity.domain.TrackClaim;
 import ru.smirnov.demandservice.kafka.producer.abstraction.KafkaTrackProducer;
 import ru.smirnov.demandservice.mapper.abstraction.TrackClaimMapper;
+import ru.smirnov.demandservice.precondition.abstraction.TrackClaimPreconditionService;
 import ru.smirnov.demandservice.repository.TrackClaimRepository;
 import ru.smirnov.demandservice.service.abstraction.auxiliary.ClaimAssignService;
 import ru.smirnov.demandservice.service.abstraction.domain.TrackClaimService;
@@ -17,12 +18,14 @@ import ru.smirnov.dtoregistry.entity.auxiliary.DemandStatus;
 import ru.smirnov.dtoregistry.entity.auxiliary.TrackStatus;
 import ru.smirnov.dtoregistry.message.TrackStatusMessage;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class TrackClaimServiceImplementation implements TrackClaimService {
 
     private final TrackClaimRepository trackClaimRepository;
+    private final TrackClaimPreconditionService trackClaimPreconditionService;
     private final TrackClaimMapper trackClaimMapper;
     private final TrackClient trackClient;
     private final ClaimAssignService claimAssignService;
@@ -31,11 +34,13 @@ public class TrackClaimServiceImplementation implements TrackClaimService {
     @Autowired
     public TrackClaimServiceImplementation(
             TrackClaimRepository trackClaimRepository,
+            TrackClaimPreconditionService trackClaimPreconditionService,
             TrackClaimMapper trackClaimMapper,
             TrackClient trackClient,
             ClaimAssignService claimAssignService, KafkaTrackProducer kafkaTrackProducer
     ) {
         this.trackClaimRepository = trackClaimRepository;
+        this.trackClaimPreconditionService = trackClaimPreconditionService;
         this.trackClaimMapper = trackClaimMapper;
         this.trackClient = trackClient;
         this.claimAssignService = claimAssignService;
@@ -63,7 +68,7 @@ public class TrackClaimServiceImplementation implements TrackClaimService {
     @Override
     @Transactional
     public void processTrackClaim(Long claimId, TrackClaimRequest dto, DataForToken tokenData) {
-        TrackClaim trackClaim = this.trackClaimRepository.findById(claimId).get();
+        TrackClaim trackClaim = this.trackClaimPreconditionService.processClaim(claimId, tokenData.getEntityId(), dto);
         trackClaim.setStatus(DemandStatus.valueOf(dto.getDemandStatus()));
 
         if (DemandStatus.valueOf(dto.getDemandStatus()).equals(DemandStatus.COMPLETED)) {
@@ -77,10 +82,26 @@ public class TrackClaimServiceImplementation implements TrackClaimService {
 
     @Override
     public List<TrackClaimResponse> getTrackClaims(Boolean relevantOnly, DataForToken tokenData) {
+
+        List<DemandStatus> statuses = Arrays.stream(DemandStatus.values()).toList();
+
         List<TrackClaim> claims;
 
-        if (relevantOnly) claims = this.trackClaimRepository.findAllRelevantByAdminId(tokenData.getEntityId());
-        else claims = this.trackClaimRepository.findAllRelevantByAdminId(tokenData.getEntityId());
+        if (relevantOnly) claims = this.trackClaimRepository.findAllByAdminIdAndRelevance(
+                tokenData.getEntityId(),
+                statuses.stream()
+                        .filter(status -> !status.isModifying())
+                        .map(status -> status.name())
+                        .toList()
+        );
+
+        else claims = this.trackClaimRepository.findAllByAdminIdAndRelevance(
+                tokenData.getEntityId(),
+                statuses.stream()
+                        .filter(status -> status.isModifying())
+                        .map(status -> status.name())
+                        .toList()
+        );
 
         return claims.stream()
                 .map(claim -> this.trackClaimMapper.toResponse(claim))
@@ -90,7 +111,7 @@ public class TrackClaimServiceImplementation implements TrackClaimService {
     @Override
     @Transactional
     public TrackClaimResponse getTrackClaimById(Long claimId, DataForToken tokenData) {
-        TrackClaim claim = this.trackClaimRepository.findById(claimId).get();
+        TrackClaim claim = this.trackClaimPreconditionService.getByIdIfExistsAndBelongsToAdmin(claimId, tokenData.getEntityId());
 
         if (claim.getStatus().equals(DemandStatus.RECEIVED)) {
             claim.setStatus(DemandStatus.IN_PROGRESS);

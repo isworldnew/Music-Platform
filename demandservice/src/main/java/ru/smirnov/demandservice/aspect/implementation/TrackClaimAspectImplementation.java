@@ -18,8 +18,8 @@ import ru.smirnov.dtoregistry.exception.NotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
-@Aspect
-@Component
+// @Aspect
+// @Component
 public class TrackClaimAspectImplementation implements TrackClaimAspect {
 
     private final TrackClaimRepository trackClaimRepository;

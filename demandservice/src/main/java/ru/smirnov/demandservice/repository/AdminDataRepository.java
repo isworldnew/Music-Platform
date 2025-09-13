@@ -33,7 +33,7 @@ public interface AdminDataRepository extends JpaRepository<AdminData, Long> {
                         WHERE track_claims.status IN ('RECEIVED', 'IN_PROGRESS')
                         GROUP BY track_claims.admin_id
                     ) AS merged_stats
-                    GROUP BY admin_id;             
+                    GROUP BY admin_id;
                     """,
             nativeQuery = true
     )
