@@ -1,6 +1,8 @@
 package ru.smirnov.musicplatform.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.minio.messages.JsonType;
 import lombok.Getter;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;

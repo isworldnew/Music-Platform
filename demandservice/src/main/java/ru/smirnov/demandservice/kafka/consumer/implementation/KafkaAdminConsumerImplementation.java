@@ -7,7 +7,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.smirnov.demandservice.kafka.consumer.abstraction.KafkaAdminConsumer;
 import ru.smirnov.demandservice.service.abstraction.domain.AdminDataService;
-import ru.smirnov.dtoregistry.message.AdminDataMessage;
+import ru.smirnov.demandservice.kafka.consumer.implementation.AdminDataMessage;
 
 @Service
 public class KafkaAdminConsumerImplementation implements KafkaAdminConsumer {
