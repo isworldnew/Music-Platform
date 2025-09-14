@@ -46,8 +46,8 @@ public class TrackClaimPreconditionServiceImplementation implements TrackClaimPr
     public TrackClaim processClaim(Long claimId, Long adminId, TrackClaimRequest dto) {
         TrackClaim claim = this.getByIdIfExistsAndBelongsToAdmin(claimId, adminId);
 
-        if (claim.getStatus().equals(DemandStatus.COMPLETED))
-            throw new ConflictException("Track claim (id=" + claim.getId() + ") is COMPLETED");
+        if (claim.getStatus().isModifying())
+            throw new ConflictException("Track claim (id=" + claim.getId() + ") is COMPLETED or DENIED");
 
         List<String> modifyingStatuses = Arrays.stream(DemandStatus.values())
                 .filter(demandStatus -> demandStatus.isModifying())

@@ -71,7 +71,7 @@ public class TrackClaimServiceImplementation implements TrackClaimService {
         TrackClaim trackClaim = this.trackClaimPreconditionService.processClaim(claimId, tokenData.getEntityId(), dto);
         trackClaim.setStatus(DemandStatus.valueOf(dto.getDemandStatus()));
 
-        if (DemandStatus.valueOf(dto.getDemandStatus()).equals(DemandStatus.COMPLETED)) {
+        if (DemandStatus.valueOf(dto.getDemandStatus()).isModifying()) {
             this.kafkaTrackProducer.sendMessage(new TrackStatusMessage(
                     trackClaim.getTrackId(),
                     TrackStatus.valueOf(dto.getAccessLevel())

@@ -13,6 +13,7 @@ import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 import ru.smirnov.musicplatform.projection.implementation.TrackShortcutProjectionImplementation;
 import ru.smirnov.musicplatform.repository.domain.finder.TrackFinderRepository;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -193,7 +194,7 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
     public List<TrackShortcutProjection> searchTracksByTagsCombination(Set<Long> tagsId) {
 
         CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<TaggedTracks> query = criteriaBuilder.createQuery(TaggedTracks.class);
+        CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
 
         Root<TaggedTracks> taggedTracks = query.from(TaggedTracks.class);
 
@@ -210,9 +211,7 @@ public class TrackFinderRepositoryImplementation implements TrackFinderRepositor
 
         query.select(taggedTracks.get("track").get("id")).where(recordsRelatedWithTagPredicate);
 
-        Set<Long> tracksId = this.entityManager.createQuery(query).getResultList().stream()
-                .map(taggedTrack -> taggedTrack.getTrack().getId())
-                .collect(Collectors.toSet());
+        Set<Long> tracksId = new HashSet<>(this.entityManager.createQuery(query).getResultList());
 
         return this.findShortcutsById(tracksId);
     }

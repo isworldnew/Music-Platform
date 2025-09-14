@@ -46,8 +46,8 @@ public class DistributorClaimPreconditionServiceImplementation implements Distri
     public DistributorRegistrationClaim processClaim(Long claimId, Long adminId, DemandStatusRequest dto) {
         DistributorRegistrationClaim claim = this.getByidIfExistsAndBelongsToAdmin(claimId, adminId);
 
-        if (claim.getStatus().equals(DemandStatus.COMPLETED))
-            throw new ConflictException("Claim (id=" + claimId + ") is COMPLETED");
+        if (claim.getStatus().isModifying())
+            throw new ConflictException("Claim (id=" + claimId + ") is COMPLETED or DENIED");
 
         List<String> modifyingStatuses = Arrays.stream(DemandStatus.values())
                 .filter(demandStatus -> demandStatus.isModifying())

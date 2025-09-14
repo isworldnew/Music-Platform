@@ -24,8 +24,8 @@ public abstract class MusicCollection {
     @Column(name = "image_reference", columnDefinition = "TEXT")
     private String imageReference;
 
-    @Column(name = "upload_date_time", columnDefinition = "TIMESTAMPTZ", nullable = false)
-    private OffsetDateTime uploadDateTime;
+    @Column(name = "upload_date_time", columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP", nullable = false)
+    private OffsetDateTime uploadDateTime = OffsetDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "access_level", columnDefinition = "VARCHAR(255) DEFAULT 'PRIVATE'", nullable = false)

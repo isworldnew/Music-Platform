@@ -12,6 +12,7 @@ import ru.smirnov.musicplatform.entity.domain.Track;
 import ru.smirnov.musicplatform.entity.relation.SavedTracks;
 import ru.smirnov.musicplatform.exception.ForbiddenException;
 import ru.smirnov.musicplatform.finder.abstraction.TrackFinderService;
+import ru.smirnov.musicplatform.mapper.abstraction.TagMapper;
 import ru.smirnov.musicplatform.mapper.abstraction.TrackMapper;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.TagPreconditionService;
 import ru.smirnov.musicplatform.precondition.abstraction.domain.TrackPreconditionService;
@@ -34,7 +35,7 @@ public class TrackFinderServiceImplementation implements TrackFinderService {
     private final TrackPreconditionService trackPreconditionService;
     private final TagPreconditionService tagPreconditionService;
     private final DistributorByArtistPreconditionService distributorByArtistPreconditionService;
-    private final TagService tagService;
+    private final TagMapper tagMapper;
     private final SavedTrackRepository savedTrackRepository;
 
     @Autowired
@@ -44,7 +45,7 @@ public class TrackFinderServiceImplementation implements TrackFinderService {
             TrackPreconditionService trackPreconditionService,
             TagPreconditionService tagPreconditionService,
             DistributorByArtistPreconditionService distributorByArtistPreconditionService,
-            TagService tagService,
+            TagMapper tagMapper,
             SavedTrackRepository savedTrackRepository
     ) {
         this.trackFinderRepository = trackFinderRepository;
@@ -52,7 +53,7 @@ public class TrackFinderServiceImplementation implements TrackFinderService {
         this.trackPreconditionService = trackPreconditionService;
         this.tagPreconditionService = tagPreconditionService;
         this.distributorByArtistPreconditionService = distributorByArtistPreconditionService;
-        this.tagService = tagService;
+        this.tagMapper = tagMapper;
         this.savedTrackRepository = savedTrackRepository;
     }
 
@@ -125,8 +126,8 @@ public class TrackFinderServiceImplementation implements TrackFinderService {
     @Override
     public TrackExtendedResponse getTrackExtendedData(Long trackId, DataForToken tokenData) {
         // для USER
-        Track track = this.trackPreconditionService.getByIdIfExists(trackId);
-        List<TagResponse> tags = this.tagService.getAllUserTags(tokenData);
+        Track track = this.trackPreconditionService.getIfExistsAndPublic(trackId);
+        List<TagResponse> tags = track.getTags().stream().map(tag -> this.tagMapper.tagEntityToTagResponse(tag.getTag())).toList();
 
         SavedTracks savedTrack = this.savedTrackRepository.findByTrackIdAndUserId(trackId, tokenData.getEntityId()).orElse(null);
 

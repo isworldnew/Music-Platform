@@ -33,7 +33,7 @@ public class TagPreconditionServiceImplementation implements TagPreconditionServ
     public Tag getByIdIfExistsAndBelongsToUser(Long tagId, Long userId) {
         Tag tag = this.getByIdIfExists(tagId);
 
-        if (!tag.getId().equals(userId))
+        if (!tag.getUser().getId().equals(userId))
             throw new ForbiddenException("Tag (id=" + tagId + ") doesn't belong to user (id=" + userId + ")");
 
         return tag;

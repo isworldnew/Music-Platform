@@ -57,6 +57,6 @@ public class TrackByPlaylistServiceImplementation implements TrackByPlaylistServ
     public void removeTrack(Long playlistId, Long trackId, DataForToken tokenData) {
         Playlist playlist = this.playlistPreconditionService.existsAndBelongToUser(playlistId, tokenData.getEntityId());
         Track track = this.trackPreconditionService.getByIdIfExists(trackId);
-        this.trackByPlaylistRepository.save(playlistId, trackId);
+        this.trackByPlaylistRepository.delete(playlistId, trackId);
     }
 }

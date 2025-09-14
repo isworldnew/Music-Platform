@@ -82,7 +82,7 @@ public class PlaylistFinderServiceImplementation implements PlaylistFinderServic
         Playlist playlist = this.playlistPreconditionService.getByIdIfExists(playlistId);
         List<TrackShortcutProjection> tracks;
 
-        if (tokenData.getRole().equals(Role.USER.name())) {
+        if (tokenData.getRole()!= null && tokenData.getRole().equals(Role.USER.name())) {
 
             if (!playlist.getUser().getId().equals(tokenData.getEntityId()) && !playlist.getAccessLevel().isAvailable())
                 throw new ForbiddenException("Playlist (id=" + playlistId + ") is not PUBLIC");
@@ -96,7 +96,7 @@ public class PlaylistFinderServiceImplementation implements PlaylistFinderServic
             return this.playlistMapper.playlistEntityToMusicCollectionResponse(playlist, tracks);
         }
 
-        if (playlist.getAccessLevel().isAvailable())
+        if (!playlist.getAccessLevel().isAvailable())
             throw new ForbiddenException("Playlist (id=" + playlistId + ") is not PUBLIC");
 
         playlist.setNumberOfPlays(playlist.getNumberOfPlays() + 1);

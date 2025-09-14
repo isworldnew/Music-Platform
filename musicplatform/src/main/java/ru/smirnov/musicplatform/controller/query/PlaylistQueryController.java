@@ -73,7 +73,7 @@ public class PlaylistQueryController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('USER', 'ANONYMOUS')")
+    @PreAuthorize("hasAnyRole('USER', 'ANONYMOUS')")
     public MusicCollectionResponse getPlaylistById(@NotNull @Positive @PathVariable("id") Long playlistId) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.playlistFinderService.getPlaylistById(playlistId, tokenData);

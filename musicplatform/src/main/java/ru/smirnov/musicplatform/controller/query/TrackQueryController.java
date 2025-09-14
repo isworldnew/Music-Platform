@@ -65,7 +65,7 @@ public class TrackQueryController {
     @GetMapping("/search/tagged-with")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('USER')")
-    public List<TrackShortcutProjection> searchTracksByTagsCombination(@NotNull @NotEmpty @RequestParam("tags") Set<Long> tagsId) {
+    public List<TrackShortcutProjection> searchTracksByTagsCombination(@NotNull @NotEmpty @RequestParam(value = "tags", required = true) Set<Long> tagsId) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.trackFinderService.searchTracksByTagsCombination(tokenData.getEntityId(), tagsId);
     }

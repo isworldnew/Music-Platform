@@ -19,6 +19,7 @@ public class PlaylistMapperImplementation implements PlaylistMapper {
         Playlist playlist = new Playlist();
         playlist.setName(dto.getName());
         playlist.setDescription(dto.getDescription());
+        playlist.setUser(user);
         return playlist;
     }
 

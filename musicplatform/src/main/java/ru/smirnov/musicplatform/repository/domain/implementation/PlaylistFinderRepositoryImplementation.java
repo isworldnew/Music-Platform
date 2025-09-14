@@ -42,7 +42,6 @@ public class PlaylistFinderRepositoryImplementation implements PlaylistFinderRep
         CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
 
         Root<Playlist> playlist = query.from(Playlist.class);
-        Join<Playlist, Artist> artistJoin = playlist.join("artist", JoinType.INNER);
         Join<Playlist, User> userJoin = playlist.join("user", JoinType.INNER);
 
         query.select(criteriaBuilder.construct(
@@ -65,10 +64,6 @@ public class PlaylistFinderRepositoryImplementation implements PlaylistFinderRep
                 criteriaBuilder.like(
                         criteriaBuilder.lower(playlist.get("name")),
                         "%" + searchRequest + "%"
-                ),
-                criteriaBuilder.like(
-                        criteriaBuilder.lower(artistJoin.get("name")),
-                        "%" + searchRequest + "%"
                 )
         );
 
@@ -85,7 +80,6 @@ public class PlaylistFinderRepositoryImplementation implements PlaylistFinderRep
         CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
 
         Root<Playlist> playlist = query.from(Playlist.class);
-        Join<Playlist, Artist> artistJoin = playlist.join("artist", JoinType.INNER);
         Join<Playlist, User> userJoin = playlist.join("user", JoinType.INNER);
         Join<Playlist, SavedPlaylists> savedPlaylistsJoin = playlist.join("savedBy", JoinType.LEFT);
 
@@ -118,10 +112,6 @@ public class PlaylistFinderRepositoryImplementation implements PlaylistFinderRep
                 criteriaBuilder.like(
                         criteriaBuilder.lower(playlist.get("name")),
                         "%" + searchRequest + "%"
-                ),
-                criteriaBuilder.like(
-                        criteriaBuilder.lower(artistJoin.get("name")),
-                        "%" + searchRequest + "%"
                 )
         );
 
@@ -141,7 +131,6 @@ public class PlaylistFinderRepositoryImplementation implements PlaylistFinderRep
         CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
 
         Root<Playlist> playlist = query.from(Playlist.class);
-        Join<Playlist, Artist> artistJoin = playlist.join("artist", JoinType.INNER);
         Join<Playlist, User> userJoin = playlist.join("user", JoinType.INNER);
         Join<Playlist, SavedPlaylists> savedPlaylistsJoin = playlist.join("savedBy", JoinType.INNER);
 
@@ -164,10 +153,6 @@ public class PlaylistFinderRepositoryImplementation implements PlaylistFinderRep
         Predicate namePredicate = criteriaBuilder.or(
                 criteriaBuilder.like(
                         criteriaBuilder.lower(playlist.get("name")),
-                        "%" + searchRequest + "%"
-                ),
-                criteriaBuilder.like(
-                        criteriaBuilder.lower(artistJoin.get("name")),
                         "%" + searchRequest + "%"
                 )
         );

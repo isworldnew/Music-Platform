@@ -71,6 +71,7 @@ public class AdminServiceImplementation implements AdminService {
         Admin admin = this.adminPreconditionService.getByIdIfExists(tokenData.getEntityId());
 
 //        admin.set();
+        // TODO: обнови информацию о бизнес-данных
 
         this.adminRepository.save(admin);
     }

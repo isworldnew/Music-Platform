@@ -41,7 +41,6 @@ public class ChartFinderRepositoryImplementation implements ChartFinderRepositor
         CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
 
         Root<Chart> chart = query.from(Chart.class);
-        Join<Chart, Artist> artistJoin = chart.join("artist", JoinType.INNER);
         Join<Chart, Admin> adminJoin = chart.join("admin", JoinType.INNER);
 
         query.select(criteriaBuilder.construct(
@@ -64,10 +63,6 @@ public class ChartFinderRepositoryImplementation implements ChartFinderRepositor
                 criteriaBuilder.like(
                         criteriaBuilder.lower(chart.get("name")),
                         "%" + searchRequest + "%"
-                ),
-                criteriaBuilder.like(
-                        criteriaBuilder.lower(artistJoin.get("name")),
-                        "%" + searchRequest + "%"
                 )
         );
 
@@ -84,7 +79,6 @@ public class ChartFinderRepositoryImplementation implements ChartFinderRepositor
         CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
 
         Root<Chart> chart = query.from(Chart.class);
-        Join<Chart, Artist> artistJoin = chart.join("artist", JoinType.INNER);
         Join<Chart, Admin> adminJoin = chart.join("admin", JoinType.INNER);
         Join<Chart, SavedCharts> savedChartsJoin = chart.join("savedBy", JoinType.LEFT);
 
@@ -117,10 +111,6 @@ public class ChartFinderRepositoryImplementation implements ChartFinderRepositor
                 criteriaBuilder.like(
                         criteriaBuilder.lower(chart.get("name")),
                         "%" + searchRequest + "%"
-                ),
-                criteriaBuilder.like(
-                        criteriaBuilder.lower(artistJoin.get("name")),
-                        "%" + searchRequest + "%"
                 )
         );
 
@@ -140,7 +130,6 @@ public class ChartFinderRepositoryImplementation implements ChartFinderRepositor
         CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
 
         Root<Chart> chart = query.from(Chart.class);
-        Join<Chart, Artist> artistJoin = chart.join("artist", JoinType.INNER);
         Join<Chart, Admin> adminJoin = chart.join("admin", JoinType.INNER);
         Join<Chart, SavedCharts> savedChartsJoin = chart.join("savedBy", JoinType.LEFT);
 
@@ -163,10 +152,6 @@ public class ChartFinderRepositoryImplementation implements ChartFinderRepositor
         Predicate namePredicate = criteriaBuilder.or(
                 criteriaBuilder.like(
                         criteriaBuilder.lower(chart.get("name")),
-                        "%" + searchRequest + "%"
-                ),
-                criteriaBuilder.like(
-                        criteriaBuilder.lower(artistJoin.get("name")),
                         "%" + searchRequest + "%"
                 )
         );
@@ -251,7 +236,6 @@ public class ChartFinderRepositoryImplementation implements ChartFinderRepositor
         CriteriaQuery<MusicCollectionShortcutProjection> query = criteriaBuilder.createQuery(MusicCollectionShortcutProjection.class);
 
         Root<Chart> chart = query.from(Chart.class);
-        Join<Chart, Artist> artistJoin = chart.join("artist", JoinType.INNER);
         Join<Chart, Admin> adminJoin = chart.join("admin", JoinType.INNER);
 
         query.select(criteriaBuilder.construct(
@@ -268,10 +252,6 @@ public class ChartFinderRepositoryImplementation implements ChartFinderRepositor
         Predicate namePredicate = criteriaBuilder.or(
                 criteriaBuilder.like(
                         criteriaBuilder.lower(chart.get("name")),
-                        "%" + searchRequest + "%"
-                ),
-                criteriaBuilder.like(
-                        criteriaBuilder.lower(artistJoin.get("name")),
                         "%" + searchRequest + "%"
                 )
         );

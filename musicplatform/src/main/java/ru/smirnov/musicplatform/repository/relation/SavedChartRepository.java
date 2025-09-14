@@ -1,6 +1,7 @@
 package ru.smirnov.musicplatform.repository.relation;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -26,6 +27,7 @@ public interface SavedChartRepository extends JpaRepository<SavedCharts, Long> {
                     """,
             nativeQuery = true
     )
+    @Modifying
     void delete(@Param("userId") Long userId, @Param("chartId") Long chartId);
 
 }

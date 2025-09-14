@@ -14,7 +14,7 @@ public class AdminMapperImplementation implements AdminMapper {
     @Override
     public AdminResponse adminEntityToAdminResponse(Admin admin) {
         AdminResponse dto = new AdminResponse();
-
+        // TODO: включи информацию о связях с исполнителями
         return dto;
     }
 

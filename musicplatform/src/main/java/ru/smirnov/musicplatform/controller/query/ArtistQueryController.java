@@ -62,7 +62,7 @@ public class ArtistQueryController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('USER', 'ANONYMOUS')")
+    @PreAuthorize("hasAnyRole('USER', 'ANONYMOUS')")
     public ArtistResponse getArtistData(@NotNull @Positive @PathVariable("id") Long artistId) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.artistFinderService.getArtistData(artistId, tokenData);
@@ -70,7 +70,7 @@ public class ArtistQueryController {
 
     @GetMapping("/{id}/extended")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN', 'ANONYMOUS')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DISTRIBUTOR')")
     public ArtistExtendedResponse getArtistExtendedData(@NotNull @Positive @PathVariable("id") Long artistId) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.artistFinderService.getArtistExtendedData(artistId, tokenData);

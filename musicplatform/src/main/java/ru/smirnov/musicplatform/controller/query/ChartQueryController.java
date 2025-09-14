@@ -74,13 +74,13 @@ public class ChartQueryController {
     @GetMapping("/search/admin-rights")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
-    public List<MusicCollectionShortcutProjection> searchChartsGloballyAdmin(String searchRequest) {
+    public List<MusicCollectionShortcutProjection> searchChartsGloballyAdmin(@RequestParam(required = true) @NotBlank String searchRequest) {
         return this.chartFinderService.searchChartsGloballyAdmin(searchRequest);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN', 'USER', 'ANONYMOUS')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'ANONYMOUS')")
     public MusicCollectionResponse getChartById(@NotNull @Positive @PathVariable("id") Long chartId) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.chartFinderService.getChartById(chartId, tokenData);
