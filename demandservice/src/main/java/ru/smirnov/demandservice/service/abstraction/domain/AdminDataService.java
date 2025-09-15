@@ -1,6 +1,6 @@
 package ru.smirnov.demandservice.service.abstraction.domain;
 
-import ru.smirnov.demandservice.kafka.consumer.implementation.AdminDataMessage;
+import ru.smirnov.demandservice.message.AdminDataMessage;
 
 public interface AdminDataService {
     Long saveAdminData(AdminDataMessage message);

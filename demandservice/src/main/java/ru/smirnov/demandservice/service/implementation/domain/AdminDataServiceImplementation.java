@@ -7,7 +7,7 @@ import ru.smirnov.demandservice.entity.domain.AdminData;
 import ru.smirnov.demandservice.mapper.abstraction.AdminDataMapper;
 import ru.smirnov.demandservice.repository.AdminDataRepository;
 import ru.smirnov.demandservice.service.abstraction.domain.AdminDataService;
-import ru.smirnov.demandservice.kafka.consumer.implementation.AdminDataMessage;
+import ru.smirnov.demandservice.message.AdminDataMessage;
 @Service
 public class AdminDataServiceImplementation implements AdminDataService {
 

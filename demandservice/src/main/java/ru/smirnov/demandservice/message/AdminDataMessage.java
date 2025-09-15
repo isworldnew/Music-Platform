@@ -1,4 +1,4 @@
-package ru.smirnov.demandservice.kafka.consumer.implementation;
+package ru.smirnov.demandservice.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

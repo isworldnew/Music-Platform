@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.smirnov.dtoregistry.message.TrackStatusMessage;
-import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;import ru.smirnov.musicplatform.kafka.consumer.abstraction.KafkaTrackConsumer;
+import ru.smirnov.musicplatform.kafka.consumer.abstraction.KafkaTrackConsumer;
 import ru.smirnov.musicplatform.service.abstraction.domain.TrackService;
 
 @Service
