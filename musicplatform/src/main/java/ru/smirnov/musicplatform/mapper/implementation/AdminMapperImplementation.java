@@ -14,7 +14,12 @@ public class AdminMapperImplementation implements AdminMapper {
     @Override
     public AdminResponse adminEntityToAdminResponse(Admin admin) {
         AdminResponse dto = new AdminResponse();
-        // TODO: включи информацию о связях с исполнителями
+        dto.setId(admin.getId());
+        dto.setUsername(admin.getAccount().getUsername());
+        dto.setLastname(admin.getData().getLastname());
+        dto.setFirstname(admin.getData().getFirstname());
+        dto.setPhonenumber(admin.getData().getPhonenumber());
+        dto.setEmail(admin.getData().getEmail());
         return dto;
     }
 

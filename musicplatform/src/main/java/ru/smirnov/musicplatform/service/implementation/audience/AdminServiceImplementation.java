@@ -11,7 +11,9 @@ import ru.smirnov.musicplatform.dto.audience.admin.AdminRequest;
 import ru.smirnov.musicplatform.dto.audience.admin.AdminResponse;
 import ru.smirnov.musicplatform.entity.audience.Account;
 import ru.smirnov.musicplatform.entity.audience.Admin;
-import ru.smirnov.dtoregistry.entity.auxiliary.AccountStatus;import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
+import ru.smirnov.dtoregistry.entity.auxiliary.AccountStatus;
+import ru.smirnov.musicplatform.entity.auxiliary.embedding.CommonPersonData;
+import ru.smirnov.musicplatform.entity.auxiliary.enums.Role;
 import ru.smirnov.musicplatform.kafka.producer.abstraction.KafkaAdminProducer;
 import ru.smirnov.musicplatform.mapper.abstraction.AdminMapper;
 import ru.smirnov.musicplatform.precondition.abstraction.audience.AdminPreconditionService;
@@ -70,8 +72,12 @@ public class AdminServiceImplementation implements AdminService {
     public void updateAdminData(AdminRequest dto, DataForToken tokenData) {
         Admin admin = this.adminPreconditionService.getByIdIfExists(tokenData.getEntityId());
 
-//        admin.set();
-        // TODO: обнови информацию о бизнес-данных
+        CommonPersonData data = new CommonPersonData();
+        data.setLastname(dto.getLastname());
+        data.setFirstname(dto.getFirstname());
+        data.setPhonenumber(dto.getPhonenumber());
+        data.setEmail(dto.getEmail());
+        admin.setData(data);
 
         this.adminRepository.save(admin);
     }
