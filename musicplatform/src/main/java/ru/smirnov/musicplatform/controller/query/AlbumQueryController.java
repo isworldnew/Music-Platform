@@ -65,7 +65,7 @@ public class AlbumQueryController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('DISTRIBUTOR', 'USER', 'ANONYMOUS')")
+    @PreAuthorize("hasAnyRole('DISTRIBUTOR', 'USER', 'ANONYMOUS')")
     public MusicCollectionResponse getAlbumById(@NotNull @Positive @PathVariable("id") Long albumId) {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.albumFinderService.getAlbumById(albumId, tokenData);

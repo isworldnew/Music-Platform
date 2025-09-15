@@ -108,7 +108,7 @@ public class TrackFileManagementServiceImplementation implements TrackFileManage
         if (track.getStatus().isAvailable())
             throw new ForbiddenException("Track (id=" + trackId + ") is PUBLIC: audiofile update is not allowed");
 
-        boolean referenceExists = (track.getImageReference() != null);
+        boolean referenceExists = (track.getAudiofileReference() != null);
         boolean audioAttached = (dto.getAudioFile() != null && !dto.getAudioFile().isEmpty());
 
         if (!referenceExists && audioAttached) {

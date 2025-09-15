@@ -7,6 +7,7 @@ import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionRespon
 import ru.smirnov.musicplatform.dto.domain.musiccollection.MusicCollectionShortcutResponse;
 import ru.smirnov.musicplatform.entity.audience.User;
 import ru.smirnov.musicplatform.entity.domain.Album;
+import ru.smirnov.musicplatform.entity.domain.Artist;
 import ru.smirnov.musicplatform.mapper.abstraction.AlbumMapper;
 import ru.smirnov.musicplatform.projection.abstraction.TrackShortcutProjection;
 
@@ -17,8 +18,9 @@ import java.util.Map;
 public class AlbumMapperImplementation implements AlbumMapper {
 
     @Override
-    public Album musicCollectionRequestToAlbumEntity(MusicCollectionRequest dto) {
+    public Album musicCollectionRequestToAlbumEntity(MusicCollectionRequest dto, Artist artist) {
         Album album = new Album();
+        album.setArtist(artist);
         album.setName(dto.getName());
         album.setDescription(dto.getDescription());
         return album;

@@ -51,10 +51,11 @@ public class AlbumServiceImplementation implements AlbumService {
         [v] У данного исполнителя ещё нет альбомов с таким названием
         */
         Artist artist = this.artistPreconditionService.getByIdIfExists(artistId);
+        this.albumPreconditionService.existsByNameAndArtistId(dto.getName(), artist.getId());
         this.distributorByArtistPreconditionService.checkActiveRelationBetweenDistributorAndArtistExistence(tokenData.getEntityId(), artistId);
         this.albumPreconditionService.existsByNameAndArtistId(dto.getName(), artistId);
 
-        Album album = this.albumMapper.musicCollectionRequestToAlbumEntity(dto);
+        Album album = this.albumMapper.musicCollectionRequestToAlbumEntity(dto, artist);
         this.albumRepository.save(album);
 
         return album.getId();
