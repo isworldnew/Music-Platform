@@ -15,23 +15,10 @@ public interface DistributorRegistrationClaimRepository extends JpaRepository<Di
             value = """
                     SELECT * FROM distributor_registration_claims
                     WHERE distributor_registration_claims.admin_id = :adminId
-                    AND distributor_registration_claims.status IN ('RECEIVED', 'IN_PROGRESS')
+                    AND distributor_registration_claims.status IN (:statuses)
                     ORDER BY distributor_registration_claims.creation_date DESC;
                     """,
             nativeQuery = true
     )
-    List<DistributorRegistrationClaim> findAllRelevantByAdminId(@Param("adminId") Long adminId);
-
-    @Query(
-            value = """
-                    SELECT * FROM distributor_registration_claims
-                    WHERE distributor_registration_claims.admin_id = :adminId
-                    AND distributor_registration_claims.status IN ('COMPLETED', 'DENIED')
-                    ORDER BY distributor_registration_claims.creation_date DESC;
-                    """,
-            nativeQuery = true
-    )
-    List<DistributorRegistrationClaim> findAllIrrelevantByAdminId(@Param("adminId") Long adminId);
-
-
+    List<DistributorRegistrationClaim> findAllByAdminIdAndRelevance(@Param("adminId") Long adminId, @Param("statuses") List<String> statuses);
 }

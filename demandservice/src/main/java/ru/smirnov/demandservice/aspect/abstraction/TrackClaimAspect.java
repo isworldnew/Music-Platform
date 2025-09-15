@@ -1,7 +1,6 @@
 package ru.smirnov.demandservice.aspect.abstraction;
 
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
-import ru.smirnov.dtoregistry.dto.domain.TrackAccessLevelRequest;
 import ru.smirnov.dtoregistry.dto.domain.TrackClaimRequest;
 
 public interface TrackClaimAspect {

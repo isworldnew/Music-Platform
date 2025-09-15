@@ -64,4 +64,5 @@ public class TrackClaimController {
         DataForToken tokenData = this.securityContextService.safelyExtractTokenDataFromSecurityContext();
         return this.trackClaimService.getTrackClaimById(claimId, tokenData);
     }
+
 }

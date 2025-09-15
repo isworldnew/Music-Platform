@@ -17,6 +17,7 @@ import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.dtoregistry.dto.domain.DemandStatusRequest;
 import ru.smirnov.dtoregistry.entity.auxiliary.DemandStatus;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -73,8 +74,23 @@ public class DistributorRegistrationClaimServiceImplementation implements Distri
     public List<DistributorRegistrationClaimShortcutResponse> getDistributorRegistrationClaims(Boolean relevantOnly, DataForToken tokenData) {
         List<DistributorRegistrationClaim> claims;
 
-        if (relevantOnly) claims = this.distributorRegistrationClaimRepository.findAllRelevantByAdminId(tokenData.getEntityId());
-        else claims = this.distributorRegistrationClaimRepository.findAllIrrelevantByAdminId(tokenData.getEntityId());
+        List<DemandStatus> statuses = Arrays.stream(DemandStatus.values()).toList();
+
+        if (relevantOnly) claims = this.distributorRegistrationClaimRepository.findAllByAdminIdAndRelevance(
+                tokenData.getEntityId(),
+                statuses.stream()
+                        .filter(status -> !status.isModifying())
+                        .map(status -> status.name())
+                        .toList()
+        );
+
+        else claims = this.distributorRegistrationClaimRepository.findAllByAdminIdAndRelevance(
+                tokenData.getEntityId(),
+                statuses.stream()
+                        .filter(status -> status.isModifying())
+                        .map(status -> status.name())
+                        .toList()
+        );
 
         return claims.stream()
                 .map(claim -> this.distributorRegistrationClaimMapper.toShortcut(claim))

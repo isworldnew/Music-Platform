@@ -16,14 +16,4 @@ public enum AccountStatus {
 
     public abstract boolean isEnabled();
 
-
-//    @JsonCreator
-//    public static AccountStatus fromString(String value) {
-//        return value == null ? null : AccountStatus.valueOf(value.toUpperCase());
-//    }
-//
-//    @JsonValue
-//    public String toJson() {
-//        return this.name().toLowerCase();
-//    }
 }

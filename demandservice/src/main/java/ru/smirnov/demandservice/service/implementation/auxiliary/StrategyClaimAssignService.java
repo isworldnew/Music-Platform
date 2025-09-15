@@ -9,9 +9,6 @@ import ru.smirnov.demandservice.repository.AdminDataRepository;
 import ru.smirnov.demandservice.repository.DistributorRegistrationClaimRepository;
 import ru.smirnov.demandservice.repository.TrackClaimRepository;
 import ru.smirnov.demandservice.service.abstraction.auxiliary.ClaimAssignService;
-import ru.smirnov.demandservice.service.abstraction.domain.AdminDataService;
-import ru.smirnov.demandservice.service.abstraction.domain.DistributorRegistrationClaimService;
-import ru.smirnov.demandservice.service.abstraction.domain.TrackClaimService;
 
 import java.util.Comparator;
 import java.util.HashMap;

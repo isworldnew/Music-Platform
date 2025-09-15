@@ -5,7 +5,6 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.smirnov.demandservice.aspect.abstraction.DistributorClaimAspect;
-import ru.smirnov.demandservice.dto.DistributorRegistrationClaimResponse;
 import ru.smirnov.demandservice.entity.domain.DistributorRegistrationClaim;
 import ru.smirnov.demandservice.repository.DistributorRegistrationClaimRepository;
 import ru.smirnov.dtoregistry.dto.authentication.DataForToken;

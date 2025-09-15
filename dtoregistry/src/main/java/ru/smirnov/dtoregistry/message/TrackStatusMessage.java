@@ -3,7 +3,6 @@ package ru.smirnov.dtoregistry.message;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.smirnov.dtoregistry.dto.authentication.DataForToken;
 import ru.smirnov.dtoregistry.entity.auxiliary.TrackStatus;
 
 @Data @AllArgsConstructor @NoArgsConstructor
